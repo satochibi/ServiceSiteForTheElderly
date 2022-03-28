@@ -121,6 +121,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DBAccess.cs" />
+    <Compile Include="Models\DTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +134,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Models\Common\CommonModel.vb" />
+    <Content Include="Models\DBAccess.vb" />
+    <Content Include="Models\DButil.vb" />
+    <Content Include="Models\ViewModels\AjaxTestViewModel.vb" />
+    <Content Include="Models\ViewModels\CommonViewModels.vb" />
+    <Content Include="Models\ViewModels\MentenanceItemViewModel.vb" />
+    <Content Include="Models\ViewModels\MentenanceViewModel.vb" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -162,7 +171,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
