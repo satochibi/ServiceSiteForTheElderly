@@ -35,13 +35,13 @@ namespace ServiceSiteForTheElderly.Models
 
         protected void OpenConnection()
         {
-            if ((_connection == null) && (_connection.State == ConnectionState.Open))
+            if ((_connection != null) && (_connection.State != ConnectionState.Open))
                 _connection.Open();
         }
 
         protected void CloseConnection()
         {
-            if ((_connection == null))
+            if ((_connection != null))
                 _connection.Close();
         }
 

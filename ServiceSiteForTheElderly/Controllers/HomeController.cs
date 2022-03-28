@@ -12,7 +12,8 @@ namespace ServiceSiteForTheElderly.Controllers
     {
         public ActionResult Index()
         {
-            
+            DBAccess dba = new DBAccess();
+            dba.Execute("insert into Books (title, description) values ('JSビギナー', 'JavaScriptに関する本');");
             return View();
         }
 
