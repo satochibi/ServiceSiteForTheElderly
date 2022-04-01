@@ -1,0 +1,23 @@
+li.cart-table-body-list-item:nth-child(1) {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 60%;
+  flex-grow: 2;
+}
+li.cart-table-body-list-item:nth-child(2) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+}
+li.cart-table-body-list-item:nth-child(3) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  border-right: none;
+  flex-grow: 2;
+}
+
+/*# sourceMappingURL=shopping-confirm.css.map */

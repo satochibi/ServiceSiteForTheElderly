@@ -1,31 +1,85 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    Layout = null;
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET @ViewData["id"]</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高齢者のお困り解決砥部町内サービスサイト</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/index.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="./index.html">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <a href="./shopping-cart.html" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>カゴ</a>
+        </header>
+
+        <div class="banner">
+            <img src="@Url.Content("~/img/top_img.png")" alt="高齢者が不自由せず楽しい生活を送れるように手助けしたい。当ページは高齢の方向けの、インターネットを活用したサービスを提供するサイトです。">
+        </div>
+
+        <div class="breadcrumb-list">
+            <ul>
+                <li><a href="./index.html">HOME</a></li>
+            </ul>
+        </div>
+
+        <div class="main-contents">
+            <h2>サービスを探す</h2>
+
+            <div class="service-table">
+                <div class="delivery-service">
+                    <h3>宅配配送サービス</h3>
+                    <div class="buttons">
+                        @Html.Raw(ViewData["categories"])
+                        @*<a href="./foodstuff.html" class="btn-flat"><span>食料品<i class="fas fa-chevron-right"></i></span></a>
+                        <a href="./tenpo.html" class="btn-flat"><span>料理とお弁当<i class="fas fa-chevron-right"></i></span></a>
+                        <a href="./daily-necessities.html" class="btn-flat"><span>日用品<i class="fas fa-chevron-right"></i></span></a>
+                        <a href="./magazine.html" class="btn-flat"><span>雑誌<i class="fas fa-chevron-right"></i></span></a>
+                        <a href="./local-specialty.html" class="btn-flat"><span>特産品<i class="fas fa-chevron-right"></i></span></a>
+                        <a href="./medicine.html" class="btn-flat"><span>お薬<i class="fas fa-chevron-right"></i></span></a>
+                        <a href="./congratulatory-gift.html" class="btn-flat"><span>お祝品<i class="fas fa-chevron-right"></i></span></a>*@
+                    </div>
+                </div>
+                <div class="other-service">
+                    <h3>その他のサービス</h3>
+                    <div class="buttons">
+                        @Html.Raw(ViewData["contacts"])
+                        @*<a href="./home-repair-service-contact.html" class="btn-flat"><span>お家の修理サービス<i class="fas fa-chevron-right"></i></span></a>
+                        <a href="./travel-planning-service-contact.html" class="btn-flat"><span>旅行計画サービス<i class="fas fa-chevron-right"></i></span></a>
+                        <a href="./in-home-work-service-contact.html" class="btn-flat"><span>家庭内作業サービス<i class="fas fa-chevron-right"></i></span></a>
+                        <a href="./contact.html" class="btn-flat"><span>お問い合わせ<i class="fas fa-chevron-right"></i></span></a>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <footer>
+
+            <div class="footer-logo">
+                HAISABU Platform
+            </div>
+
+            <div class="ads">
+                <a href="#">広告1</a>
+                <a href="#">広告2</a>
+                <a href="#">広告3</a>
+                <a href="#">広告4</a>
+            </div>
+
+        </footer>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+</body>
+
+</html>

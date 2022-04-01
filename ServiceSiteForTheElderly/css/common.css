@@ -1,0 +1,181 @@
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.button-field input[type=button], .button-field input[type=reset], .button-field button[type=button], .button-field button[type=reset] {
+  display: block !important;
+  box-sizing: border-box !important;
+  padding: 10px !important;
+  border-radius: 2px !important;
+  cursor: pointer;
+  box-shadow: 0 3px 3px gray;
+  border: 1px solid #a0a0a0;
+  color: black;
+  background-color: white;
+}
+.button-field input[type=submit], .button-field button[type=submit] {
+  display: block !important;
+  box-sizing: border-box !important;
+  padding: 10px !important;
+  border-radius: 2px !important;
+  cursor: pointer;
+  box-shadow: 0 3px 3px gray;
+  border: none !important;
+  color: white;
+  background-color: #3a0da4;
+}
+
+div.container {
+  max-width: 950px;
+  margin: 0 auto;
+}
+div.container header {
+  background-color: #ed6c00;
+  margin: 0;
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 600px) {
+  div.container header {
+    padding: 12px 7px;
+  }
+}
+div.container header h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+@media only screen and (max-width: 600px) {
+  div.container header h1 {
+    font-size: 18px;
+  }
+}
+div.container header h1 a {
+  color: black;
+  text-decoration: none;
+}
+div.container header h1 a span {
+  color: white;
+  font-size: 120%;
+}
+div.container header a.shopping-cart-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 5px 25px;
+  font-size: 15px;
+}
+@media only screen and (max-width: 600px) {
+  div.container header a.shopping-cart-button {
+    padding: 5px 14px;
+  }
+}
+div.container header a.shopping-cart-button i.fas {
+  font-size: 2.2em;
+}
+div.container .banner img {
+  width: 100%;
+  display: block;
+}
+div.container .breadcrumb-list {
+  background-color: #461e1e;
+}
+div.container .breadcrumb-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+div.container .breadcrumb-list ul li {
+  text-align: right;
+}
+div.container .breadcrumb-list ul li a {
+  color: white;
+  text-decoration: none;
+}
+div.container .breadcrumb-list ul li + li::before {
+  content: ">";
+  color: white;
+  margin: 0 5px;
+}
+div.container .main-contents {
+  background-color: #fef7e9;
+}
+div.container .main-contents h2 {
+  position: relative;
+  margin-top: 0;
+  margin-bottom: 2em;
+  padding-top: 2em;
+  display: flex;
+  justify-content: center;
+  font-size: 2em;
+  text-align: center;
+}
+div.container .main-contents h2::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -15px;
+  display: inline-block;
+  width: 60px;
+  height: 5px;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: black;
+  border-radius: 2px;
+}
+div.container .main-contents div.no-item-message p {
+  margin: 0;
+  padding: 0 110px 50px;
+  text-align: center;
+  font-weight: bold;
+  color: red;
+  font-size: 20px;
+}
+@media only screen and (max-width: 600px) {
+  div.container .main-contents div.no-item-message p {
+    padding: 0 20px 50px;
+  }
+}
+div.container .main-contents div.no-item-message p i.fas {
+  padding: 0 6px;
+}
+div.container footer .footer-logo {
+  text-align: center;
+  font-size: 25px;
+  background-color: #ed6c00;
+  color: white;
+  padding: 20px 0;
+}
+div.container footer .ads {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #bebebe;
+}
+div.container footer .ads a {
+  display: block;
+  box-sizing: border-box;
+  width: 320px;
+  height: 100px;
+  border: 1px solid white;
+  margin: 10px 0;
+}
+
+/*# sourceMappingURL=common.css.map */

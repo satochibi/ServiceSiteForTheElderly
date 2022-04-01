@@ -7,3 +7,14 @@
     public string description { get; set; }
 
 }
+
+
+public class MCategores
+{
+    //public int Id { get; set; }
+    //public bool IsContact { get; set; }
+
+    public string Name { get; set; }
+
+    public string Path { get; set; }
+}
