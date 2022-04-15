@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ServiceSiteForTheElderly.Models;
+using ServiceSiteForTheElderly.Models.Common;
 
 namespace ServiceSiteForTheElderly.Controllers
 {
@@ -12,25 +13,12 @@ namespace ServiceSiteForTheElderly.Controllers
     {
         public ActionResult Index()
         {
-            DBAccess dba = new DBAccess();
-
-            // 宅配配送サービス
-            DataTable dt = null;
-            dba.Query("select * from Categories where isContact=0 order by id asc;", ref dt);
-
-            List<MCategores> categories = new List<MCategores>();
-
-            for (int row = 0; row < dt.Rows.Count; row++)
-            {
-                MCategores aCategory = new MCategores();
-                aCategory.Name = dt.Rows[row].Field<string>("name");
-                aCategory.Path = dt.Rows[row].Field<string>("path");
-                categories.Add(aCategory);
-            }
+            List<MCategores> mCategores = new List<MCategores>();
+            CommonModel.GetDatabaseCategoriesWithoutContact(ref mCategores);
 
             string html = "";
 
-            foreach(var aCategory in categories)
+            foreach(var aCategory in mCategores)
             {
                 html += $"<a href=\"{@Url.Action("About", "Home")}\" class=\"btn-flat\"><span>{aCategory.Name.ToString()}<i class=\"fas fa-chevron-right\"></i></span></a>" + Environment.NewLine;
                 
@@ -38,32 +26,18 @@ namespace ServiceSiteForTheElderly.Controllers
 
             ViewData["categories"] = html;
 
-            // その他のサービス
-            dt = null;
-            dba.Query("select * from Categories where isContact=1 order by id asc;", ref dt);
-
-            categories.Clear();
-
-            for (int row = 0; row < dt.Rows.Count; row++)
-            {
-                MCategores aCategory = new MCategores();
-                aCategory.Name = dt.Rows[row].Field<string>("name");
-                aCategory.Path = dt.Rows[row].Field<string>("path");
-                categories.Add(aCategory);
-            }
+            mCategores.Clear();
+            CommonModel.GetDatabaseCategoriesWithContact(ref mCategores);
 
             html = "";
 
-            foreach (var aCategory in categories)
+            foreach (var aCategory in mCategores)
             {
                 html += $"<a href=\"{@Url.Action("About", "Home")}\" class=\"btn-flat\"><span>{aCategory.Name.ToString()}<i class=\"fas fa-chevron-right\"></i></span></a>" + Environment.NewLine;
 
             }
 
             ViewData["contacts"] = html;
-
-
-
 
             //dba.Execute("insert into Books (title, description) values ('JSビギナー', 'JavaScriptに関する本');");
             //ViewData["id"] = 1;
