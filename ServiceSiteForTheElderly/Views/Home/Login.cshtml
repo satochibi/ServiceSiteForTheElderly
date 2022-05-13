@@ -1,0 +1,97 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高齢者のお困り解決砥部町内サービスサイト</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/contact.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <div class="header-buttons">
+                <div class="shopping-cart">
+                    <span class="shopping-count-badge">3</span>
+                    <a href="./shopping-cart.html" class="shopping-cart-button">
+                        <i class="fas fa-shopping-cart"></i>買い物カゴを見る
+                    </a>
+                </div>
+                <a href="@Url.Action("Login", "Home")" class="avatar-button"><i class="fa-solid fa-user"></i>会員の方はこちら</a>
+            </div>
+        </header>
+
+
+        <div class="breadcrumb-list">
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
+                <li><a href="#">ログイン</a></li>
+            </ul>
+        </div>
+
+        <div class="main-contents">
+            <h2>ログイン</h2>
+            <div class="contact-table">
+                <form>
+                    <h3>会員のお客様</h3>
+                    <div class="input-container">
+                        <div class="input-field">
+                            <label class="label" for="phone-number">電話番号<small>必須</small></label>
+                            <input id="phone-number" type="text" name="phone-number" placeholder="089-982-0001"
+                                   pattern="\d{2,4}-?\d{2,4}-?\d{3,4}" required>
+                        </div>
+                        <div class="input-field">
+                            <label class="label" for="name">パスワード<small>必須</small></label>
+                            <input id="password" type="text" name="password" placeholder="パスワード" required>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <a href="#">パスワードを忘れた方はこちらから</a>
+                    </div>
+                    <div class="button-field">
+                        <button class="form-primary-button next-arrow-button grow-field" type="submit"
+                                id="login-submit">
+                            ログインする
+                        </button>
+                    </div>
+                </form>
+                <form style="margin-top: 20px;">
+                    <h3>初めて利用するお客様</h3>
+                    <div class="button-field">
+                        <button class="form-secondary-button next-arrow-button grow-field" type="submit"
+                                id="signup-submit">
+                            新規会員登録はこちら
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+        <footer>
+
+            <div class="footer-logo">
+                HAISABU Platform
+            </div>
+
+            <!-- <div class="ads">
+                広告
+            </div> -->
+
+        </footer>
+    </div>
+
+</body>
+
+</html>

@@ -289,41 +289,154 @@ div.container footer .ads a {
   margin: 10px 0;
 }
 
-div.container .main-contents div.tenpo-list {
-  padding: 0 30px 50px;
+.next-arrow-yellow-button {
+  position: relative;
 }
-@media only screen and (max-width: 600px) {
-  div.container .main-contents div.tenpo-list {
-    padding: 0 0 50px;
-  }
+.next-arrow-yellow-button::after {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 0;
+  border-top: solid 2px #f69727;
+  border-right: solid 2px #f69727;
+  transform: rotate(45deg);
 }
-div.container .main-contents div.tenpo-list div.buttons {
+
+div.container .main-contents .button-list {
+  margin: 60px 0;
+}
+div.container .main-contents .button-field {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  background-color: white;
-  padding: 26px;
-  border: 1px solid #dddddd;
-  border-radius: 5px;
 }
-div.container .main-contents div.tenpo-list div.buttons a.btn-flat {
-  box-sizing: border-box;
-  display: flex;
-  background-image: url("../img/tenpo.png");
-  background-size: cover;
-  background-position: center;
-  border: 2px solid #4f2a23;
-  width: 225px;
-  height: 83px;
+div.container .main-contents .button-field .normal-button {
+  display: block !important;
+  box-sizing: border-box !important;
+  border-radius: 15px !important;
+  cursor: pointer;
+  box-shadow: 0 3px 3px gray;
+  width: 100%;
+  padding: 0 50px !important;
+  height: 93px;
+  font-size: 1.6em;
+  font-weight: bold;
+  border: 1px solid #7f7f7f !important;
+  color: black;
+  background: linear-gradient(#fff, #ececec);
+  display: flex !important;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  padding: 0 !important;
+  width: 180px;
+  height: 150px;
   text-decoration: none;
-  margin: 12px;
 }
-div.container .main-contents div.tenpo-list div.buttons span {
-  font-size: 26px;
-  color: white;
-  text-shadow: 3px 3px 2px #4f2a23, -3px 3px 2px #4f2a23, 3px -3px 2px #4f2a23, -3px -3px 2px #4f2a23, 3px 0px 2px #4f2a23, 0px 3px 2px #4f2a23, -3px 0px 2px #4f2a23, 0px -3px 2px #4f2a23;
+div.container .main-contents .button-field .normal-button i {
+  font-size: 60px;
+  color: black;
+}
+div.container .main-contents .button-field .normal-button span {
+  text-align: center;
+  font-size: 18px;
+}
+div.container .main-contents .button-field .active-button {
+  display: block !important;
+  box-sizing: border-box !important;
+  border-radius: 15px !important;
+  cursor: pointer;
+  box-shadow: 0 3px 3px gray;
+  width: 100%;
+  padding: 0 50px !important;
+  height: 93px;
+  font-size: 1.6em;
+  font-weight: bold;
+  border: 1px solid #7f7f7f !important;
+  color: black;
+  background: linear-gradient(#fff, #ececec);
+  background: #ffb200;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 0 !important;
+  width: 180px;
+  height: 150px;
+  text-decoration: none;
+}
+div.container .main-contents .button-field .active-button i {
+  font-size: 60px;
+  color: black;
+}
+div.container .main-contents .button-field .active-button span {
+  text-align: center;
+  font-size: 18px;
+}
+div.container .main-contents .button-field .details-button {
+  display: block !important;
+  box-sizing: border-box !important;
+  border-radius: 15px !important;
+  cursor: pointer;
+  box-shadow: 0 3px 3px gray;
+  width: 100%;
+  padding: 0 50px !important;
+  height: 93px;
+  font-size: 1.6em;
+  font-weight: bold;
+  border: 1px solid #7f7f7f !important;
+  color: black;
+  background: linear-gradient(#fff, #ececec);
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+  height: 50px !important;
+  text-decoration: none;
+}
+div.container .main-contents div.log-table {
+  background-color: white;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  padding: 26px;
+  margin: 20px 20px 0;
+}
+@media only screen and (max-width: 600px) {
+  div.container .main-contents div.log-table {
+    margin: 0;
+  }
+}
+div.container .main-contents div.log-table h3 {
+  font-size: 150%;
+}
+div.container .main-contents div.log-table table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-spacing: 0;
+  border-collapse: collapse;
+  line-height: 1.5;
+}
+div.container .main-contents div.log-table table tr {
+  height: 60px;
+}
+div.container .main-contents div.log-table table tr th {
+  background-color: #ffb200;
+  text-align: center;
+}
+div.container .main-contents div.log-table table tr td {
+  padding: 12px;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+div.container .main-contents div.log-table table,
+div.container .main-contents div.log-table th,
+div.container .main-contents div.log-table td {
+  border: 1px solid #a0a0a0;
 }
 
-/*# sourceMappingURL=tenpo.css.map */
+/*# sourceMappingURL=my-page.css.map */

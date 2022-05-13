@@ -124,6 +124,7 @@
     <Compile Include="Models\Common\CommonModel.cs" />
     <Compile Include="Models\DBAccess.cs" />
     <Compile Include="Models\DTO.cs" />
+    <Compile Include="Models\ViewModels\CommonViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +135,7 @@
     <Content Include="css\common.css" />
     <Content Include="css\contact.css" />
     <Content Include="css\index.css" />
+    <Content Include="css\my-page.css" />
     <Content Include="css\normalize.css" />
     <Content Include="css\obento.css" />
     <Content Include="css\shopping-cart.css" />
@@ -186,6 +188,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

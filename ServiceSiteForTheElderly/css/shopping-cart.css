@@ -9,27 +9,82 @@ img {
   clear: both;
 }
 
-.button-field input[type=button], .button-field input[type=reset], .button-field button[type=button], .button-field button[type=reset] {
+.button-field .form-normal-button {
   display: block !important;
   box-sizing: border-box !important;
-  padding: 10px !important;
-  border-radius: 2px !important;
+  border-radius: 15px !important;
   cursor: pointer;
   box-shadow: 0 3px 3px gray;
-  border: 1px solid #a0a0a0;
+  width: 100%;
+  padding: 0 50px !important;
+  height: 93px;
+  font-size: 1.6em;
+  font-weight: bold;
+  border: 1px solid #7f7f7f !important;
   color: black;
-  background-color: white;
+  background: linear-gradient(#fff, #ececec);
 }
-.button-field input[type=submit], .button-field button[type=submit] {
+.button-field .form-primary-button {
   display: block !important;
   box-sizing: border-box !important;
-  padding: 10px !important;
-  border-radius: 2px !important;
+  border-radius: 15px !important;
   cursor: pointer;
   box-shadow: 0 3px 3px gray;
-  border: none !important;
+  width: 100%;
+  padding: 0 50px !important;
+  height: 93px;
+  font-size: 1.6em;
+  font-weight: bold;
+  border: #0c0066 1px solid !important;
   color: white;
-  background-color: #3a0da4;
+  background: linear-gradient(#4947b9, #171573);
+}
+.button-field .form-secondary-button {
+  display: block !important;
+  box-sizing: border-box !important;
+  border-radius: 15px !important;
+  cursor: pointer;
+  box-shadow: 0 3px 3px gray;
+  width: 100%;
+  padding: 0 50px !important;
+  height: 93px;
+  font-size: 1.6em;
+  font-weight: bold;
+  border: #47041d 1px solid !important;
+  color: white;
+  background: linear-gradient(#b23a3a, #7e1b1b);
+}
+.button-field .next-arrow-button {
+  position: relative;
+}
+.button-field .next-arrow-button::after {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 0;
+  border-top: solid 2px #fff;
+  border-right: solid 2px #fff;
+  transform: rotate(45deg);
+}
+.button-field .prev-arrow-button {
+  position: relative;
+}
+.button-field .prev-arrow-button::before {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 0;
+  border-bottom: solid 2px #f69727;
+  border-left: solid 2px #f69727;
+  transform: rotate(45deg);
 }
 
 div.container {
@@ -49,14 +104,16 @@ div.container header {
   }
 }
 div.container header h1 {
+  font-size: 1.5em;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0;
+  line-height: 150%;
 }
 @media only screen and (max-width: 600px) {
   div.container header h1 {
-    font-size: 18px;
+    font-size: 14px;
   }
 }
 div.container header h1 a {
@@ -67,25 +124,79 @@ div.container header h1 a span {
   color: white;
   font-size: 120%;
 }
-div.container header a.shopping-cart-button {
+div.container header .header-buttons {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  text-decoration: none;
-  color: white;
-  border: 2px solid white;
-  border-radius: 5px;
-  padding: 5px 25px;
-  font-size: 15px;
+  font-size: 22px;
 }
 @media only screen and (max-width: 600px) {
-  div.container header a.shopping-cart-button {
-    padding: 5px 14px;
+  div.container header .header-buttons {
+    font-size: 12px;
   }
 }
-div.container header a.shopping-cart-button i.fas {
-  font-size: 2.2em;
+div.container header .header-buttons .shopping-cart {
+  position: relative;
+}
+div.container header .header-buttons .shopping-cart .shopping-count-badge {
+  display: block;
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  background-color: #ad0000;
+  color: white;
+  border-radius: 50%;
+  padding: 1px 0.25em;
+}
+@media only screen and (max-width: 600px) {
+  div.container header .header-buttons .shopping-cart .shopping-count-badge {
+    right: -5px;
+    top: -5px;
+  }
+}
+div.container header .header-buttons .shopping-cart-button {
+  width: 212px;
+  display: block;
+  box-sizing: border-box;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+  padding: 2px;
+  background: linear-gradient(#f6f6f6, #d9d9d9);
+  border: #8c7f74 solid 1px;
+  border-radius: 2px;
+}
+@media only screen and (max-width: 600px) {
+  div.container header .header-buttons .shopping-cart-button {
+    width: 122px;
+  }
+}
+div.container header .header-buttons .shopping-cart-button i {
+  color: #ba4a00;
+  padding-right: 5px;
+}
+div.container header .header-buttons .avatar-button {
+  width: 212px;
+  display: block;
+  box-sizing: border-box;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+  padding: 2px;
+  background: linear-gradient(#f6f6f6, #d9d9d9);
+  border: #8c7f74 solid 1px;
+  border-radius: 2px;
+}
+@media only screen and (max-width: 600px) {
+  div.container header .header-buttons .avatar-button {
+    width: 122px;
+  }
+}
+div.container header .header-buttons .avatar-button i {
+  color: #f38900;
+  padding-left: 2px;
+  padding-right: 3px;
 }
 div.container .banner img {
   width: 100%;
@@ -316,15 +427,20 @@ div.container .main-contents div.cart-table form .total-price {
 }
 div.container .main-contents div.cart-table form .button-field {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-content: space-between;
+  flex-wrap: wrap;
   padding-top: 50px;
   padding-bottom: 50px;
 }
-div.container .main-contents div.cart-table form .button-field input:first-child {
-  margin-right: 10px;
+div.container .main-contents div.cart-table form .button-field button {
+  flex-basis: 49%;
+  margin-bottom: 20px;
 }
-div.container .main-contents div.cart-table form .button-field input:last-child {
-  margin-left: 10px;
+@media only screen and (max-width: 600px) {
+  div.container .main-contents div.cart-table form .button-field button {
+    flex-basis: 100%;
+  }
 }
 
 /*# sourceMappingURL=shopping-cart.css.map */

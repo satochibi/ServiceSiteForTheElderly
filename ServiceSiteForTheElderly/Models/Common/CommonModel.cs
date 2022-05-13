@@ -43,5 +43,12 @@ namespace ServiceSiteForTheElderly.Models.Common
 
             return 0;
         }
+
+        /*
+        public int CheckDatabaseLogin(string tel, string password, ref Mcust cust, ref int hitCount = 0)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+        }*/
     }
 }

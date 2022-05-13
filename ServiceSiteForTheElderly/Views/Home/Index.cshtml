@@ -13,14 +13,20 @@
     <title>高齢者のお困り解決砥部町内サービスサイト</title>
     <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
     <link rel="stylesheet" href="@Url.Content("~/css/index.css")">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1><a href="./index.html">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
-            <a href="./shopping-cart.html" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>カゴ</a>
+            <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <div class="header-buttons">
+                <div class="shopping-cart">
+                    <span class="shopping-count-badge">3</span>
+                    <a href="./shopping-cart.html" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
+                </div>
+                <a href="@Url.Action("Login", "Home")" class="avatar-button"><i class="fa-solid fa-user"></i>会員の方はこちら</a>
+            </div>
         </header>
 
         <div class="banner">
@@ -29,7 +35,7 @@
 
         <div class="breadcrumb-list">
             <ul>
-                <li><a href="./index.html">HOME</a></li>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
             </ul>
         </div>
 
@@ -41,7 +47,7 @@
                     <h3>宅配配送サービス</h3>
                     <div class="buttons">
                         @Html.Raw(ViewData["categories"])
-                        </div>
+                    </div>
                 </div>
                 <div class="other-service">
                     <h3>その他のサービス</h3>
