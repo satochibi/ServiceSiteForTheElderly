@@ -6,6 +6,13 @@ using System.Web;
 
 namespace ServiceSiteForTheElderly.Models.Common
 {
+    public enum ReturnOfCheckDatabaseLogin
+    {
+        Success = 0,
+        WrongUserId = -1,
+        WrongPassword = -2,
+        RunException = -3
+    }
     public static class CommonModel
     {
         // 宅配配送サービス
@@ -45,7 +52,7 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
 
-        public static int CheckDatabaseLogin(string inputTel, string inputPassword, ref MCustomers cust, ref int hitCount)
+        public static ReturnOfCheckDatabaseLogin CheckDatabaseLogin(string inputTel, string inputPassword, ref MCustomers cust, ref int hitCount)
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
@@ -60,12 +67,18 @@ namespace ServiceSiteForTheElderly.Models.Common
                     hitCount = dt.Rows.Count;
 
                     string databasePassword = dt.Rows[0].Field<string>("password");
-
+                    
+                    if (inputPassword == null)
+                    {
+                        inputPassword = "";
+                    }
                     inputPassword = inputPassword.Trim();
+                    
 
                     if (databasePassword == inputPassword)
                     {
-                        MCustomers mCustomers = new MCustomers() { 
+                        MCustomers mCustomers = new MCustomers()
+                        {
                             Id = dt.Rows[0].Field<int>("id"),
                             Name = dt.Rows[0].Field<string>("name"),
                             Furigana = dt.Rows[0].Field<string>("furigana"),
@@ -75,23 +88,23 @@ namespace ServiceSiteForTheElderly.Models.Common
                             Address = dt.Rows[0].Field<string>("address"),
                             Password = databasePassword
                         };
-                        return 0;
+                        return ReturnOfCheckDatabaseLogin.Success;
                     }
                     else
                     {
-                        return -2;
+                        return ReturnOfCheckDatabaseLogin.WrongPassword;
                     }
 
                 }
                 else
                 {
-                    return -1;
+                    return ReturnOfCheckDatabaseLogin.WrongUserId;
                 }
 
             }
             catch (Exception)
             {
-                return -3;
+                return ReturnOfCheckDatabaseLogin.RunException;
             }
             finally
             {

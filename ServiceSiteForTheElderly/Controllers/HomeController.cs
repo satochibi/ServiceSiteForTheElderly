@@ -54,26 +54,33 @@ namespace ServiceSiteForTheElderly.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel postmodel)
         {
-            string rtnCustCode = string.Empty;
+            //CurrentSession
+            //// 初期化
+            //if (Session["CurrentSession"] != null)
+            //{
+            //    CurrentSession = Session["CurrentSession"];
+            //}
+
             MCustomers cust = new MCustomers();
             int hitCount = 0;
-            int rtn = CommonModel.CheckDatabaseLogin(postmodel.Tel, postmodel.Password, ref cust, ref hitCount);
+            
+            ReturnOfCheckDatabaseLogin rtn = CommonModel.CheckDatabaseLogin(postmodel.Tel, postmodel.Password, ref cust, ref hitCount);
             switch (rtn)
             {
-                case 0:
+                case ReturnOfCheckDatabaseLogin.Success:
                     // ログインOK
-                    return Json("returnstring");
-                case -1:
+                    return Json(new MJsonWithStatus() { status = "success" });
+                case ReturnOfCheckDatabaseLogin.WrongUserId:
                     // ユーザー名が間違い
-                    return Json("userng");
-
-                case -2:
+                    return Json(new MJsonWithStatus() { status = "wrongUserId" });
+                case ReturnOfCheckDatabaseLogin.WrongPassword:
                     // パスワードが間違い
-                    return Json("passng");
+                    return Json(new MJsonWithStatus() { status = "wrongPassword" });
+                case ReturnOfCheckDatabaseLogin.RunException:
                 default:
-                    return Json("error");
-            }
+                    return Json(new MJsonWithStatus() { status = "error" });
 
+            }
             
         }
     }

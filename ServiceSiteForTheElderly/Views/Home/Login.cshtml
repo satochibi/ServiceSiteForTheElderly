@@ -14,9 +14,13 @@
     <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
     <link rel="stylesheet" href="@Url.Content("~/css/contact.css")">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
 </head>
 
 <body>
+    <input type="hidden" id="UrlAction" value="@Url.Action("Login", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("MyPageOrder", "Home")" />
+
     <div class="container">
         <header>
             <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
@@ -42,17 +46,17 @@
         <div class="main-contents">
             <h2>ログイン</h2>
             <div class="contact-table">
-                <form>
+                <form method="dialog">
                     <h3>会員のお客様</h3>
                     <div class="input-container">
                         <div class="input-field">
                             <label class="label" for="phone-number">電話番号<small>必須</small></label>
                             <input id="phone-number" type="text" name="phone-number" placeholder="089-982-0001"
-                                   pattern="\d{2,4}-?\d{2,4}-?\d{3,4}" required>
+                                   pattern="\d{2,4}-?\d{2,4}-?\d{3,4}" value="090-5141-9978" required>
                         </div>
                         <div class="input-field">
                             <label class="label" for="name">パスワード<small>必須</small></label>
-                            <input id="password" type="text" name="password" placeholder="パスワード" required>
+                            <input id="password" type="text" name="password" placeholder="パスワード" value="password" required>
                         </div>
                     </div>
                     <div style="margin-bottom: 20px;">
@@ -92,6 +96,68 @@
         </footer>
     </div>
 
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $("#login-submit").click(function () {
+                // event.preventDefault();
+
+                let tel = $("#phone-number").val();
+                tel = tel.trim();
+                tel = tel.split("-");
+                tel = tel.join("");
+                const password = $("#password").val();
+
+                const postUrl = $("#UrlAction").val();
+                const nextUrl = $("#NavigatorNext").val();
+                postfuncajax(postUrl, nextUrl, tel, password);
+
+            });
+
+
+            function postfuncajax(postUrl, nextUrl, id, password) {
+                const jsonObj = new Object();
+                jsonObj.Tel = id;
+                jsonObj.Password = password;
+                const jsonString = JSON.stringify(jsonObj);
+
+                $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    async: false,
+                    data: jsonString,
+                    dataType: "json",
+                    contentType: 'application/json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var message = XMLHttpRequest.status;
+                        alert(message);
+                    },
+                    success: function (data) {
+                        switch (data.status) {
+                            case "success":
+                                // alert("ログイン成功");
+                                location.href = nextUrl;
+                                break;
+                            case "wrongUserId":
+                                alert("ユーザIDが間違っています");
+                                break;
+                            case "wrongPassword":
+                                alert("パスワードが間違っています");
+                                break;
+                            case "error":
+                            default:
+                                alert("エラーが起こりました");
+                                break;
+                        }
+
+                    }
+                });
+            }
+
+        });
+    </script>
 </body>
 
 </html>

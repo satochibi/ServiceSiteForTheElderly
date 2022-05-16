@@ -38,3 +38,9 @@ public class MCustomers
     public string Password { get; set; }
 
 }
+
+
+public class MJsonWithStatus
+{
+    public string status { get; set; }
+}
