@@ -11,8 +11,8 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
 
     public class LoginModel
     {
-        public string tel { get; set; }
-        public string password { get; set; }
+        public string Tel { get; set; }
+        public string Password { get; set; }
     }
 
 }

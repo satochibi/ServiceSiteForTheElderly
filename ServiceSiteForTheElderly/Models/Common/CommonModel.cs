@@ -44,11 +44,59 @@ namespace ServiceSiteForTheElderly.Models.Common
             return 0;
         }
 
-        /*
-        public int CheckDatabaseLogin(string tel, string password, ref Mcust cust, ref int hitCount = 0)
+
+        public static int CheckDatabaseLogin(string inputTel, string inputPassword, ref MCustomers cust, ref int hitCount)
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
-        }*/
+            string sql = "select * from Customers";
+            sql += $" where tel = '{inputTel}'";
+
+            try
+            {
+                dba.Query(sql, ref dt);
+                if (dt.Rows.Count > 0)
+                {
+                    hitCount = dt.Rows.Count;
+
+                    string databasePassword = dt.Rows[0].Field<string>("password");
+
+                    inputPassword = inputPassword.Trim();
+
+                    if (databasePassword == inputPassword)
+                    {
+                        MCustomers mCustomers = new MCustomers() { 
+                            Id = dt.Rows[0].Field<int>("id"),
+                            Name = dt.Rows[0].Field<string>("name"),
+                            Furigana = dt.Rows[0].Field<string>("furigana"),
+                            Tel = dt.Rows[0].Field<string>("tel"),
+                            Mail = dt.Rows[0].Field<string>("mail"),
+                            Postcode = dt.Rows[0].Field<string>("postcode"),
+                            Address = dt.Rows[0].Field<string>("address"),
+                            Password = databasePassword
+                        };
+                        return 0;
+                    }
+                    else
+                    {
+                        return -2;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+            catch (Exception)
+            {
+                return -3;
+            }
+            finally
+            {
+                dt = null;
+            }
+        }
     }
 }

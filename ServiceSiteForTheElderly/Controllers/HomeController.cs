@@ -54,7 +54,27 @@ namespace ServiceSiteForTheElderly.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel postmodel)
         {
-            return Json("test");
+            string rtnCustCode = string.Empty;
+            MCustomers cust = new MCustomers();
+            int hitCount = 0;
+            int rtn = CommonModel.CheckDatabaseLogin(postmodel.Tel, postmodel.Password, ref cust, ref hitCount);
+            switch (rtn)
+            {
+                case 0:
+                    // ログインOK
+                    return Json("returnstring");
+                case -1:
+                    // ユーザー名が間違い
+                    return Json("userng");
+
+                case -2:
+                    // パスワードが間違い
+                    return Json("passng");
+                default:
+                    return Json("error");
+            }
+
+            
         }
     }
 }
