@@ -48,19 +48,15 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(LoginModel postmodel)
+        public ActionResult Login(LoginModel postModel)
         {
-            //CurrentSession
-            //// 初期化
-            //if (Session["CurrentSession"] != null)
-            //{
-            //    CurrentSession = Session["CurrentSession"];
-            //}
 
             MCustomers cust = new MCustomers();
             int hitCount = 0;
 
-            ReturnOfCheckDatabaseLogin rtn = CommonModel.CheckDatabaseLogin(postmodel.Tel, postmodel.Password, ref cust, ref hitCount);
+            postModel.Tel = postModel.Tel.Replace("-", "");
+
+            ReturnOfCheckDatabaseLogin rtn = CommonModel.CheckDatabaseLogin(postModel.Tel, postModel.Password, ref cust, ref hitCount);
             switch (rtn)
             {
                 case ReturnOfCheckDatabaseLogin.Success:
@@ -88,6 +84,9 @@ namespace ServiceSiteForTheElderly.Controllers
         [HttpPost]
         public ActionResult SignUp(SignUpModel postModel)
         {
+            postModel.Tel = postModel.Tel.Replace("-", "");
+            postModel.Postcode = postModel.Postcode.Replace("-", "");
+
             if (CommonModel.CheckDatabaseIsUserIdExist(postModel.Tel) == ReturnOfCheckDatabaseIsUserIdExist.UserIdIsNotExist)
             {
                 if (string.IsNullOrEmpty(postModel.Name) || string.IsNullOrEmpty(postModel.Furigana) || string.IsNullOrEmpty(postModel.Tel) || string.IsNullOrEmpty(postModel.Mail) || string.IsNullOrEmpty(postModel.Postcode) || string.IsNullOrEmpty(postModel.Address) || string.IsNullOrEmpty(postModel.Password))
@@ -95,13 +94,12 @@ namespace ServiceSiteForTheElderly.Controllers
                     return Json(new MJsonWithStatus() { status = "containEmptyChar" });
                 }
 
-
                 CommonModel.RegistDatabaseCustmer(new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = postModel.Mail, Postcode = postModel.Postcode, Address = postModel.Address, Password = postModel.Password });
                 return Json(new MJsonWithStatus() { status = "success" });
             }
             else
             {
-                return Json(new MJsonWithStatus() { status = "error" });
+                return Json(new MJsonWithStatus() { status = "duplicateTelError" });
             }
         }
     }

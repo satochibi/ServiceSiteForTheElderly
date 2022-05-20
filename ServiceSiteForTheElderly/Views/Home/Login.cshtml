@@ -48,7 +48,7 @@
         <div class="main-contents">
             <h2>ログイン</h2>
             <div class="contact-table">
-                <form method="dialog">
+                <form method="dialog" id="login-form">
                     <h3>会員のお客様</h3>
                     <div class="input-container">
                         <div class="input-field">
@@ -71,7 +71,7 @@
                         </button>
                     </div>
                 </form>
-                <form style="margin-top: 20px;">
+                <form style="margin-top: 20px;" method="dialog" id="signup-form">
                     <h3>初めて利用するお客様</h3>
                     <div class="button-field">
                         <button class="form-secondary-button next-arrow-button grow-field" type="submit"
@@ -103,30 +103,32 @@
 
         $(function () {
 
-            $("#signup-submit").click(function () {
-                const signupUrl = $("#UrlActionSignUp").val();
+            $("#signup-form").on("submit", function (event) {
                 event.preventDefault();
+
+                const signupUrl = $("#UrlActionSignUp").val();
                 location.href = signupUrl;
             });
 
-            $("#login-submit").click(function () {
-                let tel = $("#phone-number").val();
-                tel = tel.trim();
-                tel = tel.split("-");
-                tel = tel.join("");
-                const password = $("#password").val();
+
+            $("#login-form").on("submit", function (event) {
+                event.preventDefault();
+
+                const tel = $("#phone-number").val().trim();
+                const password = $("#password").val().trim();
+                const inputData = {
+                    Tel: tel,
+                    Password: password
+                };
 
                 const postUrl = $("#UrlActionLogin").val();
                 const nextUrl = $("#NavigatorNext").val();
-                postfuncajax(postUrl, nextUrl, tel, password);
+                postfuncajax(postUrl, nextUrl, inputData);
             });
 
 
-            function postfuncajax(postUrl, nextUrl, id, password) {
-                const jsonObj = new Object();
-                jsonObj.Tel = id;
-                jsonObj.Password = password;
-                const jsonString = JSON.stringify(jsonObj);
+            function postfuncajax(postUrl, nextUrl, inputData) {
+                const jsonString = JSON.stringify(inputData);
 
                 $.ajax({
                     url: postUrl,

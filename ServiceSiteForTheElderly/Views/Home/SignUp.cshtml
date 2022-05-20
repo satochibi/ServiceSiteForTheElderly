@@ -24,8 +24,9 @@
 
 
 <body>
-    <input type="hidden" id="UrlAction" value="@Url.Action("SignUp", "Home")" />
+    <input type="hidden" id="UrlActionSignUp" value="@Url.Action("SignUp", "Home")" />
     <input type="hidden" id="NavigatorPrev" value="@Url.Action("Login", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("SignUpConfirm", "Home")" />
 
 
 
@@ -54,7 +55,7 @@
         <div class="main-contents">
             <h2>サービスご利用のため、会員登録をお願いします</h2>
             <div class="contact-table">
-                <form>
+                <form method="dialog" id="signup-form">
                     <h3>お客様情報の入力</h3>
                     <div class="input-container">
                         <div class="input-field">
@@ -93,7 +94,7 @@
                         </div>
                         <div class="input-field">
                             <label class="label" for="name">パスワード(確認用)<small>必須</small></label>
-                            <input id="password" type="text" name="password" placeholder="確認のため、もう一度ご入力ください" required>
+                            <input id="confirm-password" type="text" name="password" placeholder="確認のため、もう一度ご入力ください" required>
                         </div>
                     </div>
                     <div class="button-field">
@@ -126,6 +127,78 @@
                 const prevUrl = $("#NavigatorPrev").val();
                 location.href = prevUrl;
             });
+
+            $("#signup-form").on("submit", function (event) {
+                event.preventDefault();
+
+                const name = $("#name").val().trim();
+                const furigana = $("#furigana").val().trim();
+                const tel = $("#phone-number").val().trim();
+                const email = $("#e-mail").val().trim();
+                const postcode = $("#postal-code").val().trim();
+                const address = $("#address").val().trim();
+                const password = $("#password").val().trim();
+                const confirmPass = $("#confirm-password").val().trim();
+
+                if (password !== confirmPass) {
+                    alert("パスワードと確認用パスワードが違います");
+                    return;
+                }
+
+                const inputData = {
+                    Name: name,
+                    Furigana: furigana,
+                    Tel: tel,
+                    Mail: email,
+                    Postcode: postcode,
+                    Address: address,
+                    Password: password,
+                    ConfirmPass: confirmPass
+                };
+
+
+                const postUrl = $("#UrlActionSignUp").val();
+                const nextUrl = $("#NavigatorNext").val();
+                postfuncajax(postUrl, nextUrl, inputData);
+
+            });
+
+
+            function postfuncajax(postUrl, nextUrl, inputData) {
+                
+                const jsonString = JSON.stringify(inputData);
+
+                $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    async: false,
+                    data: jsonString,
+                    dataType: "json",
+                    contentType: 'application/json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var message = XMLHttpRequest.status;
+                        alert(message);
+                    },
+                    success: function (data) {
+                        switch (data.status) {
+                            case "success":
+                                // alert("ログイン成功");
+                                location.href = nextUrl;
+                                break;
+                            case "containEmptyChar":
+                                alert("空文字列が含まれているフィールドがあります");
+                                break;
+                            case "duplicateTelError":
+                                alert("この電話番号は既に使われています");
+                                break;
+                            default:
+                                alert("エラーが起こりました");
+                                break;
+                        }
+
+                    }
+                });
+            }
 
         });
     </script>
