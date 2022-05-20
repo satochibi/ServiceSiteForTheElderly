@@ -11,8 +11,22 @@ namespace ServiceSiteForTheElderly.Models.Common
         Success = 0,
         WrongUserId = -1,
         WrongPassword = -2,
-        RunException = -3
+        RunException = -3,
     }
+
+    public enum ReturnOfCheckDatabaseIsUserIdExist
+    {
+        UserIdIsExist = 0,
+        UserIdIsNotExist = -1,
+        RunException = -2
+    }
+
+    public enum ReturnOfRegistDatabaseCustmer
+    {
+        Success = 0,
+        Error = -1
+    }
+
     public static class CommonModel
     {
         // 宅配配送サービス
@@ -25,6 +39,8 @@ namespace ServiceSiteForTheElderly.Models.Common
             for (int row = 0; row < dt.Rows.Count; row++)
             {
                 MCategores aCategory = new MCategores();
+                aCategory.Id = dt.Rows[row].Field<int>("id");
+                aCategory.IsContact = dt.Rows[row].Field<bool>("isContact");
                 aCategory.Name = dt.Rows[row].Field<string>("name");
                 aCategory.Link = dt.Rows[row].Field<string>("link");
                 mCategores.Add(aCategory);
@@ -43,12 +59,32 @@ namespace ServiceSiteForTheElderly.Models.Common
             for (int row = 0; row < dt.Rows.Count; row++)
             {
                 MCategores aCategory = new MCategores();
+                aCategory.Id = dt.Rows[row].Field<int>("id");
+                aCategory.IsContact = dt.Rows[row].Field<bool>("isContact");
                 aCategory.Name = dt.Rows[row].Field<string>("name");
                 aCategory.Link = dt.Rows[row].Field<string>("link");
                 mCategores.Add(aCategory);
             }
 
             return 0;
+        }
+
+        
+        public static ReturnOfCheckDatabaseIsUserIdExist CheckDatabaseIsUserIdExist(string inputTel) {
+            MCustomers cust = new MCustomers();
+            int hitCount = 0;
+
+            switch (CheckDatabaseLogin(inputTel, "", ref cust, ref hitCount))
+            {
+                case ReturnOfCheckDatabaseLogin.Success:
+                case ReturnOfCheckDatabaseLogin.WrongPassword:
+                    return ReturnOfCheckDatabaseIsUserIdExist.UserIdIsExist;
+                case ReturnOfCheckDatabaseLogin.WrongUserId:
+                    return ReturnOfCheckDatabaseIsUserIdExist.UserIdIsNotExist;
+                default:
+                case ReturnOfCheckDatabaseLogin.RunException:
+                    return ReturnOfCheckDatabaseIsUserIdExist.RunException;
+            }
         }
 
 
@@ -111,5 +147,21 @@ namespace ServiceSiteForTheElderly.Models.Common
                 dt = null;
             }
         }
+
+
+        public static ReturnOfRegistDatabaseCustmer RegistDatabaseCustmer(MCustomers cust)
+        {
+            DBAccess dba = new DBAccess();
+            string sql = $"insert into Customers (name, furigana, tel, mail, postcode, address, password) values('{cust.Name}', '{cust.Furigana}', '{cust.Tel}', '{cust.Mail}', '{cust.Postcode}', '{cust.Address}', '{cust.Password}')";
+            if (dba.Execute(sql) >= 0)
+            {
+                return ReturnOfRegistDatabaseCustmer.Success;
+            }else
+            {
+                return ReturnOfRegistDatabaseCustmer.Error;
+            }
+        }
+
+
     }
 }

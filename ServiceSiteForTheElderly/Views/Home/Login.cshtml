@@ -18,8 +18,10 @@
 </head>
 
 <body>
-    <input type="hidden" id="UrlAction" value="@Url.Action("Login", "Home")" />
+    <input type="hidden" id="UrlActionLogin" value="@Url.Action("Login", "Home")" />
     <input type="hidden" id="NavigatorNext" value="@Url.Action("MyPageOrder", "Home")" />
+    <input type="hidden" id="UrlActionSignUp" value="@Url.Action("SignUp", "Home")" />
+
 
     <div class="container">
         <header>
@@ -101,19 +103,22 @@
 
         $(function () {
 
-            $("#login-submit").click(function () {
-                // event.preventDefault();
+            $("#signup-submit").click(function () {
+                const signupUrl = $("#UrlActionSignUp").val();
+                event.preventDefault();
+                location.href = signupUrl;
+            });
 
+            $("#login-submit").click(function () {
                 let tel = $("#phone-number").val();
                 tel = tel.trim();
                 tel = tel.split("-");
                 tel = tel.join("");
                 const password = $("#password").val();
 
-                const postUrl = $("#UrlAction").val();
+                const postUrl = $("#UrlActionLogin").val();
                 const nextUrl = $("#NavigatorNext").val();
                 postfuncajax(postUrl, nextUrl, tel, password);
-
             });
 
 

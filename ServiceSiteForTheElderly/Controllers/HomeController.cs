@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using ServiceSiteForTheElderly.Models;
-using ServiceSiteForTheElderly.Models.Common;
+﻿using ServiceSiteForTheElderly.Models.Common;
 using ServiceSiteForTheElderly.Models.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace ServiceSiteForTheElderly.Controllers
 {
@@ -22,10 +18,10 @@ namespace ServiceSiteForTheElderly.Controllers
 
             string html = "";
 
-            foreach(var aCategory in mCategores)
+            foreach (var aCategory in mCategores)
             {
                 html += $"<a href=\"{@Url.Action("About", "Home")}\" class=\"btn-flat\"><span>{aCategory.Name.ToString()}<i class=\"fas fa-chevron-right\"></i></span></a>" + Environment.NewLine;
-                
+
             }
 
             ViewData["categories"] = html;
@@ -63,7 +59,7 @@ namespace ServiceSiteForTheElderly.Controllers
 
             MCustomers cust = new MCustomers();
             int hitCount = 0;
-            
+
             ReturnOfCheckDatabaseLogin rtn = CommonModel.CheckDatabaseLogin(postmodel.Tel, postmodel.Password, ref cust, ref hitCount);
             switch (rtn)
             {
@@ -81,7 +77,32 @@ namespace ServiceSiteForTheElderly.Controllers
                     return Json(new MJsonWithStatus() { status = "error" });
 
             }
-            
+
+        }
+
+        public ActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SignUp(SignUpModel postModel)
+        {
+            if (CommonModel.CheckDatabaseIsUserIdExist(postModel.Tel) == ReturnOfCheckDatabaseIsUserIdExist.UserIdIsNotExist)
+            {
+                if (string.IsNullOrEmpty(postModel.Name) || string.IsNullOrEmpty(postModel.Furigana) || string.IsNullOrEmpty(postModel.Tel) || string.IsNullOrEmpty(postModel.Mail) || string.IsNullOrEmpty(postModel.Postcode) || string.IsNullOrEmpty(postModel.Address) || string.IsNullOrEmpty(postModel.Password))
+                {
+                    return Json(new MJsonWithStatus() { status = "containEmptyChar" });
+                }
+
+
+                CommonModel.RegistDatabaseCustmer(new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = postModel.Mail, Postcode = postModel.Postcode, Address = postModel.Address, Password = postModel.Password });
+                return Json(new MJsonWithStatus() { status = "success" });
+            }
+            else
+            {
+                return Json(new MJsonWithStatus() { status = "error" });
+            }
         }
     }
 }
