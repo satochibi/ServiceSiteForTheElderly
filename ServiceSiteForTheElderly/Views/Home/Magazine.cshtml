@@ -3,5 +3,284 @@
     Layout = null;
 }
 
-<h2>Magazine</h2>
+<!DOCTYPE html>
+<html lang="ja">
 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高齢者のお困り解決砥部町内サービスサイト</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/obento.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <div class="header-buttons">
+                <div class="shopping-cart">
+                    <span class="shopping-count-badge">3</span>
+                    <a href="./shopping-cart.html" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
+                </div>
+                <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
+            </div>
+        </header>
+
+
+        <div class="breadcrumb-list">
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
+                <li><a href="#">雑誌</a></li>
+            </ul>
+        </div>
+
+        <div class="main-contents">
+            <h2>雑誌の宅配サービス</h2>
+
+            <div id="order">
+                <form action="">
+                    <h3>書籍購入の申込</h3>
+                    <div class="input-container">
+                        <div class="input-field">
+                            <label for="name">お名前</label>
+                            <input type="text" name="name" placeholder="砥部 花子">
+                        </div>
+                        <div class="input-field">
+                            <label for="phone-number">電話番号</label>
+                            <input type="text" name="phone-number" placeholder="089-982-0001"
+                                   pattern="\d{2,4}-?\d{2,4}-?\d{3,4}">
+                        </div>
+                        <div class="input-field grow-field">
+                            <label for="name">商品名</label>
+                            <input type="text" name="name" placeholder="取り寄せる商品名">
+                        </div>
+                        <div class="message grow-field">
+                            申込み後、担当者より連絡いたします
+                        </div>
+                        <div class="button-field grow-field" id="order-button">
+                            <button class="form-primary-button" type="submit">申込</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div id="search">
+                <form action="">
+                    <input type="search" name="q" placeholder="商品検索">
+                    <div class="button-field">
+                        <button class="form-primary-button" type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="shopping-table">
+                <div class="item-cell">
+                    <div class="item-header">
+                        <h3>店舗あいうえお</h3>
+                        <span>本屋</span>
+                    </div>
+
+                    <div class="item-body">
+                        <img src="@Url.Content("~/GoodsPictures/zasshi.jpg")" alt="あ雑誌">
+                        <h4>あ雑誌</h4>
+                        <hr>
+                        <form>
+                            <div class="clearfix menu-list">
+                                <label for="large">500円<span class="tax-text">(税込)</span></label>
+                                <select id="large" name="large">
+                                    <option value="one">1冊</option>
+                                    <option value="two">2冊</option>
+                                    <option value="three">3冊</option>
+                                    <option value="four">4冊</option>
+                                    <option value="five">5冊</option>
+                                    <option value="six">6冊</option>
+                                    <option value="seven">7冊</option>
+                                    <option value="eight">8冊</option>
+                                    <option value="nine">9冊</option>
+                                    <option value="ten">10冊</option>
+                                </select>
+                            </div>
+
+                            <div class="detail">
+                                つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、
+                                そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）
+                                つれづれなるまゝに、日暮らし、硯にむかひて、
+                            </div>
+
+                            <button class="cart-button" type="submit">
+                                <i class="cart-icon fas fa-cart-arrow-down"></i>カゴに入れる
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="item-cell">
+                    <div class="item-header">
+                        <h3>店舗かきくけこ</h3>
+                        <span>本屋</span>
+                    </div>
+
+                    <div class="item-body">
+                        <img src="@Url.Content("~/GoodsPictures/zasshi.jpg")" alt="か雑誌">
+                        <h4>か雑誌</h4>
+                        <hr>
+                        <form>
+                            <div class="clearfix menu-list">
+                                <label for="large">400円<span class="tax-text">(税込)</span></label>
+                                <select id="large" name="large">
+                                    <option value="one">1冊</option>
+                                    <option value="two">2冊</option>
+                                    <option value="three">3冊</option>
+                                    <option value="four">4冊</option>
+                                    <option value="five">5冊</option>
+                                    <option value="six">6冊</option>
+                                    <option value="seven">7冊</option>
+                                    <option value="eight">8冊</option>
+                                    <option value="nine">9冊</option>
+                                    <option value="ten">10冊</option>
+                                </select>
+                            </div>
+
+                            <div class="detail">
+                                つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、
+                                そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）
+                                つれづれなるまゝに、日暮らし、硯にむかひて、
+                            </div>
+
+                            <button class="cart-button" type="submit">
+                                <i class="cart-icon fas fa-cart-arrow-down"></i>カゴに入れる
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="item-cell">
+                    <div class="item-header">
+                        <h3>店舗さしすせそ</h3>
+                        <span>本屋</span>
+                    </div>
+
+                    <div class="item-body">
+                        <img src="@Url.Content("~/GoodsPictures/zasshi.jpg")" alt="さ雑誌">
+                        <h4>さ雑誌</h4>
+                        <hr>
+                        <form>
+                            <div class="clearfix menu-list">
+                                <label for="large">550円<span class="tax-text">(税込)</span></label>
+                                <select id="large" name="large">
+                                    <option value="one">1冊</option>
+                                    <option value="two">2冊</option>
+                                    <option value="three">3冊</option>
+                                    <option value="four">4冊</option>
+                                    <option value="five">5冊</option>
+                                    <option value="six">6冊</option>
+                                    <option value="seven">7冊</option>
+                                    <option value="eight">8冊</option>
+                                    <option value="nine">9冊</option>
+                                    <option value="ten">10冊</option>
+                                </select>
+                            </div>
+
+                            <div class="detail">
+                                つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、
+                                そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）
+                                つれづれなるまゝに、日暮らし、硯にむかひて、
+                            </div>
+
+                            <button class="cart-button" type="submit">
+                                <i class="cart-icon fas fa-cart-arrow-down"></i>カゴに入れる
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="item-cell">
+                    <div class="item-header">
+                        <h3>店舗たちつてと</h3>
+                        <span>本屋</span>
+                    </div>
+
+                    <div class="item-body">
+                        <img src="@Url.Content("~/GoodsPictures/zasshi.jpg")" alt="た雑誌">
+                        <h4>た雑誌</h4>
+                        <hr>
+                        <form>
+                            <div class="clearfix menu-list">
+                                <label for="large">300円<span class="tax-text">(税込)</span></label>
+                                <select id="large" name="large">
+                                    <option value="one">1冊</option>
+                                    <option value="two">2冊</option>
+                                    <option value="three">3冊</option>
+                                    <option value="four">4冊</option>
+                                    <option value="five">5冊</option>
+                                    <option value="six">6冊</option>
+                                    <option value="seven">7冊</option>
+                                    <option value="eight">8冊</option>
+                                    <option value="nine">9冊</option>
+                                    <option value="ten">10冊</option>
+                                </select>
+                            </div>
+
+                            <div class="detail">
+                                つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、
+                                そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）
+                                つれづれなるまゝに、日暮らし、硯にむかひて、
+                            </div>
+
+                            <button class="cart-button" type="submit">
+                                <i class="cart-icon fas fa-cart-arrow-down"></i>カゴに入れる
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+        <footer>
+
+            <div class="footer-logo">
+                HAISABU Platform
+            </div>
+
+            <!-- <div class="ads">
+                広告
+            </div> -->
+
+        </footer>
+    </div>
+
+    <script>
+        const orderButton = document.getElementById("order-button");
+        orderButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const answer = confirm('この商品を取り寄せますか?');
+            if (answer) {
+                location.href = "./order-complete.html";
+            }
+        });
+
+
+        const buttonElements = document.getElementsByClassName("cart-button");
+        Array.prototype.forEach.call(buttonElements, (anElement) => {
+            anElement.addEventListener('click', (e) => {
+                e.preventDefault();
+                location.href = "./shopping-cart.html";
+            });
+        });
+    </script>
+
+</body>
+
+</html>

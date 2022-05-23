@@ -57,6 +57,7 @@ namespace ServiceSiteForTheElderly.Controllers
         /// <returns>トップページのビュー</returns>
         public ActionResult Index()
         {
+            // 右上のボタンを表示するために下記のコードは絶対必要
             string sid = null;
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
@@ -261,6 +262,11 @@ namespace ServiceSiteForTheElderly.Controllers
         /// <returns>雑誌画面のビュー</returns>
         public ActionResult Magazine()
         {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+
             return View();
         }
     }
