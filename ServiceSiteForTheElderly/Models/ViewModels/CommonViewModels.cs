@@ -9,6 +9,11 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
     {
     }
 
+    public class SessionModel
+    {
+        public MCustomers customerUserInfo { get; set; }
+    }
+
     public class LoginModel
     {
         public string Tel { get; set; }

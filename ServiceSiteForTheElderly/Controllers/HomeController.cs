@@ -2,17 +2,60 @@
 using ServiceSiteForTheElderly.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 
 namespace ServiceSiteForTheElderly.Controllers
 {
     public class HomeController : Controller
     {
+        public static void GetAndSetSession(HttpSessionStateBase Session, ViewDataDictionary ViewData, UrlHelper Url, ref string sid, ref SessionModel CurrentSession)
+        {
+            sid = System.Web.HttpContext.Current.Session.SessionID;
+            if (Session["CurrentSessionID"] == null)
+            {
+                Session["CurrentSessionID"] = sid;
+            }
+            else
+            {
+                sid = Session["CurrentSessionID"] as string;
+            }
+
+
+            CurrentSession = null;
+            if (Session["CurrentSession"] != null)
+            {
+                CurrentSession = Session["CurrentSession"] as SessionModel;
+            }
+
+
+            if (CurrentSession?.customerUserInfo == null)
+            {
+                ViewData["HeaderButtonText"] = "会員の方はこちら";
+                ViewData["HeaderButtonLink"] = Url.Action("Login", "Home");
+            }
+            else
+            {
+                ViewData["HeaderButtonText"] = "マイページ";
+                ViewData["HeaderButtonLink"] = Url.Action("MyPageOrder", "Home");
+
+            }
+
+        }
+
         public ActionResult Index()
         {
-            string sid = System.Web.HttpContext.Current.Session.SessionID;
-            ViewData["SessionID"] = sid;
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            IndexMakeView();
+
+            return View();
+        }
+
+        void IndexMakeView()
+        {
             List<MCategores> mCategores = new List<MCategores>();
             CommonModel.GetDatabaseCategoriesWithoutContact(ref mCategores);
 
@@ -38,18 +81,33 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             ViewData["contacts"] = html;
-
-            return View();
         }
 
+        [HttpGet]
         public ActionResult Login()
         {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CurrentSession != null)
+            {
+                IndexMakeView();
+                return View("Index");
+            }
+
+
             return View();
         }
 
         [HttpPost]
         public ActionResult Login(LoginModel postModel)
         {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+
 
             MCustomers cust = new MCustomers();
             int hitCount = 0;
@@ -60,6 +118,12 @@ namespace ServiceSiteForTheElderly.Controllers
             switch (rtn)
             {
                 case ReturnOfCheckDatabaseLogin.Success:
+                    if (CurrentSession == null)
+                    {
+                        CurrentSession = new SessionModel();
+                        CurrentSession.customerUserInfo = cust;
+                        Session["CurrentSession"] = CurrentSession;
+                    }
                     // ログインOK
                     return Json(new MJsonWithStatus() { status = "success" });
                 case ReturnOfCheckDatabaseLogin.WrongUserId:
@@ -76,14 +140,31 @@ namespace ServiceSiteForTheElderly.Controllers
 
         }
 
+        [HttpGet]
         public ActionResult SignUp()
         {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CurrentSession != null)
+            {
+                IndexMakeView();
+                return View("Index");
+            }
+
             return View();
         }
 
         [HttpPost]
         public ActionResult SignUp(SignUpModel postModel)
         {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+
+
             postModel.Tel = postModel.Tel.Replace("-", "");
             postModel.Postcode = postModel.Postcode.Replace("-", "");
 
@@ -94,7 +175,14 @@ namespace ServiceSiteForTheElderly.Controllers
                     return Json(new MJsonWithStatus() { status = "containEmptyChar" });
                 }
 
-                CommonModel.RegistDatabaseCustmer(new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = postModel.Mail, Postcode = postModel.Postcode, Address = postModel.Address, Password = postModel.Password });
+                MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = postModel.Mail, Postcode = postModel.Postcode, Address = postModel.Address, Password = postModel.Password };
+                CommonModel.RegistDatabaseCustmer(cust);
+                if (CurrentSession == null)
+                {
+                    CurrentSession = new SessionModel();
+                    CurrentSession.customerUserInfo = cust;
+                    Session["CurrentSession"] = CurrentSession;
+                }
                 return Json(new MJsonWithStatus() { status = "success" });
             }
             else

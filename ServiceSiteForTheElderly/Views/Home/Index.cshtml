@@ -25,7 +25,7 @@
                     <span class="shopping-count-badge">3</span>
                     <a href="./shopping-cart.html" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
                 </div>
-                <a href="@Url.Action("Login", "Home")" class="avatar-button"><i class="fa-solid fa-user"></i>会員の方はこちら</a>
+                <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
             </div>
         </header>
 
