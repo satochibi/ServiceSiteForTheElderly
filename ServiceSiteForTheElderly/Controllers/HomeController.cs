@@ -9,6 +9,14 @@ namespace ServiceSiteForTheElderly.Controllers
 {
     public class HomeController : Controller
     {
+        /// <summary>
+        /// セッション管理メソッド
+        /// </summary>
+        /// <param name="Session">セッションオブジェクト(Sessionを代入すること)</param>
+        /// <param name="ViewData">ビューデータオブジェクト(ViewDataを代入すること)</param>
+        /// <param name="Url">Urlヘルパーオブジェクト(Urlを代入すること)</param>
+        /// <param name="sid">返されるセッションID</param>
+        /// <param name="CurrentSession">返されるカレントセッション</param>
         public static void GetAndSetSession(HttpSessionStateBase Session, ViewDataDictionary ViewData, UrlHelper Url, ref string sid, ref SessionModel CurrentSession)
         {
             sid = System.Web.HttpContext.Current.Session.SessionID;
@@ -28,7 +36,7 @@ namespace ServiceSiteForTheElderly.Controllers
                 CurrentSession = Session["CurrentSession"] as SessionModel;
             }
 
-
+            // 画面右上のボタン
             if (CurrentSession?.customerUserInfo == null)
             {
                 ViewData["HeaderButtonText"] = "会員の方はこちら";
@@ -43,6 +51,10 @@ namespace ServiceSiteForTheElderly.Controllers
 
         }
 
+        /// <summary>
+        /// トップページ
+        /// </summary>
+        /// <returns>トップページのビュー</returns>
         public ActionResult Index()
         {
             string sid = null;
@@ -54,8 +66,12 @@ namespace ServiceSiteForTheElderly.Controllers
             return View();
         }
 
+        /// <summary>
+        /// データベースからトップページのボタンを生成する
+        /// </summary>
         void IndexMakeView()
         {
+            // 宅配配送サービスのボタンたち
             List<MCategores> mCategores = new List<MCategores>();
             CommonModel.GetDatabaseCategoriesWithoutContact(ref mCategores);
 
@@ -63,26 +79,32 @@ namespace ServiceSiteForTheElderly.Controllers
 
             foreach (var aCategory in mCategores)
             {
-                html += $"<a href=\"{@Url.Action("About", "Home")}\" class=\"btn-flat\"><span>{aCategory.Name.ToString()}<i class=\"fas fa-chevron-right\"></i></span></a>" + Environment.NewLine;
+                html += $"<a href=\"{@Url.Action(aCategory.Link, "Home")}\" class=\"btn-flat\"><span>{aCategory.Name.ToString()}<i class=\"fas fa-chevron-right\"></i></span></a>" + Environment.NewLine;
 
             }
 
             ViewData["categories"] = html;
 
             mCategores.Clear();
+
+            // その他のサービスのボタンたち
             CommonModel.GetDatabaseCategoriesWithContact(ref mCategores);
 
             html = "";
 
             foreach (var aCategory in mCategores)
             {
-                html += $"<a href=\"{@Url.Action("About", "Home")}\" class=\"btn-flat\"><span>{aCategory.Name.ToString()}<i class=\"fas fa-chevron-right\"></i></span></a>" + Environment.NewLine;
+                html += $"<a href=\"{@Url.Action(aCategory.Link, "Home")}\" class=\"btn-flat\"><span>{aCategory.Name.ToString()}<i class=\"fas fa-chevron-right\"></i></span></a>" + Environment.NewLine;
 
             }
 
             ViewData["contacts"] = html;
         }
 
+        /// <summary>
+        /// ログイン画面
+        /// </summary>
+        /// <returns>ログイン画面のビュー</returns>
         [HttpGet]
         public ActionResult Login()
         {
@@ -90,6 +112,7 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            // 既にログイン済みならトップページにリダイレクト
             if (CurrentSession != null)
             {
                 IndexMakeView();
@@ -100,6 +123,11 @@ namespace ServiceSiteForTheElderly.Controllers
             return View();
         }
 
+        /// <summary>
+        /// ログインのREST API
+        /// </summary>
+        /// <param name="postModel">電話番号とパスワードから構成されるJsonから生成されたオブジェクト</param>
+        /// <returns>結果をstatusで返す。<c>success</c>ならログイン成功。<c>wrongUserId</c>ならユーザIDが間違い。<c>wrongPassword</c>ならパスワード間違い。<c>error</c>ならエラー。</returns>
         [HttpPost]
         public ActionResult Login(LoginModel postModel)
         {
@@ -120,6 +148,7 @@ namespace ServiceSiteForTheElderly.Controllers
                 case ReturnOfCheckDatabaseLogin.Success:
                     if (CurrentSession == null)
                     {
+                        // 未ログインならセッションに顧客情報を保持しておく
                         CurrentSession = new SessionModel();
                         CurrentSession.customerUserInfo = cust;
                         Session["CurrentSession"] = CurrentSession;
@@ -140,18 +169,27 @@ namespace ServiceSiteForTheElderly.Controllers
 
         }
 
+        /// <summary>
+        /// ログアウト画面(実際に使うかどうかは未定)
+        /// </summary>
+        /// <returns>ログアウト画面のビュー</returns>
         public ActionResult Logout()
         {
             string sid = null;
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            // セッションのログイン情報を捨てる
             CurrentSession = null;
             Session["CurrentSession"] = null;
 
             return View();
         }
 
+        /// <summary>
+        /// 新規登録画面
+        /// </summary>
+        /// <returns>新規登録画面のビュー</returns>
         [HttpGet]
         public ActionResult SignUp()
         {
@@ -159,6 +197,7 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            // 既にログイン済みならトップページにリダイレクト
             if (CurrentSession != null)
             {
                 IndexMakeView();
@@ -168,6 +207,11 @@ namespace ServiceSiteForTheElderly.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 新規登録のREST API
+        /// </summary>
+        /// <param name="postModel">新規登録に必要な項目から構成されるJsonから生成されたオブジェクト</param>
+        /// <returns>結果をstatusで返す。<c>success</c>なら成功。<c>containEmptyChar</c>なら未入力がある。<c>duplicateTelError</c>なら既にその電話番号で登録済みのユーザがいる。</returns>
         [HttpPost]
         public ActionResult SignUp(SignUpModel postModel)
         {
@@ -176,19 +220,26 @@ namespace ServiceSiteForTheElderly.Controllers
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
 
-
+            // 事前に電話番号と郵便番号のハイフンを取り除いておく
             postModel.Tel = postModel.Tel.Replace("-", "");
             postModel.Postcode = postModel.Postcode.Replace("-", "");
 
+            // ユーザが既に存在するかの判定
             if (CommonModel.CheckDatabaseIsUserIdExist(postModel.Tel) == ReturnOfCheckDatabaseIsUserIdExist.UserIdIsNotExist)
             {
+                // 存在しなかったら、登録処理
+
                 if (string.IsNullOrEmpty(postModel.Name) || string.IsNullOrEmpty(postModel.Furigana) || string.IsNullOrEmpty(postModel.Tel) || string.IsNullOrEmpty(postModel.Mail) || string.IsNullOrEmpty(postModel.Postcode) || string.IsNullOrEmpty(postModel.Address) || string.IsNullOrEmpty(postModel.Password))
                 {
+                    // 未入力があるかどうかチェック
                     return Json(new MJsonWithStatus() { status = "containEmptyChar" });
                 }
 
+                // 顧客情報を作ってデータベースに登録
                 MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = postModel.Mail, Postcode = postModel.Postcode, Address = postModel.Address, Password = postModel.Password };
                 CommonModel.RegistDatabaseCustmer(cust);
+
+                // 未ログインならログインしておく(新規登録からの自動的なログイン)
                 if (CurrentSession == null)
                 {
                     CurrentSession = new SessionModel();
@@ -201,6 +252,16 @@ namespace ServiceSiteForTheElderly.Controllers
             {
                 return Json(new MJsonWithStatus() { status = "duplicateTelError" });
             }
+        }
+
+
+        /// <summary>
+        /// 雑誌画面
+        /// </summary>
+        /// <returns>雑誌画面のビュー</returns>
+        public ActionResult Magazine()
+        {
+            return View();
         }
     }
 }
