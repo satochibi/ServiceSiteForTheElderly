@@ -27,9 +27,16 @@ namespace ServiceSiteForTheElderly.Models.Common
         Error = -1
     }
 
+    /// <summary>
+    /// データベースからモデルを作成するクラス
+    /// </summary>
     public static class CommonModel
     {
-        // 宅配配送サービス
+        /// <summary>
+        /// Indexの宅配配送サービス
+        /// </summary>
+        /// <param name="mCategores">返されるカテゴリーモデルのリスト</param>
+        /// <returns>正常終了なら0</returns>
         public static int GetDatabaseCategoriesWithoutContact(ref List<MCategores> mCategores)
         {
             DBAccess dba = new DBAccess();
@@ -49,7 +56,11 @@ namespace ServiceSiteForTheElderly.Models.Common
             return 0;
         }
 
-        // その他のサービス
+        /// <summary>
+        /// Indexのその他のサービス
+        /// </summary>
+        /// <param name="mCategores">返されるカテゴリーモデルのリスト</param>
+        /// <returns>正常終了なら0</returns>
         public static int GetDatabaseCategoriesWithContact(ref List<MCategores> mCategores)
         {
             DBAccess dba = new DBAccess();
@@ -69,7 +80,11 @@ namespace ServiceSiteForTheElderly.Models.Common
             return 0;
         }
 
-        
+        /// <summary>
+        /// ユーザがいるかどうかチェック
+        /// </summary>
+        /// <param name="inputTel">電話番号</param>
+        /// <returns>結果のステータス</returns>
         public static ReturnOfCheckDatabaseIsUserIdExist CheckDatabaseIsUserIdExist(string inputTel) {
             MCustomers cust = new MCustomers();
             int hitCount = 0;
@@ -88,6 +103,14 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
 
+        /// <summary>
+        /// ログインできるかどうかチェック
+        /// </summary>
+        /// <param name="inputTel">電話番号</param>
+        /// <param name="inputPassword">パスワード</param>
+        /// <param name="cust">返される顧客情報</param>
+        /// <param name="hitCount">ヒット件数</param>
+        /// <returns>結果のステータス</returns>
         public static ReturnOfCheckDatabaseLogin CheckDatabaseLogin(string inputTel, string inputPassword, ref MCustomers cust, ref int hitCount)
         {
             DBAccess dba = new DBAccess();
@@ -148,8 +171,12 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
         }
 
-
-        public static ReturnOfRegistDatabaseCustmer RegistDatabaseCustmer(MCustomers cust)
+        /// <summary>
+        /// 新規登録
+        /// </summary>
+        /// <param name="cust">登録する顧客情報</param>
+        /// <returns>結果のステータス</returns>
+        public static ReturnOfRegistDatabaseCustmer RegistDatabaseCustomer(MCustomers cust)
         {
             DBAccess dba = new DBAccess();
             string sql = $"insert into Customers (name, furigana, tel, mail, postcode, address, password) values('{cust.Name}', '{cust.Furigana}', '{cust.Tel}', '{cust.Mail}', '{cust.Postcode}', '{cust.Address}', '{cust.Password}')";
@@ -161,6 +188,7 @@ namespace ServiceSiteForTheElderly.Models.Common
                 return ReturnOfRegistDatabaseCustmer.Error;
             }
         }
+
 
 
     }
