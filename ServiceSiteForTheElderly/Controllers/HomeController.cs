@@ -140,6 +140,18 @@ namespace ServiceSiteForTheElderly.Controllers
 
         }
 
+        public ActionResult Logout()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            CurrentSession = null;
+            Session["CurrentSession"] = null;
+
+            return View();
+        }
+
         [HttpGet]
         public ActionResult SignUp()
         {
