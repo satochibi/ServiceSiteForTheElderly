@@ -198,7 +198,7 @@ namespace ServiceSiteForTheElderly.Models.Common
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
-            dba.Query("select * from Goods order by orderOfPublication desc, publicationStartDate desc;", ref dt);
+            dba.Query("select * from Goods where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate order by orderOfPublication desc, publicationStartDate desc;", ref dt);
 
 
            
@@ -219,10 +219,17 @@ namespace ServiceSiteForTheElderly.Models.Common
                 // 最新の価格をセット
                 DataTable dt2 = null;
                 dba.Query($"select Top 1 price from GoodsPriceTrends where goodsId = {aGoods.Id} order by priceChangeDate desc;", ref dt2);
+                
+                int price = 0;
 
-                int priceWithoutSalesTax = dt2.Rows[0].Field<int>("price");
-                // aGoods.Price = Convert.ToInt32(Math.Ceiling( * tax));
-                aGoods.Price = priceWithoutSalesTax;
+                try
+                {
+                    price = dt2.Rows[0].Field<int>("price");
+                }catch(Exception)
+                {
+                    price = 0;
+                }
+                aGoods.Price = price;
 
                 mGoods.Add(aGoods);
             }
