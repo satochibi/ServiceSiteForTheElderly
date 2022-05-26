@@ -189,6 +189,47 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
         }
 
+        /// <summary>
+        /// 雑誌の商品を取得
+        /// </summary>
+        /// <param name="mGoods">返される雑誌モデルのリスト</param>
+        /// <returns>正常終了なら0</returns>
+        public static int GetDataBaseGoodsOfMagagine(ref List<MGoods> mGoods)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            dba.Query("select * from Goods order by orderOfPublication desc, publicationStartDate desc;", ref dt);
+
+
+           
+            for (int row = 0; row < dt.Rows.Count; row++)
+            {
+                MGoods aGoods = new MGoods();
+                aGoods.Id = dt.Rows[row].Field<int>("id");
+                aGoods.OrderOfPublication = dt.Rows[row].Field<int?>("orderOfPublication");
+                aGoods.Name = dt.Rows[row].Field<string>("name");
+                aGoods.Description = dt.Rows[row].Field<string>("description");
+                aGoods.Picture = dt.Rows[row].Field<string>("picture");
+                aGoods.ShopId = dt.Rows[row].Field<int>("shopId");
+                aGoods.Publisher = dt.Rows[row].Field<string>("publisher");
+                aGoods.Author = dt.Rows[row].Field<string>("author");
+                aGoods.PublicationStartDate = dt.Rows[row].Field<DateTime>("publicationStartDate");
+                aGoods.PublicationEndDate = dt.Rows[row].Field<DateTime>("publicationEndDate");
+
+                // 最新の価格をセット
+                DataTable dt2 = null;
+                dba.Query($"select Top 1 price from GoodsPriceTrends where goodsId = {aGoods.Id} order by priceChangeDate desc;", ref dt2);
+
+                int priceWithoutSalesTax = dt2.Rows[0].Field<int>("price");
+                // aGoods.Price = Convert.ToInt32(Math.Ceiling( * tax));
+                aGoods.Price = priceWithoutSalesTax;
+
+                mGoods.Add(aGoods);
+            }
+
+            return 0;
+        }
+
 
 
     }

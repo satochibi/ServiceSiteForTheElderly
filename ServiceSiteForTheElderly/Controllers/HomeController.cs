@@ -266,6 +266,59 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            List<MGoods> mGoods = new List<MGoods>();
+
+
+            CommonModel.GetDataBaseGoodsOfMagagine(ref mGoods);
+
+            string html = "";
+
+            foreach (var aGoods in mGoods)
+            {
+                string aPicture = Url.Content($"~/GoodsPictures/{aGoods.Picture}");
+
+                html += string.Format(@"
+                    <div class=""item-cell"">
+                        <div class=""item-header"">
+                            <h3>店舗あいうえお</h3>
+                            <span>本屋</span>
+                        </div>
+
+                    <div class=""item-body"">
+                        <img src=""{2}"" alt=""{0}"">
+                        <h4>{0}</h4>
+                        <hr>
+                        <form>
+                            <div class=""clearfix menu-list"">
+                                <label for=""large"">{5}<span class=""tax-text"">(税込)</span></label>
+                                <select id =""large"" name=""large"">
+                                    <option value=""one"">1冊</option>
+                                    <option value=""two"">2冊</option>
+                                    <option value=""three"">3冊</option>
+                                    <option value=""four"">4冊</option>
+                                    <option value=""five"">5冊</option>
+                                    <option value=""six"">6冊</option>
+                                    <option value=""seven"">7冊</option>
+                                    <option value=""eight"">8冊</option>
+                                    <option value=""nine"">9冊</option>
+                                    <option value=""ten"">10冊</option>
+                                </select>
+                            </div>
+
+                            <div class=""detail"">
+                                {1}
+                            </div>
+
+                            <button class=""cart-button"" type=""submit"">
+                                <i class=""cart-icon fas fa-cart-arrow-down""></i>カゴに入れる
+                            </button>
+                        </form>
+                    </div>
+                </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Publisher, aGoods.Author, aGoods.Price);
+            }
+
+            ViewData["goods"] = html;
+
 
             return View();
         }

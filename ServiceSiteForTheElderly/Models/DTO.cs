@@ -1,4 +1,6 @@
-﻿public class MCategores
+﻿using System;
+
+public class MCategores
 {
     public int Id { get; set; }
 
@@ -27,6 +29,22 @@ public class MCustomers
     public string Address { get; set; }
     public string Password { get; set; }
 
+}
+
+
+public class MGoods
+{
+    public int Id { get; set; }
+    public int? OrderOfPublication { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string Picture { get; set; }
+    public int ShopId { get; set; }
+    public string Publisher { get; set; }
+    public string Author { get; set; }
+    public DateTime PublicationStartDate { get; set; }
+    public DateTime PublicationEndDate { get; set; }
+    public int Price { get; set; }
 }
 
 
