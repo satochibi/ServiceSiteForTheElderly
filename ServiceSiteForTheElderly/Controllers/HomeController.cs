@@ -238,6 +238,7 @@ namespace ServiceSiteForTheElderly.Controllers
 
                 // 顧客情報を作ってデータベースに登録
                 MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = postModel.Mail, Postcode = postModel.Postcode, Address = postModel.Address, Password = postModel.Password };
+
                 CommonModel.RegistDatabaseCustomer(cust);
 
                 // 未ログインならログインしておく(新規登録からの自動的なログイン)
@@ -268,8 +269,8 @@ namespace ServiceSiteForTheElderly.Controllers
 
             List<MGoods> mGoods = new List<MGoods>();
 
-
-            CommonModel.GetDataBaseGoodsOfMagagine(ref mGoods);
+            int categoryId = CommonModel.GetDataBaseCategotyId("本");
+            CommonModel.GetDataBaseGoodsOfCategory(categoryId, ref mGoods);
 
             string html = "";
 

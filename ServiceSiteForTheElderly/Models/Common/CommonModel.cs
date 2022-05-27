@@ -21,7 +21,7 @@ namespace ServiceSiteForTheElderly.Models.Common
         RunException = -2
     }
 
-    public enum ReturnOfRegistDatabaseCustmer
+    public enum ReturnOfBasicDatabase
     {
         Success = 0,
         Error = -1
@@ -176,30 +176,125 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// </summary>
         /// <param name="cust">登録する顧客情報</param>
         /// <returns>結果のステータス</returns>
-        public static ReturnOfRegistDatabaseCustmer RegistDatabaseCustomer(MCustomers cust)
+        public static ReturnOfBasicDatabase RegistDatabaseCustomer(MCustomers cust)
         {
             DBAccess dba = new DBAccess();
             string sql = $"insert into Customers (name, furigana, tel, mail, postcode, address, password) values('{cust.Name}', '{cust.Furigana}', '{cust.Tel}', '{cust.Mail}', '{cust.Postcode}', '{cust.Address}', '{cust.Password}')";
             if (dba.Execute(sql) >= 0)
             {
-                return ReturnOfRegistDatabaseCustmer.Success;
+                return ReturnOfBasicDatabase.Success;
             }else
             {
-                return ReturnOfRegistDatabaseCustmer.Error;
+                return ReturnOfBasicDatabase.Error;
             }
         }
 
         /// <summary>
-        /// 雑誌の商品を取得
+        /// カテゴリ名からカテゴリidを取得する
         /// </summary>
-        /// <param name="mGoods">返される雑誌モデルのリスト</param>
-        /// <returns>正常終了なら0</returns>
-        public static int GetDataBaseGoodsOfMagagine(ref List<MGoods> mGoods)
+        /// <param name="categoryName">カテゴリ名</param>
+        /// <returns>カテゴリid</returns>
+        public static int GetDataBaseCategotyId(string categoryName)
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
-            dba.Query("select * from Goods where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate order by orderOfPublication desc, publicationStartDate desc;", ref dt);
+            dba.Query($"select id from Categories where name = '{categoryName}'", ref dt);
+            int categoryId = dt.Rows[0].Field<int>("id");
+            return categoryId;
+        }
 
+        /// <summary>
+        /// 店名から店舗idを取得する
+        /// </summary>
+        /// <param name="shopName">店名</param>
+        /// <returns>店舗id</returns>
+        public static int GetDataBaseShopId(string shopName)
+        {
+
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            dba.Query($"select id from Shops where displayName = '{shopName}'", ref dt);
+            int shopId = dt.Rows[0].Field<int>("id");
+            return shopId;
+        }
+
+        /// <summary>
+        /// 商品を取得(カテゴリidからのバージョン)
+        /// </summary>
+        /// <param name="categoryId">カテゴリid</param>
+        /// <param name="mGoods">返される商品モデルのリスト</param>
+        /// <returns>結果のステータス</returns>
+        public static ReturnOfBasicDatabase GetDataBaseGoodsOfCategory(int categoryId, ref List<MGoods> mGoods)
+        {
+
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            bool isSuccess = true;
+
+            dba.Query($"select * from Goods left outer join Shops on Goods.shopId = Shops.id where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate and categoryId = {categoryId} order by orderOfPublication desc, publicationStartDate desc;", ref dt);
+
+
+            for (int row = 0; row < dt.Rows.Count; row++)
+            {
+                MGoods aGoods = new MGoods();
+                aGoods.Id = dt.Rows[row].Field<int>("id");
+                aGoods.OrderOfPublication = dt.Rows[row].Field<int?>("orderOfPublication");
+                aGoods.Name = dt.Rows[row].Field<string>("name");
+                aGoods.Description = dt.Rows[row].Field<string>("description");
+                aGoods.Picture = dt.Rows[row].Field<string>("picture");
+                aGoods.ShopId = dt.Rows[row].Field<int>("shopId");
+                aGoods.Publisher = dt.Rows[row].Field<string>("publisher");
+                aGoods.Author = dt.Rows[row].Field<string>("author");
+                aGoods.PublicationStartDate = dt.Rows[row].Field<DateTime>("publicationStartDate");
+                aGoods.PublicationEndDate = dt.Rows[row].Field<DateTime>("publicationEndDate");
+
+                // 最新の価格をセット
+                DataTable dt2 = null;
+                dba.Query($"select Top 1 price from GoodsPriceTrends where goodsId = {aGoods.Id} order by priceChangeDate desc;", ref dt2);
+
+                int price = 0;
+
+                try
+                {
+                    price = dt2.Rows[0].Field<int>("price");
+                }
+                catch (Exception)
+                {
+                    isSuccess = false;
+                    price = 0;
+                }
+                aGoods.Price = price;
+
+                mGoods.Add(aGoods);
+            }
+
+
+
+            if (isSuccess)
+            {
+                return ReturnOfBasicDatabase.Success;
+
+            }
+            else
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+        }
+
+
+        /// <summary>
+        /// 商品を取得(店舗idからのバージョン)
+        /// </summary>
+        /// <param name="shopId">店舗id</param>
+        /// <param name="mGoods">返される雑誌モデルのリスト</param>
+        /// <returns>結果のステータス</returns>
+        public static ReturnOfBasicDatabase GetDataBaseGoodsOfShop(int shopId, ref List<MGoods> mGoods)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            bool isSuccess = true;
+
+            dba.Query($"select * from Goods where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate and shopId = {shopId} order by orderOfPublication desc, publicationStartDate desc;", ref dt);
 
            
             for (int row = 0; row < dt.Rows.Count; row++)
@@ -225,8 +320,10 @@ namespace ServiceSiteForTheElderly.Models.Common
                 try
                 {
                     price = dt2.Rows[0].Field<int>("price");
-                }catch(Exception)
+                }
+                catch(Exception)
                 {
+                    isSuccess = false;
                     price = 0;
                 }
                 aGoods.Price = price;
@@ -234,7 +331,15 @@ namespace ServiceSiteForTheElderly.Models.Common
                 mGoods.Add(aGoods);
             }
 
-            return 0;
+            if (isSuccess)
+            {
+                return ReturnOfBasicDatabase.Success;
+
+            }
+            else
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
         }
 
 
