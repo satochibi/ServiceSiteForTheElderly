@@ -219,6 +219,35 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
         /// <summary>
+        /// 弁当の店舗一覧を取得
+        /// </summary>
+        /// <param name="mShops">返される店舗モデルのリスト</param>
+        /// <returns>結果のステータス</returns>
+        public static ReturnOfBasicDatabase GetDataBaseShopsOfBento(ref List<MShops> mShops)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+
+            int categoryId = GetDataBaseCategotyId("料理とお弁当");
+
+            dba.Query($"select * from Shops where categoryId = {categoryId};", ref dt);
+
+            for (int row = 0; row < dt.Rows.Count; row++)
+            {
+                MShops aShop = new MShops();
+                aShop.Id = dt.Rows[row].Field<int>("id");
+                aShop.DisplayName = dt.Rows[row].Field<string>("displayName");
+                aShop.ShippingCost = dt.Rows[row].Field<int?>("shippingCost");
+                aShop.CategoryId = dt.Rows[row].Field<int>("categoryId");
+                aShop.CompanyId = dt.Rows[row].Field<int>("companyId");
+                aShop.Picture = dt.Rows[row].Field<string>("picture");
+                mShops.Add(aShop);
+            }
+
+            return ReturnOfBasicDatabase.Success;
+        }
+
+        /// <summary>
         /// 商品を取得(カテゴリidからのバージョン)
         /// </summary>
         /// <param name="categoryId">カテゴリid</param>

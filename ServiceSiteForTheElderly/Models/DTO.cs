@@ -49,6 +49,17 @@ public class MGoods
 }
 
 
+public class MShops
+{
+    public int Id { get; set; }
+    public string DisplayName { get; set; }
+    public int? ShippingCost { get; set; }
+    public int CategoryId { get; set; }
+    public int CompanyId { get; set; }
+    public string Picture { get; set; }
+}
+
+
 public class MJsonWithStatus
 {
     public string status { get; set; }

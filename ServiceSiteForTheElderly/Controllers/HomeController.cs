@@ -256,6 +256,46 @@ namespace ServiceSiteForTheElderly.Controllers
             }
         }
 
+        /// <summary>
+        /// お弁当の店舗一覧画面
+        /// </summary>
+        /// <returns>店舗一覧のビュー</returns>
+        public ActionResult BentoShops()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            List<MShops> shops = new List<MShops>();
+
+            CommonModel.GetDataBaseShopsOfBento(ref shops);
+
+            string html = "";
+            string css = "";
+            
+
+            for (int index = 0; index < shops.Count; index++)
+            {
+                var aShop = shops[index];
+                html += string.Format(@"<a href=""./obento.html"" class=""btn-flat shops-button-{0}""><span>{1}</span></a>" + Environment.NewLine, index, aShop.DisplayName);
+                string image = @Url.Content($"~/ShopPictures/{aShop.Picture}");
+                image = "\"" + image + "\"";
+
+                css += string.Format(@"
+                    .shops-button-{0}{{
+                        background-image: url({1}) !important;
+                    }}
+                ", index, image);
+            }
+
+            ViewData["shops"] = html;
+            ViewData["css"] = css;
+            return View();
+        }
+
+
+
+
 
         /// <summary>
         /// 本の画面
