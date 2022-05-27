@@ -247,6 +247,7 @@ namespace ServiceSiteForTheElderly.Models.Common
                 aGoods.Author = dt.Rows[row].Field<string>("author");
                 aGoods.PublicationStartDate = dt.Rows[row].Field<DateTime>("publicationStartDate");
                 aGoods.PublicationEndDate = dt.Rows[row].Field<DateTime>("publicationEndDate");
+                aGoods.ShopName = dt.Rows[row].Field<string>("displayName");
 
                 // 最新の価格をセット
                 DataTable dt2 = null;
@@ -294,7 +295,7 @@ namespace ServiceSiteForTheElderly.Models.Common
             DataTable dt = null;
             bool isSuccess = true;
 
-            dba.Query($"select * from Goods where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate and shopId = {shopId} order by orderOfPublication desc, publicationStartDate desc;", ref dt);
+            dba.Query($"select * from Goods left outer join Shops on Goods.shopId = Shops.id where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate and shopId = {shopId} order by orderOfPublication desc, publicationStartDate desc;", ref dt);
 
            
             for (int row = 0; row < dt.Rows.Count; row++)
@@ -310,6 +311,7 @@ namespace ServiceSiteForTheElderly.Models.Common
                 aGoods.Author = dt.Rows[row].Field<string>("author");
                 aGoods.PublicationStartDate = dt.Rows[row].Field<DateTime>("publicationStartDate");
                 aGoods.PublicationEndDate = dt.Rows[row].Field<DateTime>("publicationEndDate");
+                aGoods.ShopName = dt.Rows[row].Field<string>("displayName");
 
                 // 最新の価格をセット
                 DataTable dt2 = null;

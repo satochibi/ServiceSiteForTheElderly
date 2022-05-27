@@ -34,16 +34,16 @@
         <div class="breadcrumb-list">
             <ul>
                 <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
-                <li><a href="#">雑誌</a></li>
+                <li><a href="#">@ViewData["categoryName"]</a></li>
             </ul>
         </div>
 
         <div class="main-contents">
-            <h2>雑誌の宅配サービス</h2>
+            <h2>@ViewData["categoryName"]の宅配サービス</h2>
 
             <div id="order">
                 <form action="">
-                    <h3>書籍購入の申込</h3>
+                    <h3>@ViewData["categoryName"]購入の申込</h3>
                     <div class="input-container">
                         <div class="input-field">
                             <label for="name">お名前</label>

@@ -45,6 +45,7 @@ public class MGoods
     public DateTime PublicationStartDate { get; set; }
     public DateTime PublicationEndDate { get; set; }
     public int Price { get; set; }
+    public string ShopName { get; set; }
 }
 
 

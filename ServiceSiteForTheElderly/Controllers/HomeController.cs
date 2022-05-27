@@ -258,9 +258,9 @@ namespace ServiceSiteForTheElderly.Controllers
 
 
         /// <summary>
-        /// 雑誌画面
+        /// 本の画面
         /// </summary>
-        /// <returns>雑誌画面のビュー</returns>
+        /// <returns>本の画面のビュー</returns>
         public ActionResult Magazine()
         {
             string sid = null;
@@ -269,7 +269,10 @@ namespace ServiceSiteForTheElderly.Controllers
 
             List<MGoods> mGoods = new List<MGoods>();
 
-            int categoryId = CommonModel.GetDataBaseCategotyId("本");
+            string categoryName = "本";
+            ViewData["categoryName"] = categoryName;
+
+            int categoryId = CommonModel.GetDataBaseCategotyId(categoryName);
             CommonModel.GetDataBaseGoodsOfCategory(categoryId, ref mGoods);
 
             string html = "";
@@ -281,8 +284,8 @@ namespace ServiceSiteForTheElderly.Controllers
                 html += string.Format(@"
                     <div class=""item-cell"">
                         <div class=""item-header"">
-                            <h3>店舗あいうえお</h3>
-                            <span>本屋</span>
+                            <h3>{6}</h3>
+                            <span>{7}屋</span>
                         </div>
 
                     <div class=""item-body"">
@@ -315,7 +318,7 @@ namespace ServiceSiteForTheElderly.Controllers
                             </button>
                         </form>
                     </div>
-                </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Publisher, aGoods.Author, aGoods.Price);
+                </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Publisher, aGoods.Author, aGoods.Price, aGoods.ShopName, categoryName);
             }
 
             ViewData["goods"] = html;
