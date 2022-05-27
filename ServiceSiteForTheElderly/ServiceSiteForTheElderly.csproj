@@ -193,6 +193,7 @@
     <Content Include="Views\Home\Logout.cshtml" />
     <Content Include="Views\Home\Magazine.cshtml" />
     <Content Include="Views\Home\BentoShops.cshtml" />
+    <Content Include="Views\Home\Obento.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

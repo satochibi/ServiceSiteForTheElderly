@@ -1,0 +1,304 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高齢者のお困り解決砥部町内サービスサイト</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/obento.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <div class="header-buttons">
+                <div class="shopping-cart">
+                    <span class="shopping-count-badge">3</span>
+                    <a href="./shopping-cart.html" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
+                </div>
+                <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
+            </div>
+        </header>
+
+
+        <div class="breadcrumb-list">
+            <ul>
+                <li><a href="./index.html">@Url.Action("Index", "Home")</a></li>
+                <li><a href="./tenpo.html">@Url.Action("BentoShops", "Home")</a></li>
+                <li><a href="#">店舗あいうえおの宅配サービス</a></li>
+            </ul>
+        </div>
+
+        <div class="main-contents">
+            <h2>店舗あいうえおの宅配サービス</h2>
+
+            <div id="search">
+                <form action="">
+                    <input type="search" name="q" placeholder="商品検索">
+                    <div class="button-field">
+                        <button class="form-primary-button" type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="shopping-table">
+                <div class="item-cell">
+                    <div class="item-header">
+                        <h3>店舗あいうえお</h3>
+                        <span>レストラン</span>
+                    </div>
+
+                    <div class="item-body">
+                        <img src="img/bento.png" alt="あ弁当">
+                        <h4>あ弁当</h4>
+                        <hr>
+                        <form>
+                            <div class="clearfix menu-list">
+                                <label for="large">大 500円<span class="tax-text">(税込)</span></label>
+                                <select id="large" name="large">
+                                    <option value="one">1個</option>
+                                    <option value="two">2個</option>
+                                    <option value="three">3個</option>
+                                    <option value="four">4個</option>
+                                    <option value="five">5個</option>
+                                    <option value="six">6個</option>
+                                    <option value="seven">7個</option>
+                                    <option value="eight">8個</option>
+                                    <option value="nine">9個</option>
+                                    <option value="ten">10個</option>
+                                </select>
+                            </div>
+                            <div class="clearfix menu-list">
+                                <label for="small">小 300円<span class="tax-text">(税込)</span></label>
+                                <select id="small" name="large">
+                                    <option value="one">1個</option>
+                                    <option value="two">2個</option>
+                                    <option value="three">3個</option>
+                                    <option value="four">4個</option>
+                                    <option value="five">5個</option>
+                                    <option value="six">6個</option>
+                                    <option value="seven">7個</option>
+                                    <option value="eight">8個</option>
+                                    <option value="nine">9個</option>
+                                    <option value="ten">10個</option>
+                                </select>
+                            </div>
+
+                            <div class="detail">
+                                つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、
+                                そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）
+                                つれづれなるまゝに、日暮らし、硯にむかひて、
+                            </div>
+
+                            <button type="submit">
+                                <i class="cart-icon fas fa-cart-arrow-down"></i>カゴに入れる
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="item-cell">
+                    <div class="item-header">
+                        <h3>店舗かきくけこ</h3>
+                        <span>弁当屋</span>
+                    </div>
+
+                    <div class="item-body">
+                        <img src="img/bento.png" alt="か弁当">
+                        <h4>か弁当</h4>
+                        <hr>
+                        <form>
+                            <div class="clearfix menu-list">
+                                <label for="large">大 500円<span class="tax-text">(税込)</span></label>
+                                <select id="large" name="large">
+                                    <option value="one">1個</option>
+                                    <option value="two">2個</option>
+                                    <option value="three">3個</option>
+                                    <option value="four">4個</option>
+                                    <option value="five">5個</option>
+                                    <option value="six">6個</option>
+                                    <option value="seven">7個</option>
+                                    <option value="eight">8個</option>
+                                    <option value="nine">9個</option>
+                                    <option value="ten">10個</option>
+                                </select>
+                            </div>
+                            <div class="clearfix menu-list">
+                                <label for="small">小 300円<span class="tax-text">(税込)</span></label>
+                                <select id="small" name="large">
+                                    <option value="one">1個</option>
+                                    <option value="two">2個</option>
+                                    <option value="three">3個</option>
+                                    <option value="four">4個</option>
+                                    <option value="five">5個</option>
+                                    <option value="six">6個</option>
+                                    <option value="seven">7個</option>
+                                    <option value="eight">8個</option>
+                                    <option value="nine">9個</option>
+                                    <option value="ten">10個</option>
+                                </select>
+                            </div>
+
+                            <div class="detail">
+                                つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、
+                                そこはかとなく書きつくれば、あやしうこそ
+                            </div>
+
+                            <button type="submit">
+                                <i class="cart-icon fas fa-cart-arrow-down"></i>カゴに入れる
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="item-cell">
+                    <div class="item-header">
+                        <h3>店舗さしすせそ</h3>
+                        <span>カフェ</span>
+                    </div>
+
+                    <div class="item-body">
+                        <img src="img/bento.png" alt="さ弁当">
+                        <h4>さ弁当</h4>
+                        <hr>
+                        <form>
+                            <div class="clearfix menu-list">
+                                <label for="large">大 500円<span class="tax-text">(税込)</span></label>
+                                <select id="large" name="large">
+                                    <option value="one">1個</option>
+                                    <option value="two">2個</option>
+                                    <option value="three">3個</option>
+                                    <option value="four">4個</option>
+                                    <option value="five">5個</option>
+                                    <option value="six">6個</option>
+                                    <option value="seven">7個</option>
+                                    <option value="eight">8個</option>
+                                    <option value="nine">9個</option>
+                                    <option value="ten">10個</option>
+                                </select>
+                            </div>
+                            <div class="clearfix menu-list">
+                                <label for="small">小 300円<span class="tax-text">(税込)</span></label>
+                                <select id="small" name="large">
+                                    <option value="one">1個</option>
+                                    <option value="two">2個</option>
+                                    <option value="three">3個</option>
+                                    <option value="four">4個</option>
+                                    <option value="five">5個</option>
+                                    <option value="six">6個</option>
+                                    <option value="seven">7個</option>
+                                    <option value="eight">8個</option>
+                                    <option value="nine">9個</option>
+                                    <option value="ten">10個</option>
+                                </select>
+                            </div>
+
+                            <div class="detail">
+                                つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、
+                                そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）
+                                つれづれなるまゝに、日暮らし、硯にむかひて、
+                            </div>
+
+                            <button type="submit">
+                                <i class="cart-icon fas fa-cart-arrow-down"></i>カゴに入れる
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="item-cell">
+                    <div class="item-header">
+                        <h3>店舗たちつてと</h3>
+                        <span>なんか</span>
+                    </div>
+
+                    <div class="item-body">
+                        <img src="img/bento.png" alt="た弁当">
+                        <h4>た弁当</h4>
+                        <hr>
+                        <form>
+                            <div class="clearfix menu-list">
+                                <label for="large">大 500円<span class="tax-text">(税込)</span></label>
+                                <select id="large" name="large">
+                                    <option value="one">1個</option>
+                                    <option value="two">2個</option>
+                                    <option value="three">3個</option>
+                                    <option value="four">4個</option>
+                                    <option value="five">5個</option>
+                                    <option value="six">6個</option>
+                                    <option value="seven">7個</option>
+                                    <option value="eight">8個</option>
+                                    <option value="nine">9個</option>
+                                    <option value="ten">10個</option>
+                                </select>
+                            </div>
+                            <div class="clearfix menu-list">
+                                <label for="small">小 300円<span class="tax-text">(税込)</span></label>
+                                <select id="small" name="large">
+                                    <option value="one">1個</option>
+                                    <option value="two">2個</option>
+                                    <option value="three">3個</option>
+                                    <option value="four">4個</option>
+                                    <option value="five">5個</option>
+                                    <option value="six">6個</option>
+                                    <option value="seven">7個</option>
+                                    <option value="eight">8個</option>
+                                    <option value="nine">9個</option>
+                                    <option value="ten">10個</option>
+                                </select>
+                            </div>
+
+                            <div class="detail">
+                                つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、
+                                そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）
+                                つれづれなるまゝに、日暮らし、硯にむかひて、
+                            </div>
+
+                            <button type="submit">
+                                <i class="cart-icon fas fa-cart-arrow-down"></i>カゴに入れる
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <footer>
+
+            <div class="footer-logo">
+                HAISABU Platform
+            </div>
+
+            <!-- <div class="ads">
+                広告
+            </div> -->
+
+        </footer>
+    </div>
+
+    <script>
+        const buttonElements = document.getElementsByTagName("button");
+        Array.prototype.forEach.call(buttonElements, (anElement) => {
+            anElement.addEventListener('click', (e) => {
+                e.preventDefault();
+                location.href = "./shopping-cart.html";
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -45,11 +45,13 @@ namespace ServiceSiteForTheElderly.Models.Common
 
             for (int row = 0; row < dt.Rows.Count; row++)
             {
-                MCategores aCategory = new MCategores();
-                aCategory.Id = dt.Rows[row].Field<int>("id");
-                aCategory.IsContact = dt.Rows[row].Field<bool>("isContact");
-                aCategory.Name = dt.Rows[row].Field<string>("name");
-                aCategory.Link = dt.Rows[row].Field<string>("link");
+                MCategores aCategory = new MCategores
+                {
+                    Id = dt.Rows[row].Field<int>("id"),
+                    IsContact = dt.Rows[row].Field<bool>("isContact"),
+                    Name = dt.Rows[row].Field<string>("name"),
+                    Link = dt.Rows[row].Field<string>("link")
+                };
                 mCategores.Add(aCategory);
             }
 
@@ -69,11 +71,13 @@ namespace ServiceSiteForTheElderly.Models.Common
 
             for (int row = 0; row < dt.Rows.Count; row++)
             {
-                MCategores aCategory = new MCategores();
-                aCategory.Id = dt.Rows[row].Field<int>("id");
-                aCategory.IsContact = dt.Rows[row].Field<bool>("isContact");
-                aCategory.Name = dt.Rows[row].Field<string>("name");
-                aCategory.Link = dt.Rows[row].Field<string>("link");
+                MCategores aCategory = new MCategores
+                {
+                    Id = dt.Rows[row].Field<int>("id"),
+                    IsContact = dt.Rows[row].Field<bool>("isContact"),
+                    Name = dt.Rows[row].Field<string>("name"),
+                    Link = dt.Rows[row].Field<string>("link")
+                };
                 mCategores.Add(aCategory);
             }
 

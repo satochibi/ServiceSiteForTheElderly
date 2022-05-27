@@ -257,27 +257,114 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
-        /// お弁当の店舗一覧画面
+        /// お弁当の画面
         /// </summary>
-        /// <returns>店舗一覧のビュー</returns>
+        /// <returns>お弁当のビュー</returns>
         public ActionResult BentoShops()
         {
             string sid = null;
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            string paramArg1 = Request.Params["id"];
+            // idがなければ、店舗一覧を表示
+            if (string.IsNullOrEmpty(paramArg1))
+            {
+                BentoShopsList(ViewData);
+                return View();
+
+            }
+            else
+            {
+                int shopId = int.Parse(paramArg1);
+                List<MGoods> mGoods = new List<MGoods>();
+                CommonModel.GetDataBaseGoodsOfShop(shopId, ref mGoods);
+
+                string categoryName = "お弁当";
+                ViewData["categoryName"] = categoryName;
+
+                string html = "";
+                foreach (var aGoods in mGoods)
+                {
+                    string aPicture = Url.Content($"~/GoodsPictures/{aGoods.Picture}");
+
+                    html += string.Format(@"
+                        <div class=""item-cell"">
+                            <div class=""item-header"">
+                                <h3>{4}</h3>
+                                <span>レストラン</span>
+                            </div>
+
+                            <div class=""item-body"">
+                                <img src = ""{2}"" alt=""{0}"">
+                                <h4>{0}</h4>
+                                <hr>
+                                <form>
+                                    <div class=""clearfix menu-list"">
+                                        <label for=""large"">大 {3}円<span class=""tax-text"">(税込)</span></label>
+                                        <select id =""large"" name=""large"">
+                                            <option value =""zero"">0個</option>
+                                            <option value =""one"">1個</option>
+                                            <option value =""two"">2個</option>
+                                            <option value =""three"">3個</option>
+                                            <option value =""four"">4個</option>
+                                            <option value =""five"">5個</option>
+                                            <option value =""six"">6個</option>
+                                            <option value =""seven"">7個</option>
+                                            <option value =""eight"">8個</option>
+                                            <option value =""nine"">9個</option>
+                                            <option value =""ten"">10個</option>
+                                        </select>
+                                    </div>
+                                    <div class=""clearfix menu-list"">
+                                        <label for=""small"">小 {3}円<span class=""tax-text"">(税込)</span></label>
+                                        <select id=""small"" name=""small"">
+                                            <option value =""zero"">0個</option>
+                                            <option value =""one"">1個</option>
+                                            <option value =""two"">2個</option>
+                                            <option value =""three"">3個</option>
+                                            <option value =""four"">4個</option>
+                                            <option value =""five"">5個</option>
+                                            <option value =""six"">6個</option>
+                                            <option value =""seven"">7個</option>
+                                            <option value =""eight"">8個</option>
+                                            <option value =""nine"">9個</option>
+                                            <option value =""ten"">10個</option>
+                                        </select>
+                                     </div>
+
+                                    <div class=""detail"">
+                                        {1}
+                                    </div>
+
+                                    <button type = ""submit"">
+                                        <i class=""cart-icon fas fa-cart-arrow-down""></i>カゴに入れる
+                                    </button>
+                                </form>
+                            </div>
+                        </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Price, aGoods.ShopName);
+                }
+                ViewData["goods"] = html;
+                return View("Magazine");
+            }
+
+
+
+        }
+
+
+        public void BentoShopsList(ViewDataDictionary ViewData)
+        {
             List<MShops> shops = new List<MShops>();
 
             CommonModel.GetDataBaseShopsOfBento(ref shops);
 
             string html = "";
             string css = "";
-            
 
-            for (int index = 0; index < shops.Count; index++)
+            foreach(var aShop in shops)
             {
-                var aShop = shops[index];
-                html += string.Format(@"<a href=""./obento.html"" class=""btn-flat shops-button-{0}""><span>{1}</span></a>" + Environment.NewLine, index, aShop.DisplayName);
+                html += string.Format(@"<a href=""?id={0}"" class=""btn-flat shops-button-{0}""><span>{1}</span></a>" + Environment.NewLine, aShop.Id, aShop.DisplayName);
                 string image = @Url.Content($"~/ShopPictures/{aShop.Picture}");
                 image = "\"" + image + "\"";
 
@@ -285,12 +372,11 @@ namespace ServiceSiteForTheElderly.Controllers
                     .shops-button-{0}{{
                         background-image: url({1}) !important;
                     }}
-                ", index, image);
+                ", aShop.Id, image);
             }
 
             ViewData["shops"] = html;
             ViewData["css"] = css;
-            return View();
         }
 
 
