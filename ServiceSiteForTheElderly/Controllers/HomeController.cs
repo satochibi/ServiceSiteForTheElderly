@@ -310,12 +310,11 @@ namespace ServiceSiteForTheElderly.Controllers
                     }
                     else if (aGoods.Price.Count >= 2)
                     {
-                        int index = 0;
                         foreach (var price in aGoods.Price)
                         {
                             priceHtml += string.Format(@"<div class=""clearfix menu-list"">
-                            <label for=""variety-{2}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
-                            <select id =""variety-{2}"" name=""variety-{2}"">
+                            <label for=""{0}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
+                            <select id =""{0}"" name=""{0}"">
                                 <option value =""zero"">0個</option>
                                 <option value =""one"">1個</option>
                                 <option value =""two"">2個</option>
@@ -328,9 +327,8 @@ namespace ServiceSiteForTheElderly.Controllers
                                 <option value =""nine"">9個</option>
                                 <option value =""ten"">10個</option>
                             </select>
-                        </div>", price.Variety, price.Price, index);
+                        </div>", price.Variety, price.Price);
 
-                            index++;
                         }
                     }
                     
@@ -444,12 +442,11 @@ namespace ServiceSiteForTheElderly.Controllers
                 }
                 else if (aGoods.Price.Count >= 2)
                 {
-                    int index = 0;
                     foreach (var price in aGoods.Price)
                     {
                         priceHtml += string.Format(@"<div class=""clearfix menu-list"">
-                            <label for=""variety-{2}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
-                            <select id =""variety-{2}"" name=""variety-{2}"">
+                            <label for=""{0}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
+                            <select id =""{0}"" name=""{0}"">
                                 <option value =""zero"">0個</option>
                                 <option value =""one"">1個</option>
                                 <option value =""two"">2個</option>
@@ -462,9 +459,8 @@ namespace ServiceSiteForTheElderly.Controllers
                                 <option value =""nine"">9個</option>
                                 <option value =""ten"">10個</option>
                             </select>
-                        </div>", price.Variety, price.Price, index);
+                        </div>", price.Variety, price.Price);
 
-                        index++;
                     }
                 }
 
