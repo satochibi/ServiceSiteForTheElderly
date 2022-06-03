@@ -24,7 +24,7 @@
             <div class="header-buttons">
                 <div class="shopping-cart">
                     <span class="shopping-count-badge">3</span>
-                    <a href="./shopping-cart.html" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
+                    <a href="@Url.Action("ShoppingCart", "Home")" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
                 </div>
                 <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
             </div>
@@ -109,15 +109,6 @@
             if (answer) {
                 location.href = "./order-complete.html";
             }
-        });
-
-
-        const buttonElements = document.getElementsByClassName("cart-button");
-        Array.prototype.forEach.call(buttonElements, (anElement) => {
-            anElement.addEventListener('click', (e) => {
-                e.preventDefault();
-                location.href = "./shopping-cart.html";
-            });
         });
     </script>
 

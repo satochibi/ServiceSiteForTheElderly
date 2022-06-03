@@ -62,7 +62,7 @@ namespace ServiceSiteForTheElderly.Models
 
                 rtn = cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 rtn = -1;
             }

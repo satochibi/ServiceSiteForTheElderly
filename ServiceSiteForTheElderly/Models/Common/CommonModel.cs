@@ -193,6 +193,7 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
         }
 
+
         /// <summary>
         /// カテゴリ名からカテゴリidを取得する
         /// </summary>

@@ -256,6 +256,43 @@ namespace ServiceSiteForTheElderly.Controllers
             }
         }
 
+
+        /// <summary>
+        /// カートに入れるのREST API
+        /// </summary>
+        /// <param name="postModel">カートに入れるに必要な項目から構成されるJsonから生成されたオブジェクト</param>
+        /// <returns>結果をstatusで返す。<c>success</c>なら成功。</returns>
+        [HttpPost]
+        public ActionResult AddToCart(CartModel postModel)
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CurrentSession.cartModelInfo == null)
+            {
+                CurrentSession.cartModelInfo = new List<CartModel>();
+
+            }
+
+            CurrentSession.cartModelInfo.Add(postModel);
+
+            Session["CurrentSession"] = CurrentSession;
+
+            return Json(new MJsonWithStatus() { status = "success" });
+        }
+
+        
+        public ActionResult ShoppingCart()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+
+            return View();
+        }
+
         /// <summary>
         /// お弁当の画面
         /// </summary>
@@ -331,7 +368,7 @@ namespace ServiceSiteForTheElderly.Controllers
 
                         }
                     }
-                    
+
 
                     html += string.Format(@"
                         <div class=""item-cell"">

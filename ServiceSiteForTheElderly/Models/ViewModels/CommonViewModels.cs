@@ -12,6 +12,7 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
     public class SessionModel
     {
         public MCustomers customerUserInfo { get; set; }
+        public List<CartModel> cartModelInfo { get; set; }
     }
 
     public class LoginModel
@@ -35,6 +36,14 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
         public string Address { get; set; }
 
         public string Password { get; set; }
+    }
+
+
+    public class CartModel
+    {
+        public int GoodsId { get; set; }
+        public string Variety { get; set; }
+        public int Quantity { get; set; }
     }
 
 }
