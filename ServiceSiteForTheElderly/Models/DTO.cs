@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 public class MCategores
 {
@@ -44,7 +45,7 @@ public class MGoods
     public string Author { get; set; }
     public DateTime PublicationStartDate { get; set; }
     public DateTime PublicationEndDate { get; set; }
-    public int Price { get; set; }
+    public List<MPrice> Price { get; set; }
     public string ShopName { get; set; }
     public string ShopGenre { get; set; }
 }
@@ -59,6 +60,12 @@ public class MShops
     public int CompanyId { get; set; }
     public string Picture { get; set; }
     public string Genre { get; set; }
+}
+
+public class MPrice
+{
+    public string Variety { get; set; }
+    public int Price { get; set; }
 }
 
 

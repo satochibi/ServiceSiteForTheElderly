@@ -286,35 +286,54 @@ namespace ServiceSiteForTheElderly.Models.Common
 
                 // 最新の価格をセット
                 DataTable dt2 = null;
-                dba.Query($"select Top 1 price from GoodsPriceTrends where goodsId = {aGoods.Id} order by priceChangeDate desc;", ref dt2);
 
-                int price = 0;
+                // 最新の価格ビュー(LatestPrice)を作成
+                dba.Execute($"create view LatestPrice as (select goodsId, MAX(priceChangeDate) as priceChangeDate, variety from GoodsPriceTrends group by goodsId, variety);");
 
                 try
                 {
-                    price = dt2.Rows[0].Field<int>("price");
+                    // その商品の最新のバラエティがNullかどうかチェック
+                    dba.Query($"select variety from LatestPrice where goodsId = {aGoods.Id};", ref dt2);
+                    bool isContainNull = false;
+                    for (int index = 0; index < dt2.Rows.Count; index++)
+                    {
+                        string variety = dt2.Rows[index].Field<string>("variety");
+                        if (string.IsNullOrEmpty(variety))
+                        {
+                            isContainNull = true;
+                            break;
+                        }
+                    }
+
+                    dt2 = null;
+
+                    if (isContainNull)
+                    {
+                        dba.Query($"select LatestPrice.variety, price from LatestPrice left join GoodsPriceTrends on LatestPrice.goodsId = GoodsPriceTrends.goodsId and LatestPrice.priceChangeDate = GoodsPriceTrends.priceChangeDate where LatestPrice.goodsId = {aGoods.Id} order by price desc;", ref dt2);
+                    }
+                    else
+                    {
+                        dba.Query($"select LatestPrice.variety, price from LatestPrice left join GoodsPriceTrends on LatestPrice.goodsId = GoodsPriceTrends.goodsId and LatestPrice.priceChangeDate = GoodsPriceTrends.priceChangeDate and LatestPrice.variety = GoodsPriceTrends.variety where LatestPrice.goodsId = {aGoods.Id} order by price desc;", ref dt2);
+                    }
+
+                    // 商品価格をリストに追加
+                    List<MPrice> prices = new List<MPrice>();
+                    for (int index = 0; index < dt2.Rows.Count; index++)
+                    {
+                        MPrice mPrice = new MPrice() { Variety = dt2.Rows[index].Field<string>("variety"), Price = dt2.Rows[index].Field<int>("price") };
+                        prices.Add(mPrice);
+                    }
+                    aGoods.Price = prices;
+                    mGoods.Add(aGoods);
                 }
                 catch (Exception)
                 {
                     isSuccess = false;
-                    price = 0;
                 }
-                aGoods.Price = price;
-
-                mGoods.Add(aGoods);
             }
 
 
-
-            if (isSuccess)
-            {
-                return ReturnOfBasicDatabase.Success;
-
-            }
-            else
-            {
-                return ReturnOfBasicDatabase.Error;
-            }
+            return isSuccess ? ReturnOfBasicDatabase.Success : ReturnOfBasicDatabase.Error;
         }
 
 
@@ -351,33 +370,54 @@ namespace ServiceSiteForTheElderly.Models.Common
 
                 // 最新の価格をセット
                 DataTable dt2 = null;
-                dba.Query($"select Top 1 price from GoodsPriceTrends where goodsId = {aGoods.Id} order by priceChangeDate desc;", ref dt2);
-                
-                int price = 0;
+
+                // 最新の価格ビュー(LatestPrice)を作成
+                dba.Execute($"create view LatestPrice as (select goodsId, MAX(priceChangeDate) as priceChangeDate, variety from GoodsPriceTrends group by goodsId, variety);");
 
                 try
                 {
-                    price = dt2.Rows[0].Field<int>("price");
+                    // その商品の最新のバラエティがNullかどうかチェック
+                    dba.Query($"select variety from LatestPrice where goodsId = {aGoods.Id};", ref dt2);
+                    bool isContainNull = false;
+                    for (int index = 0; index < dt2.Rows.Count; index++)
+                    {
+                        string variety = dt2.Rows[index].Field<string>("variety");
+                        if (string.IsNullOrEmpty(variety))
+                        {
+                            isContainNull = true;
+                            break;
+                        }
+                    }
+
+                    dt2 = null;
+
+                    if (isContainNull)
+                    {
+                        dba.Query($"select LatestPrice.variety, price from LatestPrice left join GoodsPriceTrends on LatestPrice.goodsId = GoodsPriceTrends.goodsId and LatestPrice.priceChangeDate = GoodsPriceTrends.priceChangeDate where LatestPrice.goodsId = {aGoods.Id} order by price desc;", ref dt2);
+                    }
+                    else
+                    {
+                        dba.Query($"select LatestPrice.variety, price from LatestPrice left join GoodsPriceTrends on LatestPrice.goodsId = GoodsPriceTrends.goodsId and LatestPrice.priceChangeDate = GoodsPriceTrends.priceChangeDate and LatestPrice.variety = GoodsPriceTrends.variety where LatestPrice.goodsId = {aGoods.Id} order by price desc;", ref dt2);
+                    }
+
+                    // 商品価格をリストに追加
+                    List<MPrice> prices = new List<MPrice>();
+                    for (int index = 0; index < dt2.Rows.Count; index++)
+                    {
+                        MPrice mPrice = new MPrice() { Variety = dt2.Rows[index].Field<string>("variety"), Price = dt2.Rows[index].Field<int>("price") };
+                        prices.Add(mPrice);
+                    }
+                    aGoods.Price = prices;
+                    mGoods.Add(aGoods);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     isSuccess = false;
-                    price = 0;
                 }
-                aGoods.Price = price;
-
-                mGoods.Add(aGoods);
             }
 
-            if (isSuccess)
-            {
-                return ReturnOfBasicDatabase.Success;
 
-            }
-            else
-            {
-                return ReturnOfBasicDatabase.Error;
-            }
+            return isSuccess ? ReturnOfBasicDatabase.Success : ReturnOfBasicDatabase.Error;
         }
 
 

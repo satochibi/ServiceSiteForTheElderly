@@ -288,6 +288,53 @@ namespace ServiceSiteForTheElderly.Controllers
                 {
                     string aPicture = Url.Content($"~/GoodsPictures/{aGoods.Picture}");
 
+
+                    string priceHtml = "";
+                    if (aGoods.Price.Count == 1)
+                    {
+                        priceHtml += string.Format(@"<div class=""clearfix menu-list"">
+                            <label for=""variety"">{1}円<span class=""tax-text"">(税込)</span></label>
+                            <select id =""variety"" name=""variety"">
+                                <option value =""one"">1個</option>
+                                <option value =""two"">2個</option>
+                                <option value =""three"">3個</option>
+                                <option value =""four"">4個</option>
+                                <option value =""five"">5個</option>
+                                <option value =""six"">6個</option>
+                                <option value =""seven"">7個</option>
+                                <option value =""eight"">8個</option>
+                                <option value =""nine"">9個</option>
+                                <option value =""ten"">10個</option>
+                            </select>
+                        </div>", aGoods.Price[0].Variety, aGoods.Price[0].Price);
+                    }
+                    else if (aGoods.Price.Count >= 2)
+                    {
+                        int index = 0;
+                        foreach (var price in aGoods.Price)
+                        {
+                            priceHtml += string.Format(@"<div class=""clearfix menu-list"">
+                            <label for=""variety-{2}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
+                            <select id =""variety-{2}"" name=""variety-{2}"">
+                                <option value =""zero"">0個</option>
+                                <option value =""one"">1個</option>
+                                <option value =""two"">2個</option>
+                                <option value =""three"">3個</option>
+                                <option value =""four"">4個</option>
+                                <option value =""five"">5個</option>
+                                <option value =""six"">6個</option>
+                                <option value =""seven"">7個</option>
+                                <option value =""eight"">8個</option>
+                                <option value =""nine"">9個</option>
+                                <option value =""ten"">10個</option>
+                            </select>
+                        </div>", price.Variety, price.Price, index);
+
+                            index++;
+                        }
+                    }
+                    
+
                     html += string.Format(@"
                         <div class=""item-cell"">
                             <div class=""item-header"">
@@ -300,38 +347,7 @@ namespace ServiceSiteForTheElderly.Controllers
                                 <h4>{0}</h4>
                                 <hr>
                                 <form>
-                                    <div class=""clearfix menu-list"">
-                                        <label for=""large"">大 {3}円<span class=""tax-text"">(税込)</span></label>
-                                        <select id =""large"" name=""large"">
-                                            <option value =""zero"">0個</option>
-                                            <option value =""one"">1個</option>
-                                            <option value =""two"">2個</option>
-                                            <option value =""three"">3個</option>
-                                            <option value =""four"">4個</option>
-                                            <option value =""five"">5個</option>
-                                            <option value =""six"">6個</option>
-                                            <option value =""seven"">7個</option>
-                                            <option value =""eight"">8個</option>
-                                            <option value =""nine"">9個</option>
-                                            <option value =""ten"">10個</option>
-                                        </select>
-                                    </div>
-                                    <div class=""clearfix menu-list"">
-                                        <label for=""small"">小 {3}円<span class=""tax-text"">(税込)</span></label>
-                                        <select id=""small"" name=""small"">
-                                            <option value =""zero"">0個</option>
-                                            <option value =""one"">1個</option>
-                                            <option value =""two"">2個</option>
-                                            <option value =""three"">3個</option>
-                                            <option value =""four"">4個</option>
-                                            <option value =""five"">5個</option>
-                                            <option value =""six"">6個</option>
-                                            <option value =""seven"">7個</option>
-                                            <option value =""eight"">8個</option>
-                                            <option value =""nine"">9個</option>
-                                            <option value =""ten"">10個</option>
-                                        </select>
-                                     </div>
+                                    {3}
 
                                     <div class=""detail"">
                                         {1}
@@ -342,7 +358,7 @@ namespace ServiceSiteForTheElderly.Controllers
                                     </button>
                                 </form>
                             </div>
-                        </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Price, aGoods.ShopName, aGoods.ShopGenre);
+                        </div>", aGoods.Name, aGoods.Description, aPicture, priceHtml, aGoods.ShopName, aGoods.ShopGenre);
                 }
                 ViewData["goods"] = html;
                 return View("Magazine");
@@ -362,7 +378,7 @@ namespace ServiceSiteForTheElderly.Controllers
             string html = "";
             string css = "";
 
-            foreach(var aShop in shops)
+            foreach (var aShop in shops)
             {
                 html += string.Format(@"<a href=""?id={0}"" class=""btn-flat shops-button-{0}""><span>{1}</span></a>" + Environment.NewLine, aShop.Id, aShop.DisplayName);
                 string image = @Url.Content($"~/ShopPictures/{aShop.Picture}");
@@ -407,11 +423,58 @@ namespace ServiceSiteForTheElderly.Controllers
             {
                 string aPicture = Url.Content($"~/GoodsPictures/{aGoods.Picture}");
 
+                string priceHtml = "";
+                if (aGoods.Price.Count == 1)
+                {
+                    priceHtml += string.Format(@"<div class=""clearfix menu-list"">
+                            <label for=""variety"">{1}円<span class=""tax-text"">(税込)</span></label>
+                            <select id =""variety"" name=""variety"">
+                                <option value =""one"">1個</option>
+                                <option value =""two"">2個</option>
+                                <option value =""three"">3個</option>
+                                <option value =""four"">4個</option>
+                                <option value =""five"">5個</option>
+                                <option value =""six"">6個</option>
+                                <option value =""seven"">7個</option>
+                                <option value =""eight"">8個</option>
+                                <option value =""nine"">9個</option>
+                                <option value =""ten"">10個</option>
+                            </select>
+                        </div>", aGoods.Price[0].Variety, aGoods.Price[0].Price);
+                }
+                else if (aGoods.Price.Count >= 2)
+                {
+                    int index = 0;
+                    foreach (var price in aGoods.Price)
+                    {
+                        priceHtml += string.Format(@"<div class=""clearfix menu-list"">
+                            <label for=""variety-{2}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
+                            <select id =""variety-{2}"" name=""variety-{2}"">
+                                <option value =""zero"">0個</option>
+                                <option value =""one"">1個</option>
+                                <option value =""two"">2個</option>
+                                <option value =""three"">3個</option>
+                                <option value =""four"">4個</option>
+                                <option value =""five"">5個</option>
+                                <option value =""six"">6個</option>
+                                <option value =""seven"">7個</option>
+                                <option value =""eight"">8個</option>
+                                <option value =""nine"">9個</option>
+                                <option value =""ten"">10個</option>
+                            </select>
+                        </div>", price.Variety, price.Price, index);
+
+                        index++;
+                    }
+                }
+
+
+
                 html += string.Format(@"
                     <div class=""item-cell"">
                         <div class=""item-header"">
-                            <h3>{6}</h3>
-                            <span>{7}</span>
+                            <h3>{4}</h3>
+                            <span>{5}</span>
                         </div>
 
                     <div class=""item-body"">
@@ -419,21 +482,7 @@ namespace ServiceSiteForTheElderly.Controllers
                         <h4>{0}</h4>
                         <hr>
                         <form>
-                            <div class=""clearfix menu-list"">
-                                <label for=""large"">{5}<span class=""tax-text"">(税込)</span></label>
-                                <select id =""large"" name=""large"">
-                                    <option value=""one"">1冊</option>
-                                    <option value=""two"">2冊</option>
-                                    <option value=""three"">3冊</option>
-                                    <option value=""four"">4冊</option>
-                                    <option value=""five"">5冊</option>
-                                    <option value=""six"">6冊</option>
-                                    <option value=""seven"">7冊</option>
-                                    <option value=""eight"">8冊</option>
-                                    <option value=""nine"">9冊</option>
-                                    <option value=""ten"">10冊</option>
-                                </select>
-                            </div>
+                            {3}
 
                             <div class=""detail"">
                                 {1}
@@ -444,7 +493,7 @@ namespace ServiceSiteForTheElderly.Controllers
                             </button>
                         </form>
                     </div>
-                </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Publisher, aGoods.Author, aGoods.Price, aGoods.ShopName, aGoods.ShopGenre);
+                </div>", aGoods.Name, aGoods.Description, aPicture, priceHtml, aGoods.ShopName, aGoods.ShopGenre);
             }
 
             ViewData["goods"] = html;
