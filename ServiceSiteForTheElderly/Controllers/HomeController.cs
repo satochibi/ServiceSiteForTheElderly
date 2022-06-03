@@ -292,7 +292,7 @@ namespace ServiceSiteForTheElderly.Controllers
                         <div class=""item-cell"">
                             <div class=""item-header"">
                                 <h3>{4}</h3>
-                                <span>レストラン</span>
+                                <span>{5}</span>
                             </div>
 
                             <div class=""item-body"">
@@ -342,7 +342,7 @@ namespace ServiceSiteForTheElderly.Controllers
                                     </button>
                                 </form>
                             </div>
-                        </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Price, aGoods.ShopName);
+                        </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Price, aGoods.ShopName, aGoods.ShopGenre);
                 }
                 ViewData["goods"] = html;
                 return View("Magazine");
@@ -411,7 +411,7 @@ namespace ServiceSiteForTheElderly.Controllers
                     <div class=""item-cell"">
                         <div class=""item-header"">
                             <h3>{6}</h3>
-                            <span>{7}屋</span>
+                            <span>{7}</span>
                         </div>
 
                     <div class=""item-body"">
@@ -444,7 +444,7 @@ namespace ServiceSiteForTheElderly.Controllers
                             </button>
                         </form>
                     </div>
-                </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Publisher, aGoods.Author, aGoods.Price, aGoods.ShopName, categoryName);
+                </div>", aGoods.Name, aGoods.Description, aPicture, aGoods.Publisher, aGoods.Author, aGoods.Price, aGoods.ShopName, aGoods.ShopGenre);
             }
 
             ViewData["goods"] = html;

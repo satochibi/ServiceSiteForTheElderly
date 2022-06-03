@@ -245,6 +245,7 @@ namespace ServiceSiteForTheElderly.Models.Common
                 aShop.CategoryId = dt.Rows[row].Field<int>("categoryId");
                 aShop.CompanyId = dt.Rows[row].Field<int>("companyId");
                 aShop.Picture = dt.Rows[row].Field<string>("picture");
+                aShop.Genre = dt.Rows[row].Field<string>("genre");
                 mShops.Add(aShop);
             }
 
@@ -281,6 +282,7 @@ namespace ServiceSiteForTheElderly.Models.Common
                 aGoods.PublicationStartDate = dt.Rows[row].Field<DateTime>("publicationStartDate");
                 aGoods.PublicationEndDate = dt.Rows[row].Field<DateTime>("publicationEndDate");
                 aGoods.ShopName = dt.Rows[row].Field<string>("displayName");
+                aGoods.ShopGenre = dt.Rows[row].Field<string>("genre");
 
                 // 最新の価格をセット
                 DataTable dt2 = null;
@@ -345,6 +347,7 @@ namespace ServiceSiteForTheElderly.Models.Common
                 aGoods.PublicationStartDate = dt.Rows[row].Field<DateTime>("publicationStartDate");
                 aGoods.PublicationEndDate = dt.Rows[row].Field<DateTime>("publicationEndDate");
                 aGoods.ShopName = dt.Rows[row].Field<string>("displayName");
+                aGoods.ShopGenre = dt.Rows[row].Field<string>("genre");
 
                 // 最新の価格をセット
                 DataTable dt2 = null;

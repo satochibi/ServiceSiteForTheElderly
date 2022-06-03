@@ -46,6 +46,7 @@ public class MGoods
     public DateTime PublicationEndDate { get; set; }
     public int Price { get; set; }
     public string ShopName { get; set; }
+    public string ShopGenre { get; set; }
 }
 
 
@@ -57,6 +58,7 @@ public class MShops
     public int CategoryId { get; set; }
     public int CompanyId { get; set; }
     public string Picture { get; set; }
+    public string Genre { get; set; }
 }
 
 
