@@ -384,7 +384,8 @@ div.container .main-contents div.contact-table form .input-container .input-fiel
   }
 }
 div.container .main-contents div.contact-table form .input-container .input-field input[type=text],
-div.container .main-contents div.contact-table form .input-container .input-field input[type=email] {
+div.container .main-contents div.contact-table form .input-container .input-field input[type=email],
+div.container .main-contents div.contact-table form .input-container .input-field input[type=password] {
   height: 3em;
   width: 100%;
 }
