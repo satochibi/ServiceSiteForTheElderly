@@ -35,9 +35,15 @@ namespace ServiceSiteForTheElderly.Controllers
             {
                 CurrentSession = Session["CurrentSession"] as SessionModel;
             }
+            else
+            {
+                CurrentSession = new SessionModel();
+                Session["CurrentSession"] = CurrentSession;
+            }
+
 
             // 画面右上のボタン
-            if (CurrentSession?.customerUserInfo == null)
+            if (CurrentSession.customerUserInfo == null)
             {
                 ViewData["HeaderButtonText"] = "会員の方はこちら";
                 ViewData["HeaderButtonLink"] = Url.Action("Login", "Home");
@@ -114,7 +120,7 @@ namespace ServiceSiteForTheElderly.Controllers
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
             // 既にログイン済みならトップページにリダイレクト
-            if (CurrentSession != null)
+            if (CurrentSession.customerUserInfo != null)
             {
                 IndexMakeView();
                 return View("Index");
@@ -147,7 +153,7 @@ namespace ServiceSiteForTheElderly.Controllers
             switch (rtn)
             {
                 case ReturnOfCheckDatabaseLogin.Success:
-                    if (CurrentSession == null)
+                    if (CurrentSession.customerUserInfo == null)
                     {
                         // 未ログインならセッションに顧客情報を保持しておく
                         CurrentSession = new SessionModel();
@@ -199,7 +205,7 @@ namespace ServiceSiteForTheElderly.Controllers
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
             // 既にログイン済みならトップページにリダイレクト
-            if (CurrentSession != null)
+            if (CurrentSession.customerUserInfo != null)
             {
                 IndexMakeView();
                 return View("Index");
@@ -242,7 +248,7 @@ namespace ServiceSiteForTheElderly.Controllers
                 CommonModel.RegistDatabaseCustomer(cust);
 
                 // 未ログインならログインしておく(新規登録からの自動的なログイン)
-                if (CurrentSession == null)
+                if (CurrentSession.customerUserInfo == null)
                 {
                     CurrentSession = new SessionModel();
                     CurrentSession.customerUserInfo = cust;
@@ -289,7 +295,20 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            if (CurrentSession.cartModelInfo == null)
+            {
+                CurrentSession.cartModelInfo = new List<CartModel>();
+            }
 
+            // カートに商品があれば
+            if (CurrentSession.cartModelInfo != null && CurrentSession.cartModelInfo.Count > 0)
+            {
+                foreach (var item in CurrentSession.cartModelInfo)
+                {
+                    Console.WriteLine(item);
+                }
+                
+            }
             return View();
         }
 
