@@ -533,7 +533,7 @@ namespace ServiceSiteForTheElderly.Controllers
                         <img src=""{2}"" alt=""{0}"">
                         <h4>{0}</h4>
                         <hr>
-                        <form>
+                        <form id=""goods-{6}"" class=""goods"">
                             {3}
 
                             <div class=""detail"">
@@ -545,7 +545,7 @@ namespace ServiceSiteForTheElderly.Controllers
                             </button>
                         </form>
                     </div>
-                </div>", aGoods.Name, aGoods.Description, aPicture, priceHtml, aGoods.ShopName, aGoods.ShopGenre);
+                </div>", aGoods.Name, aGoods.Description, aPicture, priceHtml, aGoods.ShopName, aGoods.ShopGenre, aGoods.Id);
             }
 
             ViewData["goods"] = html;
