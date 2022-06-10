@@ -486,7 +486,7 @@ namespace ServiceSiteForTheElderly.Controllers
                 {
                     priceHtml += string.Format(@"<div class=""clearfix menu-list"">
                             <label for=""variety"">{1}円<span class=""tax-text"">(税込)</span></label>
-                            <select id =""variety"" name=""variety"">
+                            <select id=""variety"" name=""variety"">
                                 <option value =""1"">1{2}</option>
                                 <option value =""2"">2{2}</option>
                                 <option value =""3"">3{2}</option>
@@ -505,7 +505,7 @@ namespace ServiceSiteForTheElderly.Controllers
                     {
                         priceHtml += string.Format(@"<div class=""clearfix menu-list"">
                             <label for=""{0}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
-                            <select id =""{0}"" name=""{0}"">
+                            <select id=""{0}"" name=""{0}"">
                                 <option value =""0"">0{2}</option>
                                 <option value =""1"">1{2}</option>
                                 <option value =""2"">2{2}</option>

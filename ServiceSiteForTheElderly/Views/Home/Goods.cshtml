@@ -18,6 +18,10 @@
 </head>
 
 <body>
+    <input type="hidden" id="UrlActionAddToCart" value="@Url.Action("AddToCart", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("ShoppingCart", "Home")" />
+
+
     <div class="container">
         <header>
             <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
@@ -119,22 +123,45 @@
                 $(element).on("submit", function (event) {
                     event.preventDefault();
                     const data = $(element).serializeArray();
-                    console.log(data);
-                    /*
-                    const tel = $("#phone-number").val().trim();
-                    const password = $("#password").val().trim();
-                    const inputData = {
-                        Tel: tel,
-                        Password: password
-                    };
+                    const inputData = data.map(item => ({ "GoodsId": goodsId, "Variety": (item.name == "variety") ? "" : item.name, "Quantity": parseInt(item.value) }));
 
-                    const postUrl = $("#UrlActionLogin").val();
+                    const postUrl = $("#UrlActionAddToCart").val();
                     const nextUrl = $("#NavigatorNext").val();
                     postfuncajax(postUrl, nextUrl, inputData);
-                    */
+
                 });
 
             });
+
+
+            function postfuncajax(postUrl, nextUrl, inputData) {
+                const jsonString = JSON.stringify(inputData);
+
+                $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    async: false,
+                    data: jsonString,
+                    dataType: "json",
+                    contentType: 'application/json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var message = XMLHttpRequest.status;
+                        alert(message);
+                    },
+                    success: function (data) {
+                        switch (data.status) {
+                            case "success":
+                                // alert("カートに入れた");
+                                location.href = nextUrl;
+                                break;
+                            default:
+                                alert("エラーが起こりました");
+                                break;
+                        }
+
+                    }
+                });
+            }
 
         });
     </script>
