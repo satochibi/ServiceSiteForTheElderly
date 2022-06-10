@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServiceSiteForTheElderly.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -89,7 +90,8 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// </summary>
         /// <param name="inputTel">電話番号</param>
         /// <returns>結果のステータス</returns>
-        public static ReturnOfCheckDatabaseIsUserIdExist CheckDatabaseIsUserIdExist(string inputTel) {
+        public static ReturnOfCheckDatabaseIsUserIdExist CheckDatabaseIsUserIdExist(string inputTel)
+        {
             MCustomers cust = new MCustomers();
             int hitCount = 0;
 
@@ -130,13 +132,13 @@ namespace ServiceSiteForTheElderly.Models.Common
                     hitCount = dt.Rows.Count;
 
                     string databasePassword = dt.Rows[0].Field<string>("password");
-                    
+
                     if (inputPassword == null)
                     {
                         inputPassword = "";
                     }
                     inputPassword = inputPassword.Trim();
-                    
+
 
                     if (databasePassword == inputPassword)
                     {
@@ -187,7 +189,8 @@ namespace ServiceSiteForTheElderly.Models.Common
             if (dba.Execute(sql) >= 0)
             {
                 return ReturnOfBasicDatabase.Success;
-            }else
+            }
+            else
             {
                 return ReturnOfBasicDatabase.Error;
             }
@@ -254,7 +257,7 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
         /// <summary>
-        /// 商品を取得(カテゴリidからのバージョン)
+        /// 商品の一覧を取得(カテゴリidからのバージョン)
         /// </summary>
         /// <param name="categoryId">カテゴリid</param>
         /// <param name="mGoods">返される商品モデルのリスト</param>
@@ -339,7 +342,7 @@ namespace ServiceSiteForTheElderly.Models.Common
 
 
         /// <summary>
-        /// 商品を取得(店舗idからのバージョン)
+        /// 商品の一覧を取得(店舗idからのバージョン)
         /// </summary>
         /// <param name="shopId">店舗id</param>
         /// <param name="mGoods">返される雑誌モデルのリスト</param>
@@ -352,7 +355,7 @@ namespace ServiceSiteForTheElderly.Models.Common
 
             dba.Query($"select * from Goods left outer join Shops on Goods.shopId = Shops.id where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate and shopId = {shopId} order by orderOfPublication desc, publicationStartDate desc;", ref dt);
 
-           
+
             for (int row = 0; row < dt.Rows.Count; row++)
             {
                 MGoods aGoods = new MGoods();
@@ -419,6 +422,51 @@ namespace ServiceSiteForTheElderly.Models.Common
 
 
             return isSuccess ? ReturnOfBasicDatabase.Success : ReturnOfBasicDatabase.Error;
+        }
+
+        /// <summary>
+        /// カートに入っている商品をデータベースに問い合わせ
+        /// </summary>
+        /// <param name="cartModelInfo">カートのモデル</param>
+        /// <param name="mGoods">返される商品モデルのリスト</param>
+        public static void GetDataBaseGoodsInCart(List<CartModel> cartModelInfo, ref List<MGoods> mGoods)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+
+            if (cartModelInfo == null)
+            {
+                return;
+            }
+
+            foreach (var aItemInCart in cartModelInfo)
+            {
+                // 商品idから商品を検索
+                if (string.IsNullOrEmpty(aItemInCart.Variety))
+                {
+                    dba.Query($"select Top(1) * from Goods left join GoodsPriceTrends on Goods.id = GoodsPriceTrends.goodsId where Goods.id = {aItemInCart.GoodsId} order by priceChangeDate desc;", ref dt);
+                    aItemInCart.Variety = "";
+                }
+                else
+                {
+                    dba.Query($"select Top(1) * from Goods left join GoodsPriceTrends on Goods.id = GoodsPriceTrends.goodsId where Goods.id = {aItemInCart.GoodsId} and variety = '{aItemInCart.Variety}' order by priceChangeDate desc;", ref dt);
+                }
+
+                MGoods aGoods = new MGoods();
+                aGoods.Id = dt.Rows[0].Field<int>("id");
+                aGoods.OrderOfPublication = dt.Rows[0].Field<int?>("orderOfPublication");
+                aGoods.Name = dt.Rows[0].Field<string>("name");
+                aGoods.Description = dt.Rows[0].Field<string>("description");
+                aGoods.Picture = dt.Rows[0].Field<string>("picture");
+                aGoods.ShopId = dt.Rows[0].Field<int>("shopId");
+                aGoods.Publisher = dt.Rows[0].Field<string>("publisher");
+                aGoods.Author = dt.Rows[0].Field<string>("author");
+                aGoods.PublicationStartDate = dt.Rows[0].Field<DateTime>("publicationStartDate");
+                aGoods.PublicationEndDate = dt.Rows[0].Field<DateTime>("publicationEndDate");
+                aGoods.Price = new List<MPrice>() { new MPrice() { Variety = aItemInCart.Variety, Price = dt.Rows[0].Field<int>("price"), Quantity = aItemInCart.Quantity } };
+                mGoods.Add(aGoods);
+            }
+
         }
 
 

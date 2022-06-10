@@ -329,7 +329,8 @@ namespace ServiceSiteForTheElderly.Controllers
 
             // 同じgoodId同士をまとめる
             var query = CurrentSession.cartModelInfo.GroupBy(item => new { GoodsId = item.GoodsId, Variety = item.Variety })
-            .Select(item => new {
+            .Select(item => new
+            {
                 GoodsId = item.Key.GoodsId,
                 Variety = item.Key.Variety,
                 Quantity = item.Sum(s => s.Quantity)
@@ -364,18 +365,30 @@ namespace ServiceSiteForTheElderly.Controllers
                 CurrentSession.cartModelInfo = new List<CartModel>();
             }
 
+            int totalPrice = 0;
+
+
             // カートに商品があれば
             if (CurrentSession.cartModelInfo != null && CurrentSession.cartModelInfo.Count > 0)
             {
-                string test = "";
-                foreach (var item in CurrentSession.cartModelInfo)
-                {
-                    test += item.ToString();
-                    test += Environment.NewLine;
-                }
-                ViewData["test"] = test;
+                List<MGoods> mGoodsList = new List<MGoods>();
+                CommonModel.GetDataBaseGoodsInCart(CurrentSession.cartModelInfo, ref mGoodsList);
 
+                string test = "";
+                foreach (var mGoods in mGoodsList)
+                {
+                    int price = mGoods.Price[0].Price;
+                    string variety = (string.IsNullOrEmpty(mGoods.Price[0].Variety)) ? "" : $"({mGoods.Price[0].Variety})";
+                    int quantity = mGoods.Price[0].Quantity;
+                    test += $"{mGoods.Name}{variety}, {price}円 {quantity}個 合計{price * quantity}円" + Environment.NewLine;
+                    totalPrice += price * quantity;
+                }
+
+                ViewData["test"] = test;
             }
+            
+            ViewData["totalPrice"] = totalPrice;
+
             return View();
         }
 
@@ -390,7 +403,7 @@ namespace ServiceSiteForTheElderly.Controllers
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
             string paramArg1 = Request.Params["id"];
-            
+
             if (string.IsNullOrEmpty(paramArg1))
             {
                 // idがなければ、店舗一覧を表示
@@ -557,6 +570,6 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
 
-        
+
     }
 }
