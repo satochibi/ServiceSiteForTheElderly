@@ -282,7 +282,6 @@ namespace ServiceSiteForTheElderly.Controllers
             }
         }
 
-
         /// <summary>
         /// カートに入れるのREST API
         /// </summary>
@@ -350,7 +349,10 @@ namespace ServiceSiteForTheElderly.Controllers
             return Json(new MJsonWithStatus() { status = "success" });
         }
 
-
+        /// <summary>
+        /// カゴの中の画面
+        /// </summary>
+        /// <returns>カゴの中の画面のビュー</returns>
         public ActionResult ShoppingCart()
         {
             string sid = null;
@@ -385,15 +387,17 @@ namespace ServiceSiteForTheElderly.Controllers
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
             string paramArg1 = Request.Params["id"];
-            // idがなければ、店舗一覧を表示
+            
             if (string.IsNullOrEmpty(paramArg1))
             {
-                BentoShopsList(ViewData);
+                // idがなければ、店舗一覧を表示
+                BentoShopsListMakeView();
                 return View();
 
             }
             else
             {
+                // idがあれば、その店の商品画面へ
                 int shopId = int.Parse(paramArg1);
                 List<MGoods> mGoods = new List<MGoods>();
                 CommonModel.GetDataBaseGoodsOfShop(shopId, ref mGoods);
@@ -402,89 +406,18 @@ namespace ServiceSiteForTheElderly.Controllers
                 ViewData["categoryName"] = categoryName;
                 string unitName = "個";
 
-                string html = "";
-                foreach (var aGoods in mGoods)
-                {
-                    string aPicture = Url.Content($"~/GoodsPictures/{aGoods.Picture}");
-
-
-                    string priceHtml = "";
-                    if (aGoods.Price.Count == 1)
-                    {
-                        priceHtml += string.Format(@"<div class=""clearfix menu-list"">
-                            <label for=""variety"">{1}円<span class=""tax-text"">(税込)</span></label>
-                            <select id =""variety"" name=""variety"">
-                                <option value =""1"">1{2}</option>
-                                <option value =""2"">2{2}</option>
-                                <option value =""3"">3{2}</option>
-                                <option value =""4"">4{2}</option>
-                                <option value =""5"">5{2}</option>
-                                <option value =""6"">6{2}</option>
-                                <option value =""7"">7{2}</option>
-                                <option value =""8"">8{2}</option>
-                                <option value =""9"">9{2}</option>
-                            </select>
-                        </div>", aGoods.Price[0].Variety, aGoods.Price[0].Price, unitName);
-                    }
-                    else if (aGoods.Price.Count >= 2)
-                    {
-                        foreach (var price in aGoods.Price)
-                        {
-                            priceHtml += string.Format(@"<div class=""clearfix menu-list"">
-                            <label for=""{0}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
-                            <select id =""{0}"" name=""{0}"">
-                                <option value =""0"">0{2}</option>
-                                <option value =""1"">1{2}</option>
-                                <option value =""2"">2{2}</option>
-                                <option value =""3"">3{2}</option>
-                                <option value =""4"">4{2}</option>
-                                <option value =""5"">5{2}</option>
-                                <option value =""6"">6{2}</option>
-                                <option value =""7"">7{2}</option>
-                                <option value =""8"">8{2}</option>
-                                <option value =""9"">9{2}</option>
-                            </select>
-                        </div>", price.Variety, price.Price, unitName);
-
-                        }
-                    }
-
-
-                    html += string.Format(@"
-                        <div class=""item-cell"">
-                            <div class=""item-header"">
-                                <h3>{4}</h3>
-                                <span>{5}</span>
-                            </div>
-
-                            <div class=""item-body"">
-                                <img src = ""{2}"" alt=""{0}"">
-                                <h4>{0}</h4>
-                                <hr>
-                                <form id=""goods-{6}"" class=""goods"">
-                                    {3}
-
-                                    <div class=""detail"">
-                                        {1}
-                                    </div>
-
-                                    <button type = ""submit"">
-                                        <i class=""cart-icon fas fa-cart-arrow-down""></i>カゴに入れる
-                                    </button>
-                                </form>
-                            </div>
-                        </div>", aGoods.Name, aGoods.Description, aPicture, priceHtml, aGoods.ShopName, aGoods.ShopGenre, aGoods.Id);
-                }
-                ViewData["goods"] = html;
-                return View("Magazine");
+                GoodsMakeView(mGoods, unitName);
+                return View("Goods");
             }
 
 
 
         }
 
-
-        public void BentoShopsList(ViewDataDictionary ViewData)
+        /// <summary>
+        /// 弁当の店舗一覧のhtmlを生成する
+        /// </summary>
+        public void BentoShopsListMakeView()
         {
             List<MShops> shops = new List<MShops>();
 
@@ -510,10 +443,6 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["css"] = css;
         }
 
-
-
-
-
         /// <summary>
         /// 本の画面
         /// </summary>
@@ -533,6 +462,19 @@ namespace ServiceSiteForTheElderly.Controllers
             int categoryId = CommonModel.GetDataBaseCategotyId(categoryName);
             CommonModel.GetDataBaseGoodsOfCategory(categoryId, ref mGoods);
 
+            GoodsMakeView(mGoods, unitName);
+
+
+            return View("Goods");
+        }
+
+        /// <summary>
+        /// 商品一覧のhtmlを生成する
+        /// </summary>
+        /// <param name="mGoods">商品のリスト</param>
+        /// <param name="unitName">商品の個数の単位</param>
+        void GoodsMakeView(List<MGoods> mGoods, string unitName)
+        {
             string html = "";
 
             foreach (var aGoods in mGoods)
@@ -609,9 +551,9 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             ViewData["goods"] = html;
-
-
-            return View();
         }
+
+
+        
     }
 }
