@@ -367,10 +367,13 @@ namespace ServiceSiteForTheElderly.Controllers
             // カートに商品があれば
             if (CurrentSession.cartModelInfo != null && CurrentSession.cartModelInfo.Count > 0)
             {
+                string test = "";
                 foreach (var item in CurrentSession.cartModelInfo)
                 {
-                    Console.WriteLine(item);
+                    test += item.ToString();
+                    test += Environment.NewLine;
                 }
+                ViewData["test"] = test;
 
             }
             return View();
