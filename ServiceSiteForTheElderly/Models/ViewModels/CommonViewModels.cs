@@ -44,6 +44,11 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
         public int GoodsId { get; set; }
         public string Variety { get; set; }
         public int Quantity { get; set; }
+
+        public override string ToString()
+        {
+            return $"(id={this.GoodsId}, variety={this.Variety} num={this.Quantity})";
+        }
     }
 
 }

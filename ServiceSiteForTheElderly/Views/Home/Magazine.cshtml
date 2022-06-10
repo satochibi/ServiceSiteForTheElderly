@@ -114,11 +114,12 @@
         $(function () {
             $(".goods").each(function (index, element) {
                 const goodsId = parseInt($(element).attr("id").replace("goods-", ""));
-                console.log(goodsId);
+                // console.log(goodsId);
 
                 $(element).on("submit", function (event) {
                     event.preventDefault();
-
+                    const data = $(element).serializeArray();
+                    console.log(data);
                     /*
                     const tel = $("#phone-number").val().trim();
                     const password = $("#password").val().trim();
