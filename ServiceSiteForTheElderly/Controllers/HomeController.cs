@@ -20,6 +20,7 @@ namespace ServiceSiteForTheElderly.Controllers
         /// <param name="CurrentSession">返されるカレントセッション</param>
         public static void GetAndSetSession(HttpSessionStateBase Session, ViewDataDictionary ViewData, UrlHelper Url, ref string sid, ref SessionModel CurrentSession)
         {
+            // セッションIDを保持
             sid = System.Web.HttpContext.Current.Session.SessionID;
             if (Session["CurrentSessionID"] == null)
             {
@@ -30,7 +31,7 @@ namespace ServiceSiteForTheElderly.Controllers
                 sid = Session["CurrentSessionID"] as string;
             }
 
-
+            // セッションの本体を保持
             CurrentSession = null;
             if (Session["CurrentSession"] != null)
             {
@@ -40,6 +41,12 @@ namespace ServiceSiteForTheElderly.Controllers
             {
                 CurrentSession = new SessionModel();
                 Session["CurrentSession"] = CurrentSession;
+            }
+
+
+            if (CurrentSession.cartModelInfo == null)
+            {
+                CurrentSession.cartModelInfo = new List<CartModel>();
             }
 
 
@@ -55,6 +62,10 @@ namespace ServiceSiteForTheElderly.Controllers
                 ViewData["HeaderButtonLink"] = Url.Action("MyPageOrder", "Home");
 
             }
+
+            //カート個数バッジ
+            int count = CurrentSession.cartModelInfo.Select(x => x.Quantity).Sum();
+            ViewData["HeaderBadge"] = (count == 0) ? "" : count.ToString();
 
         }
 
@@ -360,13 +371,7 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
-            if (CurrentSession.cartModelInfo == null)
-            {
-                CurrentSession.cartModelInfo = new List<CartModel>();
-            }
-
             int allTotalPrice = 0;
-
 
             // カートに商品があれば
             if (CurrentSession.cartModelInfo != null && CurrentSession.cartModelInfo.Count > 0)
@@ -396,7 +401,7 @@ namespace ServiceSiteForTheElderly.Controllers
 
                 ViewData["test"] = test;
             }
-            
+
             ViewData["totalPrice"] = allTotalPrice;
 
             return View();
