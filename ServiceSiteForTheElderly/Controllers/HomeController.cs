@@ -362,6 +362,60 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
+        /// カートの商品の個数を変更するREST API(Deleteは、Quantityを0にする)
+        /// </summary>
+        /// <param name="postModel">カートに入れるに必要な項目から構成されるJsonから生成されたオブジェクト
+        /// <example>
+        /// {
+        ///     "GoodsId":3,
+        ///     "Variety":"",
+        ///     "Quantity": 3
+        /// }
+        /// </example>
+        /// </param>
+        /// <returns>結果をstatusで返す。<c>success</c>なら成功。</returns>
+        [HttpPost]
+        public ActionResult ChangeToCart(CartModel postModel)
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            string postModelVariety = string.IsNullOrEmpty(postModel.Variety) ? null : postModel.Variety;
+
+            if (postModel.Quantity == 0)
+            {
+                // 数量が0ならDelete
+                if (postModelVariety == null)
+                {
+                    CurrentSession.cartModelInfo.RemoveAll(item => item.GoodsId == postModel.GoodsId);
+                }
+                else
+                {
+                    CurrentSession.cartModelInfo.RemoveAll(item => item.GoodsId == postModel.GoodsId && item.Variety == postModel.Variety);
+                }
+            }
+            else
+            {
+                // 数量が0より大きいならChange
+                if (postModelVariety == null)
+                {
+                    var selectedItem = CurrentSession.cartModelInfo.Find(item => item.GoodsId == postModel.GoodsId);
+                    selectedItem.Quantity = postModel.Quantity;
+                }
+                else
+                {
+                    var selectedItem = CurrentSession.cartModelInfo.Find(item => item.GoodsId == postModel.GoodsId && item.Variety == postModel.Variety);
+                    selectedItem.Quantity = postModel.Quantity;
+                }
+            }
+            
+            Session["CurrentSession"] = CurrentSession;
+            return Json(new MJsonWithStatus() { status = "success" });
+
+        }
+
+        /// <summary>
         /// カゴの中の画面
         /// </summary>
         /// <returns>カゴの中の画面のビュー</returns>
@@ -414,7 +468,7 @@ namespace ServiceSiteForTheElderly.Controllers
                         string aPicture = Url.Content($"~/GoodsPictures/{item.Picture}");
 
                         // 選択式セレクトボックスを生成
-                        string select = @"<select id=""num"" name=""num"">";
+                        string select = @"<select class=""num"" name=""num"">";
                         for (int index = 1; index <= 9; index++)
                         {
                             if (index == item.Quantity)

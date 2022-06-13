@@ -14,10 +14,16 @@
     <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
     <link rel="stylesheet" href="@Url.Content("~/css/shopping-cart.css")">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+
 </head>
 
 
 <body>
+    <input type="hidden" id="UrlActionChangeToCart" value="@Url.Action("ChangeToCart", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("ShoppingCart", "Home")" />
+
+
     <div class="container">
         <header>
             <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
@@ -42,7 +48,7 @@
             <h2>買い物カゴ</h2>
 
             <div class="cart-table">
-                <form>
+                <form id="form">
                     @Html.Raw(ViewData["goodsOfCart"])
 
                     <div class="total-price">
@@ -74,11 +80,83 @@
 
 
     <script>
-        const submitBtn = document.getElementById('submit');
-        submitBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            location.href='./shopping-customer-info.html';
+
+        $(function () {
+            $("#form").on("submit", function (event) {
+                event.preventDefault();
+                alert("submit");
+            });
+
+            $(".trash-icon").click(function () {
+                const goodsTemp = $(this).parent().parent().attr("id").replace("goods-", "").split("-");
+                const goodsId = goodsTemp[0];
+                const goodsVariety = goodsTemp[1];
+                const goodsQuantity = 0;
+
+                const inputData = {
+                    GoodsId: goodsId,
+                    Variety: goodsVariety,
+                    Quantity: goodsQuantity
+                };
+
+                const postUrl = $("#UrlActionChangeToCart").val();
+                const nextUrl = $("#NavigatorNext").val();
+
+                postfuncajax(postUrl, nextUrl, inputData);
+            });
+
+            $(".num").change(function () {
+                const goodsTemp = $(this).parent().parent().attr("id").replace("goods-", "").split("-");
+                const goodsId = goodsTemp[0];
+                const goodsVariety = goodsTemp[1] == undefined ? "" : goodsTemp[1];
+                const goodsQuantity = parseInt($(this).val());
+
+                const inputData = {
+                    GoodsId: goodsId,
+                    Variety: goodsVariety,
+                    Quantity: goodsQuantity
+                };
+
+                const postUrl = $("#UrlActionChangeToCart").val();
+                const nextUrl = $("#NavigatorNext").val();
+
+                postfuncajax(postUrl, nextUrl, inputData);
+            });
+
+
+            function postfuncajax(postUrl, nextUrl, inputData) {
+                const jsonString = JSON.stringify(inputData);
+
+                $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    async: false,
+                    data: jsonString,
+                    dataType: "json",
+                    contentType: 'application/json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var message = XMLHttpRequest.status;
+                        alert(message);
+                    },
+                    success: function (data) {
+                        switch (data.status) {
+                            case "success":
+                                // alert("ログイン成功");
+                                location.href = nextUrl;
+                                break;
+                            case "error":
+                            default:
+                                alert("エラーが起こりました");
+                                break;
+                        }
+
+                    }
+                });
+            }
         });
+
+
+
     </script>
 </body>
 
