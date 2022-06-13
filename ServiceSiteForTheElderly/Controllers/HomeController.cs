@@ -388,6 +388,7 @@ namespace ServiceSiteForTheElderly.Controllers
                         shopTotalPrice += totalPrice;
                     }
 
+                    shopTotalPrice += group.Key.ShippingCost;
                     test += $"送料 {group.Key.ShippingCost}円<br>合計金額 {shopTotalPrice}円";
                     allTotalPrice += shopTotalPrice;
 
