@@ -71,6 +71,7 @@ public class MPrice
 
 public class MGoodsOfCart
 {
+    public int GoodsId { get; set; }
     public int Quantity { get; set; }
     public string Variety { get; set; }
     public int Price { get; set; }

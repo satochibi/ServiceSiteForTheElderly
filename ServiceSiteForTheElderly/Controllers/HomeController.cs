@@ -379,27 +379,102 @@ namespace ServiceSiteForTheElderly.Controllers
                 List<MGoodsOfCart> mGoodsOfCartList = new List<MGoodsOfCart>();
                 CommonModel.GetDataBaseGoodsInCart(CurrentSession.cartModelInfo, ref mGoodsOfCartList);
 
+                // 店ごとにグループ化
                 var query = mGoodsOfCartList.GroupBy(item => new { ShopName = item.ShopName, ShippingCost = item.ShippingCost });
-                string test = "";
+                string html = "";
 
                 foreach (var group in query)
                 {
+                    // それぞれの店ごとにテーブルを作成
+
                     int shopTotalPrice = 0;
-                    test += $"{group.Key.ShopName}<br>";
+
+                    // テーブルヘッダー
+                    html +=string.Format(@"
+                        <div class=""a-shop"">
+                            <h3>{0}</h3>
+                            <div class=""cart-table-heading"">
+                                <ul>
+                                    <li class=""cart-table-body-list-item"">削除</li>
+                                    <li class=""cart-table-body-list-item"">商品内容</li>
+                                    <li class=""cart-table-body-list-item"">数量</li>
+                                    <li class=""cart-table-body-list-item"">小計(税込)</li>
+                                </ul>
+                            </div>
+                        <div class=""cart-table-body"">", group.Key.ShopName);
+
+
+
                     foreach (var item in group)
                     {
                         int totalPrice = item.Price * item.Quantity;
-                        test += $"{item.Name}{item.Variety}, {item.Price}円 {item.Quantity}個 合計{totalPrice}円<br>" + Environment.NewLine;
+                        string varietyDisplay = string.IsNullOrEmpty(item.Variety) ? "" : $"({item.Variety})";
+                        string varietyId = string.IsNullOrEmpty(item.Variety) ? "" : $"-{item.Variety}";
+
+                        string aPicture = Url.Content($"~/GoodsPictures/{item.Picture}");
+
+                        // 選択式セレクトボックスを生成
+                        string select = @"<select id=""num"" name=""num"">";
+                        for (int index = 1; index <= 9; index++)
+                        {
+                            if (index == item.Quantity)
+                            {
+                                select += string.Format(@"<option value=""{0}"" selected>{0}個</option>", index);
+                            }
+                            else
+                            {
+                                select += string.Format(@"<option value=""{0}"">{0}個</option>", index);
+                            }
+                        }
+                        select += @"</select>";
+
+
+                        // テーブルボディー
+                        html += string.Format(@"
+                            <ul class=""goods"" id=""goods-{6}{7}"">
+                                
+                                <li class=""cart-table-body-list-item"">
+                                    <div class=""trash-icon""><i class=""fas fa-trash-alt""></i></div>
+                                </li>
+                                <li class=""cart-table-body-list-item shopping-item-column"">
+                                    <img src = ""{5}"" alt=""{0}{1}"">
+                                    <div>
+                                        <h4>{0}{1}</h4>
+                                        <p>{2}円</p>
+                                    </div>
+
+                                </li>
+                                <li class=""cart-table-body-list-item"">
+                                    {3}
+                                </li>
+                                <li class=""cart-table-body-list-item"">
+                                    {4}
+                                </li>
+                             </ul>", item.Name, varietyDisplay, item.Price, select, totalPrice, aPicture, item.GoodsId, varietyId);
+                        
                         shopTotalPrice += totalPrice;
                     }
 
                     shopTotalPrice += group.Key.ShippingCost;
-                    test += $"送料 {group.Key.ShippingCost}円<br>合計金額 {shopTotalPrice}円";
+
+                    html += string.Format(@"
+                        </div>
+                        <div class=""cart-table-postage"">
+                            <span>送料 {0}円</span>
+                        </div>
+
+                        <div class=""cart-table-price"">
+                            <span>合計金額 {1}円</span>
+                        </div>", group.Key.ShippingCost, shopTotalPrice);
+
+                    // test += $"送料 {group.Key.ShippingCost}円<br>合計金額 {shopTotalPrice}円";
                     allTotalPrice += shopTotalPrice;
+                    html += "</div>";
 
                 }
 
-                ViewData["test"] = test;
+
+                ViewData["goodsOfCart"] = html;
             }
 
             ViewData["totalPrice"] = allTotalPrice;

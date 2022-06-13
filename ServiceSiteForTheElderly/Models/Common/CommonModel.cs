@@ -453,6 +453,7 @@ namespace ServiceSiteForTheElderly.Models.Common
                 }
 
                 MGoodsOfCart aGoods = new MGoodsOfCart();
+                aGoods.GoodsId = aItemInCart.GoodsId;
                 aGoods.Quantity = aItemInCart.Quantity;
                 aGoods.Variety = string.IsNullOrEmpty(aItemInCart.Variety) ? "" : aItemInCart.Variety;
                 aGoods.Price = dt.Rows[0].Field<int>("price");
