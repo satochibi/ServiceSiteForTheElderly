@@ -448,7 +448,7 @@ namespace ServiceSiteForTheElderly.Controllers
                                     {3}
                                 </li>
                                 <li class=""cart-table-body-list-item"">
-                                    {4}
+                                    {4}円
                                 </li>
                              </ul>", item.Name, varietyDisplay, item.Price, select, totalPrice, aPicture, item.GoodsId, varietyId);
                         
