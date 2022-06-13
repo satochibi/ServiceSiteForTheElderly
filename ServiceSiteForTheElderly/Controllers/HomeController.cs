@@ -365,29 +365,38 @@ namespace ServiceSiteForTheElderly.Controllers
                 CurrentSession.cartModelInfo = new List<CartModel>();
             }
 
-            int totalPrice = 0;
+            int allTotalPrice = 0;
 
 
             // カートに商品があれば
             if (CurrentSession.cartModelInfo != null && CurrentSession.cartModelInfo.Count > 0)
             {
-                List<MGoods> mGoodsList = new List<MGoods>();
-                CommonModel.GetDataBaseGoodsInCart(CurrentSession.cartModelInfo, ref mGoodsList);
+                List<MGoodsOfCart> mGoodsOfCartList = new List<MGoodsOfCart>();
+                CommonModel.GetDataBaseGoodsInCart(CurrentSession.cartModelInfo, ref mGoodsOfCartList);
 
+                var query = mGoodsOfCartList.GroupBy(item => new { ShopName = item.ShopName, ShippingCost = item.ShippingCost });
                 string test = "";
-                foreach (var mGoods in mGoodsList)
+
+                foreach (var group in query)
                 {
-                    int price = mGoods.Price[0].Price;
-                    string variety = (string.IsNullOrEmpty(mGoods.Price[0].Variety)) ? "" : $"({mGoods.Price[0].Variety})";
-                    int quantity = mGoods.Price[0].Quantity;
-                    test += $"{mGoods.Name}{variety}, {price}円 {quantity}個 合計{price * quantity}円" + Environment.NewLine;
-                    totalPrice += price * quantity;
+                    int shopTotalPrice = 0;
+                    test += $"{group.Key.ShopName}<br>";
+                    foreach (var item in group)
+                    {
+                        int totalPrice = item.Price * item.Quantity;
+                        test += $"{item.Name}{item.Variety}, {item.Price}円 {item.Quantity}個 合計{totalPrice}円<br>" + Environment.NewLine;
+                        shopTotalPrice += totalPrice;
+                    }
+
+                    test += $"送料 {group.Key.ShippingCost}円<br>合計金額 {shopTotalPrice}円";
+                    allTotalPrice += shopTotalPrice;
+
                 }
 
                 ViewData["test"] = test;
             }
             
-            ViewData["totalPrice"] = totalPrice;
+            ViewData["totalPrice"] = allTotalPrice;
 
             return View();
         }

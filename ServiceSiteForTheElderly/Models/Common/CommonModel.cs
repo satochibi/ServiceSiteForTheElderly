@@ -428,8 +428,8 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// カートに入っている商品をデータベースに問い合わせ
         /// </summary>
         /// <param name="cartModelInfo">カートのモデル</param>
-        /// <param name="mGoods">返される商品モデルのリスト</param>
-        public static void GetDataBaseGoodsInCart(List<CartModel> cartModelInfo, ref List<MGoods> mGoods)
+        /// <param name="mGoodsOfCart">返される商品モデルのリスト</param>
+        public static void GetDataBaseGoodsInCart(List<CartModel> cartModelInfo, ref List<MGoodsOfCart> mGoodsOfCart)
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
@@ -444,27 +444,27 @@ namespace ServiceSiteForTheElderly.Models.Common
                 // 商品idから商品を検索
                 if (string.IsNullOrEmpty(aItemInCart.Variety))
                 {
-                    dba.Query($"select Top(1) * from Goods left join GoodsPriceTrends on Goods.id = GoodsPriceTrends.goodsId where Goods.id = {aItemInCart.GoodsId} order by priceChangeDate desc;", ref dt);
+                    dba.Query($"select Top(1) * from Goods left join GoodsPriceTrends on Goods.id = GoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} order by priceChangeDate desc;", ref dt);
                     aItemInCart.Variety = "";
                 }
                 else
                 {
-                    dba.Query($"select Top(1) * from Goods left join GoodsPriceTrends on Goods.id = GoodsPriceTrends.goodsId where Goods.id = {aItemInCart.GoodsId} and variety = '{aItemInCart.Variety}' order by priceChangeDate desc;", ref dt);
+                    dba.Query($"select Top(1) * from Goods left join GoodsPriceTrends on Goods.id = GoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} and variety = '{aItemInCart.Variety}' order by priceChangeDate desc;", ref dt);
                 }
 
-                MGoods aGoods = new MGoods();
-                aGoods.Id = dt.Rows[0].Field<int>("id");
-                aGoods.OrderOfPublication = dt.Rows[0].Field<int?>("orderOfPublication");
+                MGoodsOfCart aGoods = new MGoodsOfCart();
+                aGoods.Quantity = aItemInCart.Quantity;
+                aGoods.Variety = string.IsNullOrEmpty(aItemInCart.Variety) ? "" : aItemInCart.Variety;
+                aGoods.Price = dt.Rows[0].Field<int>("price");
                 aGoods.Name = dt.Rows[0].Field<string>("name");
-                aGoods.Description = dt.Rows[0].Field<string>("description");
                 aGoods.Picture = dt.Rows[0].Field<string>("picture");
                 aGoods.ShopId = dt.Rows[0].Field<int>("shopId");
-                aGoods.Publisher = dt.Rows[0].Field<string>("publisher");
-                aGoods.Author = dt.Rows[0].Field<string>("author");
                 aGoods.PublicationStartDate = dt.Rows[0].Field<DateTime>("publicationStartDate");
                 aGoods.PublicationEndDate = dt.Rows[0].Field<DateTime>("publicationEndDate");
-                aGoods.Price = new List<MPrice>() { new MPrice() { Variety = aItemInCart.Variety, Price = dt.Rows[0].Field<int>("price"), Quantity = aItemInCart.Quantity } };
-                mGoods.Add(aGoods);
+                aGoods.ShopName = dt.Rows[0].Field<string>("displayName");
+                aGoods.ShopGenre = dt.Rows[0].Field<string>("genre");
+                aGoods.ShippingCost = dt.Rows[0].Field<int>("shippingCost");
+                mGoodsOfCart.Add(aGoods);
             }
 
         }

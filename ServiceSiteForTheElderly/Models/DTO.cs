@@ -66,8 +66,24 @@ public class MPrice
 {
     public string Variety { get; set; }
     public int Price { get; set; }
-    public int Quantity { get; set; } = 0;
 }
+
+
+public class MGoodsOfCart
+{
+    public int Quantity { get; set; }
+    public string Variety { get; set; }
+    public int Price { get; set; }
+    public string Name { get; set; }
+    public string Picture { get; set; }
+    public int ShopId { get; set; }
+    public DateTime PublicationStartDate { get; set; }
+    public DateTime PublicationEndDate { get; set; }
+    public string ShopName { get; set; }
+    public string ShopGenre { get; set; }
+    public int ShippingCost { get; set; }
+}
+
 
 
 public class MJsonWithStatus
