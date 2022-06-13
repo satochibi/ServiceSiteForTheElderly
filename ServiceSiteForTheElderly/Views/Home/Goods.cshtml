@@ -125,9 +125,16 @@
                     const data = $(element).serializeArray();
                     const inputData = data.map(item => ({ "GoodsId": goodsId, "Variety": (item.name == "variety") ? "" : item.name, "Quantity": parseInt(item.value) }));
 
-                    const postUrl = $("#UrlActionAddToCart").val();
-                    const nextUrl = $("#NavigatorNext").val();
-                    postfuncajax(postUrl, nextUrl, inputData);
+                    const inputCheck = inputData.every(item => item.Quantity == 0);
+                    
+                    if (inputCheck) {
+                        alert("個数を入力してください");
+                        return;
+                    } else {
+                        const postUrl = $("#UrlActionAddToCart").val();
+                        const nextUrl = $("#NavigatorNext").val();
+                        postfuncajax(postUrl, nextUrl, inputData);
+                    }
 
                 });
 
