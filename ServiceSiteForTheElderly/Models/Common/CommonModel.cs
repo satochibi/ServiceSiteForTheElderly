@@ -261,15 +261,18 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// </summary>
         /// <param name="categoryId">カテゴリid</param>
         /// <param name="mGoods">返される商品モデルのリスト</param>
+        /// <param name="q">検索キーワード(省略可能)</param>
         /// <returns>結果のステータス</returns>
-        public static ReturnOfBasicDatabase GetDataBaseGoodsOfCategory(int categoryId, ref List<MGoods> mGoods)
+        public static ReturnOfBasicDatabase GetDataBaseGoodsOfCategory(int categoryId, ref List<MGoods> mGoods, string q = "")
         {
 
             DBAccess dba = new DBAccess();
             DataTable dt = null;
             bool isSuccess = true;
 
-            dba.Query($"select * from Goods left outer join Shops on Goods.shopId = Shops.id where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate and categoryId = {categoryId} order by orderOfPublication desc, publicationStartDate desc;", ref dt);
+            q = string.IsNullOrEmpty(q) ? "" : $"and (name like '%{q}%' or description like '%{q}%')";
+
+            dba.Query($"select * from Goods left outer join Shops on Goods.shopId = Shops.id where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate and categoryId = {categoryId} {q} order by orderOfPublication desc, publicationStartDate desc;", ref dt);
 
 
             for (int row = 0; row < dt.Rows.Count; row++)
@@ -347,14 +350,15 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// <param name="shopId">店舗id</param>
         /// <param name="mGoods">返される雑誌モデルのリスト</param>
         /// <returns>結果のステータス</returns>
-        public static ReturnOfBasicDatabase GetDataBaseGoodsOfShop(int shopId, ref List<MGoods> mGoods)
+        public static ReturnOfBasicDatabase GetDataBaseGoodsOfShop(int shopId, ref List<MGoods> mGoods, string q = "")
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
             bool isSuccess = true;
 
-            dba.Query($"select * from Goods left outer join Shops on Goods.shopId = Shops.id where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate and shopId = {shopId} order by orderOfPublication desc, publicationStartDate desc;", ref dt);
+            q = string.IsNullOrEmpty(q) ? "" : $"and (name like '%{q}%' or description like '%{q}%')";
 
+            dba.Query($"select * from Goods left outer join Shops on Goods.shopId = Shops.id where publicationStartDate <= GETDATE() and GETDATE() <= publicationEndDate and shopId = {shopId} {q} order by orderOfPublication desc, publicationStartDate desc;", ref dt);
 
             for (int row = 0; row < dt.Rows.Count; row++)
             {

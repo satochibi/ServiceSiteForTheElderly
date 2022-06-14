@@ -75,7 +75,8 @@
 
             <div id="search">
                 <form action="">
-                    <input type="search" name="q" placeholder="商品検索">
+                    <input type="search" name="q" placeholder="商品検索" value="@ViewData["q"]">
+                    <input type="hidden" name="id" value="@ViewData["id"]" />
                     <div class="button-field">
                         <button class="form-primary-button" type="submit">
                             <i class="fa-solid fa-magnifying-glass"></i>

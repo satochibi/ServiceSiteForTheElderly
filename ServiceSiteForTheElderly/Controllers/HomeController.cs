@@ -566,6 +566,7 @@ namespace ServiceSiteForTheElderly.Controllers
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
             string paramArg1 = Request.Params["id"];
+            string q = string.IsNullOrEmpty(Request.Params["q"]) ? "" : Request.Params["q"];
 
             if (string.IsNullOrEmpty(paramArg1))
             {
@@ -578,14 +579,18 @@ namespace ServiceSiteForTheElderly.Controllers
             {
                 // idがあれば、その店の商品画面へ
                 int shopId = int.Parse(paramArg1);
+                
                 List<MGoods> mGoods = new List<MGoods>();
-                CommonModel.GetDataBaseGoodsOfShop(shopId, ref mGoods);
+                CommonModel.GetDataBaseGoodsOfShop(shopId, ref mGoods, q);
 
                 string categoryName = "お弁当";
                 ViewData["categoryName"] = categoryName;
                 string unitName = "個";
 
                 GoodsMakeView(mGoods, unitName);
+
+                ViewData["id"] = shopId;
+                ViewData["q"] = q;
                 return View("Goods");
             }
 
@@ -632,6 +637,8 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            string q = string.IsNullOrEmpty(Request.Params["q"]) ? "" : Request.Params["q"];
+
             List<MGoods> mGoods = new List<MGoods>();
 
             string categoryName = "本";
@@ -639,11 +646,11 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["categoryName"] = categoryName;
 
             int categoryId = CommonModel.GetDataBaseCategotyId(categoryName);
-            CommonModel.GetDataBaseGoodsOfCategory(categoryId, ref mGoods);
+            CommonModel.GetDataBaseGoodsOfCategory(categoryId, ref mGoods, q);
 
             GoodsMakeView(mGoods, unitName);
 
-
+            ViewData["q"] = q;
             return View("Goods");
         }
 
