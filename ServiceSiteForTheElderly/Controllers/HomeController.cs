@@ -409,7 +409,7 @@ namespace ServiceSiteForTheElderly.Controllers
                     selectedItem.Quantity = postModel.Quantity;
                 }
             }
-            
+
             Session["CurrentSession"] = CurrentSession;
             return Json(new MJsonWithStatus() { status = "success" });
 
@@ -444,7 +444,7 @@ namespace ServiceSiteForTheElderly.Controllers
                     int shopTotalPrice = 0;
 
                     // テーブルヘッダー
-                    html +=string.Format(@"
+                    html += string.Format(@"
                         <div class=""a-shop"">
                             <h3>{0}</h3>
                             <div class=""cart-table-heading"">
@@ -505,7 +505,7 @@ namespace ServiceSiteForTheElderly.Controllers
                                     {4}円
                                 </li>
                              </ul>", item.Name, varietyDisplay, item.Price, select, totalPrice, aPicture, item.GoodsId, varietyId);
-                        
+
                         shopTotalPrice += totalPrice;
                     }
 
@@ -645,8 +645,8 @@ namespace ServiceSiteForTheElderly.Controllers
                 if (aGoods.Price.Count == 1)
                 {
                     priceHtml += string.Format(@"<div class=""clearfix menu-list"">
-                            <label for=""variety"">{1}円<span class=""tax-text"">(税込)</span></label>
-                            <select id=""variety"" name=""variety"">
+                            <label for=""{3}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
+                            <select id=""{3}"" name=""{3}"">
                                 <option value =""1"">1{2}</option>
                                 <option value =""2"">2{2}</option>
                                 <option value =""3"">3{2}</option>
@@ -657,15 +657,15 @@ namespace ServiceSiteForTheElderly.Controllers
                                 <option value =""8"">8{2}</option>
                                 <option value =""9"">9{2}</option>
                             </select>
-                        </div>", aGoods.Price[0].Variety, aGoods.Price[0].Price, unitName);
+                        </div>", string.IsNullOrEmpty(aGoods.Price[0].Variety) ? "" : aGoods.Price[0].Variety, aGoods.Price[0].Price, unitName, string.IsNullOrEmpty(aGoods.Price[0].Variety) ? "variety" : aGoods.Price[0].Variety);
                 }
                 else if (aGoods.Price.Count >= 2)
                 {
                     foreach (var price in aGoods.Price)
                     {
                         priceHtml += string.Format(@"<div class=""clearfix menu-list"">
-                            <label for=""{0}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
-                            <select id=""{0}"" name=""{0}"">
+                            <label for=""{3}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
+                            <select id=""{3}"" name=""{3}"">
                                 <option value =""0"">0{2}</option>
                                 <option value =""1"">1{2}</option>
                                 <option value =""2"">2{2}</option>
@@ -677,10 +677,11 @@ namespace ServiceSiteForTheElderly.Controllers
                                 <option value =""8"">8{2}</option>
                                 <option value =""9"">9{2}</option>
                             </select>
-                        </div>", price.Variety, price.Price, unitName);
+                        </div>", string.IsNullOrEmpty(price.Variety) ? "" : price.Variety, price.Price, unitName, string.IsNullOrEmpty(price.Variety) ? "variety" : price.Variety);
 
                     }
                 }
+
 
 
 
