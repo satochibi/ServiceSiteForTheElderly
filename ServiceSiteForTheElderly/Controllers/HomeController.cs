@@ -175,7 +175,6 @@ namespace ServiceSiteForTheElderly.Controllers
                     if (CurrentSession.customerUserInfo == null)
                     {
                         // 未ログインならセッションに顧客情報を保持しておく
-                        CurrentSession = new SessionModel();
                         CurrentSession.customerUserInfo = cust;
                         Session["CurrentSession"] = CurrentSession;
                     }
@@ -327,7 +326,9 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             postModelList = postModelList.Select(postModel => new CartModel() { GoodsId = postModel.GoodsId, Variety = string.IsNullOrEmpty(postModel.Variety) ? "" : postModel.Variety, Quantity = postModel.Quantity }).ToList();
-
+            
+            // 商品をカートに入れる前に、カートに入れた時に、10個以上の商品が入っているかチェック
+            // 10個以上ならstatusをerrorにして終了
 
             // 商品を入れる
             foreach (var postModel in postModelList)
