@@ -326,6 +326,8 @@ namespace ServiceSiteForTheElderly.Controllers
 
             }
 
+            postModelList = postModelList.Select(postModel => new CartModel() { GoodsId = postModel.GoodsId, Variety = string.IsNullOrEmpty(postModel.Variety) ? "" : postModel.Variety, Quantity = postModel.Quantity }).ToList();
+
 
             // 商品を入れる
             foreach (var postModel in postModelList)
