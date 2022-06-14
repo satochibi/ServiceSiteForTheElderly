@@ -311,7 +311,7 @@ namespace ServiceSiteForTheElderly.Controllers
         /// ]
         /// </example>
         /// </param>
-        /// <returns>結果をstatusで返す。<c>success</c>なら成功。</returns>
+        /// <returns>結果をstatusで返す。<c>success</c>なら成功。<c>maxQuantityError</c>なら最大数量エラー</returns>
         [HttpPost]
         public ActionResult AddToCart(List<CartModel> postModelList)
         {
@@ -326,23 +326,26 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             postModelList = postModelList.Select(postModel => new CartModel() { GoodsId = postModel.GoodsId, Variety = string.IsNullOrEmpty(postModel.Variety) ? "" : postModel.Variety, Quantity = postModel.Quantity }).ToList();
+
             
-            // 商品をカートに入れる前に、カートに入れた時に、10個以上の商品が入っているかチェック
-            // 10個以上ならstatusをerrorにして終了
+
+            // カートの状態のコピーをとっておく、そのコピーに対して商品を入れる
+            var copyCurrentCart = new List<CartModel>(CurrentSession.cartModelInfo);
+
 
             // 商品を入れる
             foreach (var postModel in postModelList)
             {
-                CurrentSession.cartModelInfo.Add(postModel);
+                copyCurrentCart.Add(postModel);
             }
 
             // https://paiza.io/projects/WUXuluJbpntGJrTOFsvmOg
 
             // 量が0であるものを除外する
-            CurrentSession.cartModelInfo.RemoveAll(item => item.Quantity == 0);
+            copyCurrentCart.RemoveAll(item => item.Quantity == 0);
 
             // 同じgoodId同士をまとめる
-            var query = CurrentSession.cartModelInfo.GroupBy(item => new { GoodsId = item.GoodsId, Variety = item.Variety })
+            var query = copyCurrentCart.GroupBy(item => new { GoodsId = item.GoodsId, Variety = item.Variety })
             .Select(item => new
             {
                 GoodsId = item.Key.GoodsId,
@@ -356,12 +359,25 @@ namespace ServiceSiteForTheElderly.Controllers
             {
                 newList.Add(new CartModel() { GoodsId = item.GoodsId, Variety = item.Variety, Quantity = item.Quantity });
             }
-            CurrentSession.cartModelInfo = newList;
+            copyCurrentCart = newList;
 
 
-            Session["CurrentSession"] = CurrentSession;
 
-            return Json(new MJsonWithStatus() { status = "success" });
+            // 商品をカートに入れる前に、カートに入れた時に、10個以上の商品が入っているかチェック
+            bool checkQuantity = copyCurrentCart.All(cartModel => cartModel.Quantity < 10);
+            
+            if (checkQuantity)
+            {
+                CurrentSession.cartModelInfo = copyCurrentCart;
+                Session["CurrentSession"] = CurrentSession;
+                return Json(new MJsonWithStatus() { status = "success" });
+            }
+            else
+            {
+                // 10個以上ならstatusをerrorにして終了
+                return Json(new MJsonWithStatus() { status = "maxQuantityError" });
+            }
+            
         }
 
         /// <summary>

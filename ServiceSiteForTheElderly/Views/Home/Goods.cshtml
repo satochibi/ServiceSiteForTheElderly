@@ -161,6 +161,10 @@
                                 // alert("カートに入れた");
                                 location.href = nextUrl;
                                 break;
+                            case "maxQuantityError":
+                                alert("1つの商品に対して10個以上カゴに入れることはできません");
+                                break;
+                            case "error":
                             default:
                                 alert("エラーが起こりました");
                                 break;
