@@ -192,6 +192,7 @@
     <Content Include="Views\Home\Goods.cshtml" />
     <Content Include="Views\Home\BentoShops.cshtml" />
     <Content Include="Views\Home\ShoppingCart.cshtml" />
+    <Content Include="Views\Home\EnterShippingAddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

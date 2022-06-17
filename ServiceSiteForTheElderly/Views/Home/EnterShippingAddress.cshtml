@@ -1,0 +1,163 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高齢者のお困り解決砥部町内サービスサイト</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/contact.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+</head>
+
+<body>
+    <input type="hidden" id="NavigatorPrev" value="@Url.Action("ShoppingCart", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("Index", "Home")" />
+    <div class="container">
+        <header>
+            <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <div class="header-buttons">
+                <div class="shopping-cart">
+                    <span class="shopping-count-badge">@ViewData["HeaderBadge"]</span>
+                    <a href="@Url.Action("ShoppingCart", "Home")" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
+                </div>
+                <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
+            </div>
+        </header>
+
+
+        <div class="breadcrumb-list">
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
+                <li><a href="@Url.Action("ShoppingCart", "Home")">買い物カゴ</a></li>
+                <li><a href="#">送り先情報入力</a></li>
+            </ul>
+        </div>
+
+        <div class="main-contents">
+            <h2>送り先情報入力</h2>
+
+            <div class="contact-table">
+                <form id="form">
+                    <div class="input-container">
+                        <div class="input-field grow-field information">
+                            <span>※アカウントの情報(申込者)と送り先が違うなら、以下の情報を入力してください</span>
+                        </div>
+
+                        <div class="input-field grow-field">
+                            <input type="checkbox" class="inline-block" id="is-delivery-destination"
+                                   name="is-delivery-destination">
+                            <label class="inline-block" for="is-delivery-destination">アカウントの情報と送り先の情報が違います</label>
+                        </div>
+
+                        <div class="input-container delivery-destination">
+                            <div class="input-field">
+                                <label class="label" for="dest-name">送り先のお名前<small>必須</small></label>
+                                <input id="dest-name" type="text" name="dest-name" placeholder="砥部 花子">
+                            </div>
+
+                            <div class="input-field">
+                                <label class="label" for="dest-furigana">送り先のふりがな<small>必須</small></label>
+                                <input id="dest-furigana" type="text" name="dest-furigana" placeholder="とべ はなこ"
+                                       pattern="(?=.*?[\u3041-\u309F])[\u3041-\u309F\s]*">
+                            </div>
+
+                            <div class="input-field">
+                                <label class="label" for="dest-phone-number">送り先の電話番号<small>必須</small></label>
+                                <input id="dest-phone-number" type="text" name="dest-phone-number"
+                                       placeholder="089-982-0001" pattern="\d{2,4}-?\d{2,4}-?\d{3,4}">
+                            </div>
+
+                            <div class="input-field">
+                                <label class="label" for="dest-postal-code">送り先の郵便番号<small>必須</small></label>
+                                <input id="dest-postal-code" type="text" name="dest-postal-code"
+                                       onKeyUp="AjaxZip3.zip2addr(this,'','dest-address','dest-address');"
+                                       placeholder="791-2114" pattern="\d{3}-?\d{4}">
+                            </div>
+
+                            <div class="input-field grow-field">
+                                <label class="label" for="dest-address">送り先の住所<small>必須</small></label>
+                                <input id="dest-address" type="text" name="dest-address" placeholder="砥部町麻生000-0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-field">
+                        <button class="form-normal-button prev-arrow-button" id="back-button" type="button">カゴの画面に戻る</button>
+                        <button class="form-primary-button next-arrow-button" type="submit" id="submit">確認</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+        <footer>
+
+            <div class="footer-logo">
+                HAISABU Platform
+            </div>
+
+            <!-- <div class="ads">
+                広告
+            </div> -->
+
+        </footer>
+    </div>
+
+    <script>
+        $(function () {
+            check();
+            $('#is-delivery-destination').change(check);
+
+            function check() {
+                const checkbox = $('#is-delivery-destination');
+                if (checkbox.is(':checked')) {
+                    $(".delivery-destination").css('display', 'flex').show();
+                    $("#dest-name").prop('required', true);
+                    $("#dest-furigana").prop('required', true);
+                    $("#dest-phone-number").prop('required', true);
+                    $("#dest-postal-code").prop('required', true);
+                    $("#dest-address").prop('required', true);
+
+                } else {
+                    $(".delivery-destination").css('display', 'flex').hide();
+                    $("#dest-name").prop('required', false);
+                    $("#dest-furigana").prop('required', false);
+                    $("#dest-phone-number").prop('required', false);
+                    $("#dest-postal-code").prop('required', false);
+                    $("#dest-address").prop('required', false);
+                }
+            }
+
+            $("#form").on("submit", function (event) {
+                event.preventDefault();
+                const nextUrl = $("#NavigatorNext").val();
+                location.href = nextUrl;
+            });
+
+            $("#back-button").click(function () {
+                const prevUrl = $("#NavigatorPrev").val();
+                location.href = prevUrl;
+            });
+
+
+
+
+        });
+
+    </script>
+
+</body>
+
+</html>

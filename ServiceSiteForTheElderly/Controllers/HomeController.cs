@@ -556,6 +556,35 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
+        /// 送り先アドレスの入力画面
+        /// </summary>
+        /// <returns>送り先アドレスの入力画面のビュー</returns>
+        public ActionResult EnterShippingAddress()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            // 既にログイン済みならトップページにリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            // セッション内のカゴに入れている商品が1つもなければ
+            // トップページにリダイレクト
+            if (CurrentSession.cartModelInfo.Count == 0)
+            {
+                IndexMakeView();
+                return View("Index");
+            }
+
+            return View();
+
+        }
+
+        /// <summary>
         /// お弁当の画面
         /// </summary>
         /// <returns>お弁当のビュー</returns>

@@ -20,8 +20,10 @@
 
 
 <body>
+    <input type="hidden" id="cart-item-count" value="@ViewData["HeaderBadge"]" />
     <input type="hidden" id="UrlActionChangeToCart" value="@Url.Action("ChangeToCart", "Home")" />
-    <input type="hidden" id="NavigatorNext" value="@Url.Action("ShoppingCart", "Home")" />
+    <input type="hidden" id="NavigatorSelf" value="@Url.Action("ShoppingCart", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("EnterShippingAddress", "Home")" />
     <input type="hidden" id="NavigatorTop" value="@Url.Action("Index", "Home")" />
 
 
@@ -85,7 +87,12 @@
         $(function () {
             $("#form").on("submit", function (event) {
                 event.preventDefault();
-                alert("submit");
+                const nextUrl = $("#NavigatorNext").val();
+                if (!$("#cart-item-count").val()) {
+                    alert("カゴに商品がありません");
+                    return;
+                }
+                location.href = nextUrl;
             });
 
             $("#continue-shopping-button").click(function () {
@@ -106,7 +113,7 @@
                 };
 
                 const postUrl = $("#UrlActionChangeToCart").val();
-                const nextUrl = $("#NavigatorNext").val();
+                const nextUrl = $("#NavigatorSelf").val();
 
                 postfuncajax(postUrl, nextUrl, inputData);
             });
@@ -124,7 +131,7 @@
                 };
 
                 const postUrl = $("#UrlActionChangeToCart").val();
-                const nextUrl = $("#NavigatorNext").val();
+                const nextUrl = $("#NavigatorSelf").val();
 
                 postfuncajax(postUrl, nextUrl, inputData);
             });
