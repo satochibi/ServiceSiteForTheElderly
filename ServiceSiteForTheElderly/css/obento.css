@@ -413,6 +413,10 @@ div.container .main-contents div.shopping-table div.item-cell div.item-body {
   margin: 0 40px 40px;
   color: #4f2a23;
 }
+div.container .main-contents div.shopping-table div.item-cell div.item-body img {
+  height: 220px;
+  margin: 0 auto;
+}
 div.container .main-contents div.shopping-table div.item-cell div.item-body h4 {
   margin-top: 5px;
   margin-bottom: 0;
@@ -442,8 +446,7 @@ div.container .main-contents div.shopping-table div.item-cell div.item-body form
   font-size: medium;
   letter-spacing: normal;
   margin: 10px 0;
-  height: 6.5em;
-  overflow: scroll;
+  height: 130px;
 }
 div.container .main-contents div.shopping-table div.item-cell div.item-body form button {
   width: 100%;

@@ -145,6 +145,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="GoodsPictures\noimage.png" />
     <Content Include="GoodsPictures\bento.png" />
     <Content Include="GoodsPictures\menu01_01.png" />
     <Content Include="GoodsPictures\menu01_02.png" />

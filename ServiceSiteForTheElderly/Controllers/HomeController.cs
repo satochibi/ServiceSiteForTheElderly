@@ -694,7 +694,8 @@ namespace ServiceSiteForTheElderly.Controllers
 
             foreach (var aGoods in mGoods)
             {
-                string aPicture = Url.Content($"~/GoodsPictures/{aGoods.Picture}");
+                
+                string aPicture = string.IsNullOrEmpty(aGoods.Picture) ? Url.Content($"~/GoodsPictures/noimage.png") : Url.Content($"~/GoodsPictures/{aGoods.Picture}");
 
                 string priceHtml = "";
                 if (aGoods.Price.Count == 1)
