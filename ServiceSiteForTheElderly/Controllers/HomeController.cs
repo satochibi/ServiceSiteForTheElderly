@@ -484,7 +484,8 @@ namespace ServiceSiteForTheElderly.Controllers
                         string varietyDisplay = string.IsNullOrEmpty(item.Variety) ? "" : $"({item.Variety})";
                         string varietyId = string.IsNullOrEmpty(item.Variety) ? "" : $"-{item.Variety}";
 
-                        string aPicture = Url.Content($"~/GoodsPictures/{item.Picture}");
+                        string aPicture = string.IsNullOrEmpty(item.Picture) ? Url.Content($"~/GoodsPictures/noimage.png") : Url.Content($"~/GoodsPictures/{item.Picture}");
+
 
                         // 選択式セレクトボックスを生成
                         string select = @"<select class=""num"" name=""num"">";
