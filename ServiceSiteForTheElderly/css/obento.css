@@ -466,5 +466,10 @@ div.container .main-contents div.shopping-table div.item-cell div.item-body form
 div.container .main-contents div.shopping-table div.item-cell div.item-body form button:hover {
   background-color: #e6e6e6;
 }
+div.container .main-contents div.shopping-table div.item-cell div.item-body form button:disabled {
+  background-color: #ccc;
+  color: rgba(118, 118, 118, 0.3);
+  border: 2px solid rgba(118, 118, 118, 0.3);
+}
 
 /*# sourceMappingURL=obento.css.map */
