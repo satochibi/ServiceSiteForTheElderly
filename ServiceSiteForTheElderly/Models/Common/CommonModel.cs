@@ -294,35 +294,12 @@ namespace ServiceSiteForTheElderly.Models.Common
                 // 最新の価格をセット
                 DataTable dt2 = null;
 
-                // 最新の価格ビュー(LatestPrice)を作成
-                dba.Execute($"create view LatestPrice as (select goodsId, MAX(priceChangeDate) as priceChangeDate, variety from GoodsPriceTrends group by goodsId, variety);");
+                // 最新の価格ビュー(Latest)を作成
+                MakeViewDataBaseLatestGoodsPriceTrends(dba);
 
                 try
                 {
-                    // その商品の最新のバラエティがNullかどうかチェック
-                    dba.Query($"select variety from LatestPrice where goodsId = {aGoods.Id};", ref dt2);
-                    bool isContainNull = false;
-                    for (int index = 0; index < dt2.Rows.Count; index++)
-                    {
-                        string variety = dt2.Rows[index].Field<string>("variety");
-                        if (string.IsNullOrEmpty(variety))
-                        {
-                            isContainNull = true;
-                            break;
-                        }
-                    }
-
-                    dt2 = null;
-
-                    if (isContainNull)
-                    {
-                        dba.Query($"select LatestPrice.variety, price from LatestPrice left join GoodsPriceTrends on LatestPrice.goodsId = GoodsPriceTrends.goodsId and LatestPrice.priceChangeDate = GoodsPriceTrends.priceChangeDate where LatestPrice.goodsId = {aGoods.Id} order by price desc;", ref dt2);
-                    }
-                    else
-                    {
-                        dba.Query($"select LatestPrice.variety, price from LatestPrice left join GoodsPriceTrends on LatestPrice.goodsId = GoodsPriceTrends.goodsId and LatestPrice.priceChangeDate = GoodsPriceTrends.priceChangeDate and LatestPrice.variety = GoodsPriceTrends.variety where LatestPrice.goodsId = {aGoods.Id} order by price desc;", ref dt2);
-                    }
-
+                    dba.Query($"select variety, price from LatestGoodsPriceTrends where goodsId = {aGoods.Id} order by price desc;", ref dt2);
                     // 商品価格をリストに追加
                     List<MPrice> prices = new List<MPrice>();
                     for (int index = 0; index < dt2.Rows.Count; index++)
@@ -379,35 +356,12 @@ namespace ServiceSiteForTheElderly.Models.Common
                 // 最新の価格をセット
                 DataTable dt2 = null;
 
-                // 最新の価格ビュー(LatestPrice)を作成
-                dba.Execute($"create view LatestPrice as (select goodsId, MAX(priceChangeDate) as priceChangeDate, variety from GoodsPriceTrends group by goodsId, variety);");
+                // 最新の価格変動ビュー(LatestGoodsPriceTrends)を作成
+                MakeViewDataBaseLatestGoodsPriceTrends(dba);
 
                 try
                 {
-                    // その商品の最新のバラエティがNullかどうかチェック
-                    dba.Query($"select variety from LatestPrice where goodsId = {aGoods.Id};", ref dt2);
-                    bool isContainNull = false;
-                    for (int index = 0; index < dt2.Rows.Count; index++)
-                    {
-                        string variety = dt2.Rows[index].Field<string>("variety");
-                        if (string.IsNullOrEmpty(variety))
-                        {
-                            isContainNull = true;
-                            break;
-                        }
-                    }
-
-                    dt2 = null;
-
-                    if (isContainNull)
-                    {
-                        dba.Query($"select LatestPrice.variety, price from LatestPrice left join GoodsPriceTrends on LatestPrice.goodsId = GoodsPriceTrends.goodsId and LatestPrice.priceChangeDate = GoodsPriceTrends.priceChangeDate where LatestPrice.goodsId = {aGoods.Id} order by price desc;", ref dt2);
-                    }
-                    else
-                    {
-                        dba.Query($"select LatestPrice.variety, price from LatestPrice left join GoodsPriceTrends on LatestPrice.goodsId = GoodsPriceTrends.goodsId and LatestPrice.priceChangeDate = GoodsPriceTrends.priceChangeDate and LatestPrice.variety = GoodsPriceTrends.variety where LatestPrice.goodsId = {aGoods.Id} order by price desc;", ref dt2);
-                    }
-
+                    dba.Query($"select variety, price from LatestGoodsPriceTrends where goodsId = {aGoods.Id} order by price desc;", ref dt2);
                     // 商品価格をリストに追加
                     List<MPrice> prices = new List<MPrice>();
                     for (int index = 0; index < dt2.Rows.Count; index++)
@@ -429,6 +383,16 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
         /// <summary>
+        /// 過去～現在の最新のGoodsPriceTrendsのビューを作成する
+        /// </summary>
+        /// <param name="dba">データベースオブジェクト</param>
+        private static void MakeViewDataBaseLatestGoodsPriceTrends(DBAccess dba)
+        {
+            dba.Execute($"create view LatestGoodsPriceTrends as (select Latest.goodsId, Latest.priceChangeDate, NULLIF(Latest.variety, '') as variety, price from(select goodsId, MAX(priceChangeDate) as priceChangeDate, isnull(variety, '') as variety from GoodsPriceTrends where priceChangeDate <= GETDATE() group by goodsId, variety) as Latest left join(select goodsId, priceChangeDate, isnull(variety, '') as variety, price from GoodsPriceTrends) as Trends on Latest.goodsId = Trends.goodsId and Latest.priceChangeDate = Trends.priceChangeDate and Latest.variety = Trends.variety);");
+            return;
+        }
+
+        /// <summary>
         /// カートに入っている商品をデータベースに問い合わせ
         /// </summary>
         /// <param name="cartModelInfo">カートのモデル</param>
@@ -443,17 +407,19 @@ namespace ServiceSiteForTheElderly.Models.Common
                 return;
             }
 
+            MakeViewDataBaseLatestGoodsPriceTrends(dba);
+
             foreach (var aItemInCart in cartModelInfo)
             {
                 // 商品idから商品を検索
                 if (string.IsNullOrEmpty(aItemInCart.Variety))
                 {
-                    dba.Query($"select Top(1) * from Goods left join GoodsPriceTrends on Goods.id = GoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} order by priceChangeDate desc;", ref dt);
+                    dba.Query($"select Top(1) * from Goods left join LatestGoodsPriceTrends on Goods.id = LatestGoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} order by priceChangeDate desc;", ref dt);
                     aItemInCart.Variety = "";
                 }
                 else
                 {
-                    dba.Query($"select Top(1) * from Goods left join GoodsPriceTrends on Goods.id = GoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} and variety = '{aItemInCart.Variety}' order by priceChangeDate desc;", ref dt);
+                    dba.Query($"select Top(1) * from Goods left join LatestGoodsPriceTrends on Goods.id = LatestGoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} and variety = '{aItemInCart.Variety}' order by priceChangeDate desc;", ref dt);
                 }
 
                 MGoodsOfCart aGoods = new MGoodsOfCart();

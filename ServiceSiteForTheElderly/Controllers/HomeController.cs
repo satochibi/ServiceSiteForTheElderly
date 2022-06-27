@@ -699,7 +699,13 @@ namespace ServiceSiteForTheElderly.Controllers
                 string aPicture = string.IsNullOrEmpty(aGoods.Picture) ? Url.Content($"~/GoodsPictures/noimage.png") : Url.Content($"~/GoodsPictures/{aGoods.Picture}");
 
                 string priceHtml = "";
-                if (aGoods.Price.Count == 1)
+                if (aGoods.Price.Count == 0)
+                {
+                    priceHtml += @"<div class=""clearfix menu-list"">
+                            未発売
+                        </div>";
+                }
+                else if (aGoods.Price.Count == 1)
                 {
                     priceHtml += string.Format(@"<div class=""clearfix menu-list"">
                             <label for=""{3}"">{0} {1}円<span class=""tax-text"">(税込)</span></label>
@@ -739,7 +745,7 @@ namespace ServiceSiteForTheElderly.Controllers
                     }
                 }
 
-
+                string clickable = (aGoods.Price.Count == 0) ? "disabled" : "";
 
 
                 html += string.Format(@"
@@ -760,12 +766,12 @@ namespace ServiceSiteForTheElderly.Controllers
                                 {1}
                             </div>
 
-                            <button class=""cart-button"" type=""submit"">
+                            <button class=""cart-button"" type=""submit"" {7}>
                                 <i class=""cart-icon fas fa-cart-arrow-down""></i>カゴに入れる
                             </button>
                         </form>
                     </div>
-                </div>", aGoods.Name, aGoods.Description, aPicture, priceHtml, aGoods.ShopName, aGoods.ShopGenre, aGoods.Id);
+                </div>", aGoods.Name, aGoods.Description, aPicture, priceHtml, aGoods.ShopName, aGoods.ShopGenre, aGoods.Id, clickable);
             }
 
             ViewData["goods"] = html;
