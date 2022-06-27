@@ -66,6 +66,7 @@ namespace ServiceSiteForTheElderly.Controllers
             //カート個数バッジ
             int count = CurrentSession.cartModelInfo.Select(x => x.Quantity).Sum();
             ViewData["HeaderBadge"] = (count == 0) ? "" : count.ToString();
+            ViewData["HeaderBadgeStatus"] = (count == 0) ? "disabled" : "";
 
         }
 

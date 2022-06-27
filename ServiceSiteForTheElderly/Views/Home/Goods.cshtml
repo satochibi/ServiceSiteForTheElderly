@@ -27,7 +27,7 @@
             <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
             <div class="header-buttons">
                 <div class="shopping-cart">
-                    <span class="shopping-count-badge">@ViewData["HeaderBadge"]</span>
+                    <span class="shopping-count-badge @ViewData["HeaderBadgeStatus"]">@ViewData["HeaderBadge"]</span>
                     <a href="@Url.Action("ShoppingCart", "Home")" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
                 </div>
                 <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
