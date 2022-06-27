@@ -398,6 +398,9 @@ div.container .main-contents div.shopping-table div.item-cell {
   background-color: white;
   width: 400px;
   margin-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 div.container .main-contents div.shopping-table div.item-cell div.item-header {
   background-color: #4f2a23;
