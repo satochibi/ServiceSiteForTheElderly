@@ -412,13 +412,13 @@ div.container .main-contents div.shopping-table div.item-cell div.item-header {
 div.container .main-contents div.shopping-table div.item-cell div.item-header h3 {
   margin: 0;
 }
+div.container .main-contents div.shopping-table div.item-cell img {
+  height: 220px;
+  margin: 0 auto;
+}
 div.container .main-contents div.shopping-table div.item-cell div.item-body {
   margin: 0 40px 40px;
   color: #4f2a23;
-}
-div.container .main-contents div.shopping-table div.item-cell div.item-body img {
-  height: 220px;
-  margin: 0 auto;
 }
 div.container .main-contents div.shopping-table div.item-cell div.item-body h4 {
   margin-top: 5px;

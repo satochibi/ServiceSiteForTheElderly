@@ -755,23 +755,25 @@ namespace ServiceSiteForTheElderly.Controllers
                             <span>{5}</span>
                         </div>
 
-                    <div class=""item-body"">
                         <img src=""{2}"" alt=""{0}"">
-                        <h4>{0}</h4>
-                        <hr>
-                        <form id=""goods-{6}"" class=""goods"">
-                            {3}
 
-                            <div class=""detail"">
-                                {1}
-                            </div>
+                        <div class=""item-body"">
+                            
+                            <h4>{0}</h4>
+                            <hr>
+                            <form id=""goods-{6}"" class=""goods"">
+                                {3}
 
-                            <button class=""cart-button"" type=""submit"" {7}>
-                                <i class=""cart-icon fas fa-cart-arrow-down""></i>カゴに入れる
-                            </button>
-                        </form>
-                    </div>
-                </div>", aGoods.Name, aGoods.Description, aPicture, priceHtml, aGoods.ShopName, aGoods.ShopGenre, aGoods.Id, clickable);
+                                <div class=""detail"">
+                                    {1}
+                                </div>
+
+                                <button class=""cart-button"" type=""submit"" {7}>
+                                    <i class=""cart-icon fas fa-cart-arrow-down""></i>カゴに入れる
+                                </button>
+                            </form>
+                        </div>
+                    </div>", aGoods.Name, aGoods.Description, aPicture, priceHtml, aGoods.ShopName, aGoods.ShopGenre, aGoods.Id, clickable);
             }
 
             ViewData["goods"] = html;
