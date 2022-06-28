@@ -3,6 +3,7 @@ using ServiceSiteForTheElderly.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -13,6 +14,27 @@ namespace ServiceSiteForTheElderly.Controllers
         const string mentainanceTitle = "メンテナンス中";
         const string mentainanceMessage = "しばらく経ってから再度アクセスしなおして下さい";
 
+        /// <summary>
+        /// メールを送る関数
+        /// 参考にしたコード: https://dobon.net/vb/dotnet/internet/smtpclient.html
+        /// Gmailでの設定: https://work-note32.com/vb-smtp-gmail-send
+        /// </summary>
+        /// <example>
+        ///     <code>
+        ///         MailSend("smtp.gmail.com", "satochibibu@gmail.com", "satochibibu@gmail.com","test", "testbody");
+        ///     </code>
+        /// </example>
+        /// <param name="smtpServer">SMTPサーバ</param>
+        /// <param name="senderMail">差出人のメールアドレス</param>
+        /// <param name="recipientMail">宛先のメールアドレス</param>
+        /// <param name="subject">件名</param>
+        /// <param name="body">メール本文</param>
+        public static void MailSend(string smtpServer, string senderMail, string recipientMail, string subject, string body)
+        {
+            SmtpClient sc = new SmtpClient() { Host = smtpServer, Port=587, DeliveryMethod = SmtpDeliveryMethod.Network, Credentials = new System.Net.NetworkCredential(senderMail, "qhtdcoppzgkkigfv"), EnableSsl = true };
+            sc.Send(senderMail, recipientMail, subject, body);
+            sc.Dispose();
+        }
 
         /// <summary>
         /// セッション管理メソッド
@@ -92,7 +114,6 @@ namespace ServiceSiteForTheElderly.Controllers
                 ViewData["message"] = mentainanceMessage;
                 return View("Error");
             }
-            
 
             IndexMakeView();
             return View();
