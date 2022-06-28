@@ -10,6 +10,10 @@ namespace ServiceSiteForTheElderly.Controllers
 {
     public class HomeController : Controller
     {
+        const string mentainanceTitle = "メンテナンス中";
+        const string mentainanceMessage = "しばらく経ってから再度アクセスしなおして下さい";
+
+
         /// <summary>
         /// セッション管理メソッド
         /// </summary>
@@ -81,8 +85,16 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
-            IndexMakeView();
+            // メンテナンス中ページを表示させるために下記のコードは絶対必要
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+            
 
+            IndexMakeView();
             return View();
         }
 
@@ -131,6 +143,13 @@ namespace ServiceSiteForTheElderly.Controllers
             string sid = null;
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
 
             // 既にログイン済みならトップページにリダイレクト
             if (CurrentSession.customerUserInfo != null)
@@ -205,6 +224,13 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
             // セッションのログイン情報を捨てる
             CurrentSession = null;
             Session["CurrentSession"] = null;
@@ -222,6 +248,13 @@ namespace ServiceSiteForTheElderly.Controllers
             string sid = null;
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
 
             // 既にログイン済みならトップページにリダイレクト
             if (CurrentSession.customerUserInfo != null)
@@ -256,6 +289,13 @@ namespace ServiceSiteForTheElderly.Controllers
             string sid = null;
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
 
 
             // 事前に電話番号と郵便番号のハイフンを取り除いておく
@@ -445,6 +485,13 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
             int allTotalPrice = 0;
 
             // カートに商品があれば
@@ -567,6 +614,13 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
             // ログインしていなければ、ログイン画面にリダイレクト
             // 既にログイン済みならトップページにリダイレクト
             if (CurrentSession.customerUserInfo == null)
@@ -595,6 +649,13 @@ namespace ServiceSiteForTheElderly.Controllers
             string sid = null;
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
 
             string paramArg1 = Request.Params["id"];
             string q = string.IsNullOrEmpty(Request.Params["q"]) ? "" : Request.Params["q"];
@@ -667,6 +728,14 @@ namespace ServiceSiteForTheElderly.Controllers
             string sid = null;
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
 
             string q = string.IsNullOrEmpty(Request.Params["q"]) ? "" : Request.Params["q"];
 
@@ -780,7 +849,77 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["goods"] = html;
         }
 
+        public ActionResult Foodstuff()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            ViewData["title"] = "食料品";
+            ViewData["message"] = "現在商品がありません";
+            return View("Error");
+        }
+
+        public ActionResult DailyNecessities()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            ViewData["title"] = "日用品";
+            ViewData["message"] = "現在商品がありません";
+            return View("Error");
+        }
+
+        public ActionResult Medicine()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            ViewData["title"] = "お薬";
+            ViewData["message"] = "現在商品がありません";
+            return View("Error");
+        }
+
+        public ActionResult CongratulatoryGift()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            ViewData["title"] = "お祝品";
+            ViewData["message"] = "現在商品がありません";
+            return View("Error");
+        }
 
     }
 }

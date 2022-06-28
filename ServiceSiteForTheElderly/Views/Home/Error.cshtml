@@ -1,0 +1,67 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高齢者のお困り解決砥部町内サービスサイト</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/common.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <div class="header-buttons">
+                <div class="shopping-cart">
+                    <span class="shopping-count-badge @ViewData["HeaderBadgeStatus"]">@ViewData["HeaderBadge"]</span>
+                    <a href="@Url.Action("ShoppingCart", "Home")" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
+                </div>
+                <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
+            </div>
+        </header>
+
+
+        <div class="breadcrumb-list">
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
+                <li><a href="#">@ViewData["title"]</a></li>
+
+            </ul>
+        </div>
+
+        <div class="main-contents">
+            <h2>@ViewData["title"]</h2>
+
+            <div class="no-item-message">
+                <p><i class="fas fa-exclamation-circle"></i>@ViewData["message"]</p>
+            </div>
+        </div>
+
+
+        <footer>
+
+            <div class="footer-logo">
+                HAISABU Platform
+            </div>
+
+            <!-- <div class="ads">
+            広告
+        </div> -->
+
+        </footer>
+    </div>
+
+</body>
+
+</html>

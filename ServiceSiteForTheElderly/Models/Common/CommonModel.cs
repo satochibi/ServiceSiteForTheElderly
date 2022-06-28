@@ -33,6 +33,24 @@ namespace ServiceSiteForTheElderly.Models.Common
     /// </summary>
     public static class CommonModel
     {
+        public static ReturnOfBasicDatabase GetDatabaseGlobalStatus()
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            dba.Query("select status from Global;", ref dt);
+
+            switch (dt.Rows[0].Field<int>("status")){
+                
+                case 0:
+                    return ReturnOfBasicDatabase.Success;
+                case -1:
+                default:
+                    return ReturnOfBasicDatabase.Error;
+
+            }
+        }
+
+
         /// <summary>
         /// Indexの宅配配送サービス
         /// </summary>
