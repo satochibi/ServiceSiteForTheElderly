@@ -21,6 +21,9 @@
 </head>
 
 <body>
+    <input type="hidden" id="UrlActionEnter" value="@Url.Action("EnterShippingAddress", "Home")" />
+    <input type="hidden" id="UrlActionClear" value="@Url.Action("ClearShippingAddress", "Home")" />
+
     <input type="hidden" id="NavigatorPrev" value="@Url.Action("ShoppingCart", "Home")" />
     <input type="hidden" id="NavigatorNext" value="@Url.Action("ShoppingConfirm", "Home")" />
     <div class="container">
@@ -143,7 +146,22 @@
             $("#form").on("submit", function (event) {
                 event.preventDefault();
                 const nextUrl = $("#NavigatorNext").val();
-                location.href = nextUrl;
+
+                if ($('#is-delivery-destination').is(':checked')) {
+                    const postUrl = $("#UrlActionEnter").val();
+                    const inputData = {
+                        "Name": $("#dest-name").val(),
+                        "Furigana": $("#dest-furigana").val(),
+                        "Tel": $("#dest-phone-number").val(),
+                        "Postcode": $("#dest-postal-code").val(),
+                        "Address": $("#dest-address").val()
+                    };
+                    postfuncajax(postUrl, nextUrl, inputData);
+                } else {
+                    const postUrl = $("#UrlActionClear").val();
+                    const inputData = {};
+                    postfuncajax(postUrl, nextUrl, inputData);
+                }
             });
 
             $("#back-button").click(function () {
@@ -152,6 +170,34 @@
             });
 
 
+            function postfuncajax(postUrl, nextUrl, inputData) {
+                const jsonString = JSON.stringify(inputData);
+
+                $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    async: false,
+                    data: jsonString,
+                    dataType: "json",
+                    contentType: 'application/json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var message = XMLHttpRequest.status;
+                        alert(message);
+                    },
+                    success: function (data) {
+                        switch (data.status) {
+                            case "success":
+                                location.href = nextUrl;
+                                break;
+                            case "error":
+                            default:
+                                alert("エラーが起こりました");
+                                break;
+                        }
+
+                    }
+                });
+            }
 
 
         });

@@ -310,14 +310,6 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
-            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
-            {
-                ViewData["title"] = mentainanceTitle;
-                ViewData["message"] = mentainanceMessage;
-                return View("Error");
-            }
-
-
             // 事前に電話番号と郵便番号のハイフンを取り除いておく
             postModel.Tel = postModel.Tel.Replace("-", "");
             postModel.Postcode = postModel.Postcode.Replace("-", "");
@@ -643,6 +635,7 @@ namespace ServiceSiteForTheElderly.Controllers
         /// 送り先アドレスの入力画面
         /// </summary>
         /// <returns>送り先アドレスの入力画面のビュー</returns>
+        [HttpGet]
         public ActionResult EnterShippingAddress()
         {
             string sid = null;
@@ -674,6 +667,60 @@ namespace ServiceSiteForTheElderly.Controllers
             return View();
 
         }
+
+        /// <summary>
+        /// 送り先情報をセッションに保存するためのAPI
+        /// </summary>
+        /// <param name="postModel">送り先情報から必要な項目から構成されるJsonから生成されたオブジェクト</param>
+        /// <example>
+        /// {
+        ///     "Name": "砥部花子",
+        ///     "Furigana": "とべはなこ",
+        ///     "Tel": "0000-000-0000",
+        ///     "Postcode": "000-0000",
+        ///     "Address": "砥部町麻生000-0"
+        /// }
+        /// </example>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult EnterShippingAddress(ShippingAddressModel postModel)
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            postModel.Tel = postModel.Tel.Replace("-", "");
+            postModel.Postcode = postModel.Postcode.Replace("-", "");
+
+            CurrentSession.shippingAddressInfo = new MShippingAddress()
+            {
+                Name = postModel.Name,
+                Furigana = postModel.Furigana,
+                Tel = postModel.Tel,
+                Postcode = postModel.Postcode,
+                Address = postModel.Address
+            };
+
+            return Json(new MJsonWithStatus() { status = "success" });
+        }
+
+        /// <summary>
+        /// セッション内の送り先情報を削除するためのAPI
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ClearShippingAddress()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            CurrentSession.shippingAddressInfo = null;
+
+            return Json(new MJsonWithStatus() { status = "success" });
+
+        }
+
 
         /// <summary>
         /// 注文最終確認画面
