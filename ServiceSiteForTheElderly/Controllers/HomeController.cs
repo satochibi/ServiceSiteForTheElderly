@@ -497,6 +497,21 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
+        /// カートの中身を全部消去する
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ClearToCart()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            CurrentSession.cartModelInfo.Clear();
+            return Json(new MJsonWithStatus() { status = "success" });
+        }
+
+        /// <summary>
         /// カゴの中の画面
         /// </summary>
         /// <returns>カゴの中の画面のビュー</returns>
