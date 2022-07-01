@@ -253,8 +253,7 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             // セッションのログイン情報を捨てる
-            CurrentSession = null;
-            Session["CurrentSession"] = null;
+            CurrentSession.customerUserInfo = null;
 
             return View();
         }
