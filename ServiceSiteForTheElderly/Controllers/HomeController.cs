@@ -664,6 +664,7 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Index");
             }
 
+            ViewData["CurrentSession"] = CurrentSession;
             return View();
 
         }
