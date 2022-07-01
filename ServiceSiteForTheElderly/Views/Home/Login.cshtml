@@ -19,7 +19,7 @@
 
 <body>
     <input type="hidden" id="UrlActionLogin" value="@Url.Action("Login", "Home")" />
-    <input type="hidden" id="NavigatorNext" value="@Url.Action("MyPageOrder", "Home")" />
+    <input type="hidden" id="NavigatorTop" value="@Url.Action("Index", "Home")" />
     <input type="hidden" id="UrlActionSignUp" value="@Url.Action("SignUp", "Home")" />
 
 
@@ -122,7 +122,7 @@
                 };
 
                 const postUrl = $("#UrlActionLogin").val();
-                const nextUrl = $("#NavigatorNext").val();
+                const nextUrl = $("#NavigatorTop").val();
                 postfuncajax(postUrl, nextUrl, inputData);
             });
 
@@ -145,7 +145,11 @@
                         switch (data.status) {
                             case "success":
                                 // alert("ログイン成功");
-                                location.href = nextUrl;
+                                if (!document.referrer) {
+                                    location.href = nextUrl;
+                                    return;
+                                }
+                                location.href = document.referrer;
                                 break;
                             case "wrongUserId":
                                 alert("ユーザIDが間違っています");
