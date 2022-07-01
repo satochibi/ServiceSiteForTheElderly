@@ -662,6 +662,45 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
+        /// 注文最終確認画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ShoppingConfirm()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            // 既にログイン済みならトップページにリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            // セッション内のカゴに入れている商品が1つもなければ
+            // トップページにリダイレクト
+            if (CurrentSession.cartModelInfo.Count == 0)
+            {
+                IndexMakeView();
+                return View("Index");
+            }
+
+            ViewData["CurrentSession"] = CurrentSession;
+
+
+            return View();
+        }
+
+        /// <summary>
         /// お弁当の画面
         /// </summary>
         /// <returns>お弁当のビュー</returns>

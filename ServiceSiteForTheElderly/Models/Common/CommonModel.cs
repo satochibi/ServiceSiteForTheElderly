@@ -171,6 +171,8 @@ namespace ServiceSiteForTheElderly.Models.Common
                             Address = dt.Rows[0].Field<string>("address"),
                             Password = databasePassword
                         };
+
+                        cust = mCustomers;
                         return ReturnOfCheckDatabaseLogin.Success;
                     }
                     else

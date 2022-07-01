@@ -1,0 +1,284 @@
+﻿
+@{
+    Layout = null;
+    var CurrentSession = ViewData["CurrentSession"] as ServiceSiteForTheElderly.Models.ViewModels.SessionModel;
+}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高齢者のお困り解決砥部町内サービスサイト</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/contact.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/shopping-cart.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/shopping-confirm.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+</head>
+
+
+<body>
+    <input type="hidden" id="NavigatorPrev" value="@Url.Action("EnterShippingAddress", "Home")" />
+    <div class="container">
+        <header>
+            <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <div class="header-buttons">
+                <div class="shopping-cart">
+                    <span class="shopping-count-badge @ViewData["HeaderBadgeStatus"]">@ViewData["HeaderBadge"]</span>
+                    <a href="@Url.Action("ShoppingCart", "Home")" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
+                </div>
+                <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
+            </div>
+        </header>
+
+
+        <div class="breadcrumb-list">
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
+                <li><a href="@Url.Action("ShoppingCart", "Home")">買い物カゴ</a></li>
+                <li><a href="@Url.Action("EnterShippingAddress", "Home")">送り先情報入力</a></li>
+                <li><a href="#">注文確認</a></li>
+            </ul>
+        </div>
+
+        <div class="main-contents">
+            <h2>注文内容を以下の内容で送信しますか?</h2>
+
+            <div class="contact-table cart-table">
+                <form>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th colspan="2">申し込み者</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>お名前</th>
+                                <td>@CurrentSession.customerUserInfo.Name</td>
+                            </tr>
+                            <tr>
+                                <th>ふりがな</th>
+                                <td>@CurrentSession.customerUserInfo.Furigana</td>
+                            </tr>
+                            <tr>
+                                <th>電話番号</th>
+                                <td>@CurrentSession.customerUserInfo.Tel</td>
+                            </tr>
+                            <tr>
+                                <th>メールアドレス</th>
+                                <td>@CurrentSession.customerUserInfo.Mail</td>
+                            </tr>
+                            <tr>
+                                <th>郵便番号</th>
+                                <td>@CurrentSession.customerUserInfo.Postcode</td>
+                            </tr>
+                            <tr>
+                                <th>住所</th>
+                                <td>@CurrentSession.customerUserInfo.Address</td>
+                            </tr>
+                        </tbody>
+
+                        <thead>
+                            <tr>
+                                <th colspan="2">送り先</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>お名前</th>
+                                <td>砥部 花子</td>
+                            </tr>
+                            <tr>
+                                <th>電話番号</th>
+                                <td>089-982-0001</td>
+                            </tr>
+                            <tr>
+                                <th>郵便番号</th>
+                                <td>791-2114</td>
+                            </tr>
+                            <tr>
+                                <th>住所</th>
+                                <td>砥部町麻生000-0</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                    <div class="a-shop">
+                        <h3>あいうえお店</h3>
+
+                        <div class="cart-table-heading">
+                            <ul>
+                                <li class="cart-table-body-list-item">商品内容</li>
+                                <li class="cart-table-body-list-item">数量</li>
+                                <li class="cart-table-body-list-item">小計(税込)</li>
+                            </ul>
+                        </div>
+                        <div class="cart-table-body">
+                            <ul>
+                                <li class="cart-table-body-list-item shopping-item-column">
+                                    <img src="./img/bento.png" alt="あ弁当">
+                                    <div>
+                                        <h4>あ弁当</h4>
+                                        <p>500円</p>
+                                    </div>
+
+                                </li>
+                                <li class="cart-table-body-list-item">
+                                    1個
+                                </li>
+                                <li class="cart-table-body-list-item">
+                                    500円
+                                </li>
+                            </ul>
+
+                            <ul>
+
+                                <li class="cart-table-body-list-item shopping-item-column">
+                                    <img src="./img/bento.png" alt="い弁当">
+                                    <div>
+                                        <h4>い弁当</h4>
+                                        <p>500円</p>
+                                    </div>
+
+                                </li>
+                                <li class="cart-table-body-list-item">
+                                    1個
+                                </li>
+                                <li class="cart-table-body-list-item">
+                                    500円
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="cart-table-postage">
+                            <span>送料 300円</span>
+                        </div>
+
+                        <div class="cart-table-price">
+                            <span>合計金額 1300円</span>
+                        </div>
+                    </div>
+
+                    <div class="a-shop">
+                        <h3>かきくけこ店</h3>
+
+                        <div class="cart-table-heading">
+                            <ul>
+                                <li class="cart-table-body-list-item">商品内容</li>
+                                <li class="cart-table-body-list-item">数量</li>
+                                <li class="cart-table-body-list-item">小計(税込)</li>
+                            </ul>
+                        </div>
+                        <div class="cart-table-body">
+                            <ul>
+                                <li class="cart-table-body-list-item shopping-item-column">
+                                    <img src="./img/zasshi.jpg" alt="あ雑誌">
+                                    <div>
+                                        <h4>あ雑誌</h4>
+                                        <p>500円</p>
+                                    </div>
+
+                                </li>
+                                <li class="cart-table-body-list-item">
+                                    1個
+                                </li>
+                                <li class="cart-table-body-list-item">
+                                    500円
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="cart-table-postage">
+                            <span>送料 300円</span>
+                        </div>
+
+                        <div class="cart-table-price">
+                            <span>合計金額 800円</span>
+                        </div>
+                    </div>
+
+
+                    <div class="a-shop">
+                        <h3>さしすせそ店</h3>
+
+                        <div class="cart-table-heading">
+                            <ul>
+                                <li class="cart-table-body-list-item">商品内容</li>
+                                <li class="cart-table-body-list-item">数量</li>
+                                <li class="cart-table-body-list-item">小計(税込)</li>
+                            </ul>
+                        </div>
+                        <div class="cart-table-body">
+                            <ul>
+                                <li class="cart-table-body-list-item shopping-item-column">
+                                    <img src="./img/tokusanhin.jpg" alt="さ特産品">
+                                    <div>
+                                        <h4>さ特産品</h4>
+                                        <p>650円</p>
+                                    </div>
+
+                                </li>
+                                <li class="cart-table-body-list-item">
+                                    1個
+                                </li>
+                                <li class="cart-table-body-list-item">
+                                    650円
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="cart-table-postage">
+                            <span>配送地域により送料が変わります</span>
+                        </div>
+
+                        <div class="cart-table-price">
+                            <span>合計金額 650円以上</span>
+                        </div>
+                    </div>
+
+
+                    <div class="total-price">
+                        <span>総合計金額 2750円以上</span>
+                    </div>
+
+                    <div class="button-field">
+                        <button class="form-normal-button prev-arrow-button" type="button" id="back-button">送り先情報入力に戻る</button>
+                        <button class="form-primary-button next-arrow-button" type="submit" id="submit">送信</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+
+        <footer>
+
+            <div class="footer-logo">
+                HAISABU Platform
+            </div>
+
+            <!-- <div class="ads">
+                広告
+            </div> -->
+
+        </footer>
+    </div>
+
+    <script>
+        $(function () {
+            $("#back-button").click(function () {
+                const prevUrl = $("#NavigatorPrev").val();
+                location.href = prevUrl;
+            });
+        });
+    </script>
+</body>
+
+</html>
