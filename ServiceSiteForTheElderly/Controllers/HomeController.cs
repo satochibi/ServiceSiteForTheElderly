@@ -694,9 +694,95 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Index");
             }
 
+
+            int allTotalPrice = 0;
+
+            // カートに商品があれば
+            if (CurrentSession.cartModelInfo != null && CurrentSession.cartModelInfo.Count > 0)
+            {
+                List<MGoodsOfCart> mGoodsOfCartList = new List<MGoodsOfCart>();
+                CommonModel.GetDataBaseGoodsInCart(CurrentSession.cartModelInfo, ref mGoodsOfCartList);
+
+                // 店ごとにグループ化
+                var query = mGoodsOfCartList.GroupBy(item => new { ShopName = item.ShopName, ShippingCost = item.ShippingCost });
+                string html = "";
+
+                foreach (var group in query)
+                {
+                    // それぞれの店ごとにテーブルを作成
+
+                    int shopTotalPrice = 0;
+
+                    // テーブルヘッダー
+                    html += string.Format(@"
+                        <div class=""a-shop"">
+                            <h3>{0}</h3>
+                            <div class=""cart-table-heading"">
+                                <ul>
+                                    <li class=""cart-table-body-list-item"">商品内容</li>
+                                    <li class=""cart-table-body-list-item"">数量</li>
+                                    <li class=""cart-table-body-list-item"">小計(税込)</li>
+                                </ul>
+                            </div>
+                        <div class=""cart-table-body"">", group.Key.ShopName);
+
+
+
+                    foreach (var item in group)
+                    {
+                        int totalPrice = item.Price * item.Quantity;
+                        string varietyDisplay = string.IsNullOrEmpty(item.Variety) ? "" : $"({item.Variety})";
+                        string varietyId = string.IsNullOrEmpty(item.Variety) ? "" : $"-{item.Variety}";
+
+                        string aPicture = string.IsNullOrEmpty(item.Picture) ? Url.Content($"~/GoodsPictures/noimage.png") : Url.Content($"~/GoodsPictures/{item.Picture}");
+
+                        // テーブルボディー
+                        html += string.Format(@"
+                            <ul class=""goods"" id=""goods-{6}{7}"">
+                                
+                                <li class=""cart-table-body-list-item shopping-item-column"">
+                                    <img src = ""{5}"" alt=""{0}{1}"">
+                                    <div>
+                                        <h4>{0}{1}</h4>
+                                        <p>{2}円</p>
+                                    </div>
+
+                                </li>
+                                <li class=""cart-table-body-list-item"">
+                                    {3}
+                                </li>
+                                <li class=""cart-table-body-list-item"">
+                                    {4}円
+                                </li>
+                             </ul>", item.Name, varietyDisplay, item.Price, item.Quantity, totalPrice, aPicture, item.GoodsId, varietyId);
+
+                        shopTotalPrice += totalPrice;
+                    }
+
+                    shopTotalPrice += group.Key.ShippingCost;
+
+                    html += string.Format(@"
+                        </div>
+                        <div class=""cart-table-postage"">
+                            <span>送料 {0}円</span>
+                        </div>
+
+                        <div class=""cart-table-price"">
+                            <span>合計金額 {1}円</span>
+                        </div>", group.Key.ShippingCost, shopTotalPrice);
+
+                    allTotalPrice += shopTotalPrice;
+                    html += "</div>";
+
+                }
+
+
+                ViewData["goodsOfCart"] = html;
+            }
+
+            ViewData["totalPrice"] = allTotalPrice;
+
             ViewData["CurrentSession"] = CurrentSession;
-
-
             return View();
         }
 
