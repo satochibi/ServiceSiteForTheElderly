@@ -801,6 +801,29 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
+        /// 完了画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ShoppingComplete()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+
+            ViewData["title"] = "ご注文手続きが完了いたしました";
+            ViewData["message"] = "ご注文いただき、ありがとうございます。";
+            return View("Complete");
+        }
+
+        /// <summary>
         /// お弁当の画面
         /// </summary>
         /// <returns>お弁当のビュー</returns>
@@ -1008,6 +1031,9 @@ namespace ServiceSiteForTheElderly.Controllers
 
             ViewData["goods"] = html;
         }
+
+
+        
 
         public ActionResult Foodstuff()
         {
