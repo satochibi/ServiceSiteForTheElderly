@@ -22,7 +22,11 @@
 
 
 <body>
+    <input type="hidden" id="UrlAction" value="@Url.Action("CartToDatabase", "Home")" />
     <input type="hidden" id="NavigatorPrev" value="@Url.Action("EnterShippingAddress", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("ShoppingComplete", "Home")" />
+    <input type="hidden" id="NavigatorTop" value="@Url.Action("Index", "Home")" />
+
     <div class="container">
         <header>
             <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
@@ -49,7 +53,7 @@
             <h2>注文内容を以下の内容で送信しますか?</h2>
 
             <div class="contact-table cart-table">
-                <form>
+                <form id="form">
                     <table border="1">
                         <thead>
                             <tr>
@@ -163,6 +167,46 @@
                 const prevUrl = $("#NavigatorPrev").val();
                 location.href = prevUrl;
             });
+
+
+            $("#form").on("submit", function (event) {
+                event.preventDefault();
+                const inputData = {};
+                const postUrl = $("#UrlAction").val();
+                const nextUrl = $("#NavigatorNext").val();
+                postfuncajax(postUrl, nextUrl, inputData);
+
+            });
+
+            function postfuncajax(postUrl, nextUrl, inputData) {
+                const jsonString = JSON.stringify(inputData);
+
+                $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    async: false,
+                    data: jsonString,
+                    dataType: "json",
+                    contentType: 'application/json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var message = XMLHttpRequest.status;
+                        alert(message);
+                    },
+                    success: function (data) {
+                        switch (data.status) {
+                            case "success":
+                                location.href = nextUrl;
+                                break;
+                            case "error":
+                            default:
+                                alert("エラーが起こりました");
+                                location.href = $("#NavigatorTop").val();
+                                break;
+                        }
+
+                    }
+                });
+            }
         });
     </script>
 </body>

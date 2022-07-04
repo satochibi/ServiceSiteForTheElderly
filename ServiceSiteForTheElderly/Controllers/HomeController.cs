@@ -867,8 +867,12 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             // セッションのカートの情報・送り先情報をもとに、データベースに書き込み
-            // CommonModel.ResistDatabaseOrders(CurrentSession);
-
+            int? shippingAddressesId = null;
+            CommonModel.RegistDatabaseShippingAddresses(CurrentSession, ref shippingAddressesId);
+            int ordersId = -1;
+            CommonModel.RegistDatabaseOrders(CurrentSession, shippingAddressesId, ref ordersId);
+            CommonModel.RegistDatabaseOrderGoods(CurrentSession, ordersId);
+            CurrentSession.randomId = CommonModel.GetDatabaseOrdersIdToRandomId(ordersId);
             // カートの中身を空にする
             ClearToCart();
 
@@ -896,9 +900,19 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Error");
             }
 
+            // 再アクセスの禁止
+            if (string.IsNullOrEmpty(CurrentSession.randomId))
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "注文が複数起こりました";
+                return View("Error");
+            }
+
 
             ViewData["title"] = "ご注文手続きが完了いたしました";
             ViewData["message"] = "ご注文いただき、ありがとうございます。";
+            ViewData["randomId"] = CurrentSession.randomId;
+            CurrentSession.randomId = "";
             return View("Complete");
         }
 

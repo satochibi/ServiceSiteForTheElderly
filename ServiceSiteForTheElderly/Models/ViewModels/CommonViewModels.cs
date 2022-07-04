@@ -14,6 +14,7 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
         public MCustomers customerUserInfo { get; set; }
         public List<CartModel> cartModelInfo { get; set; }
         public MShippingAddress shippingAddressInfo { get; set; }
+        public string randomId { get; set; } = "";
     }
 
     public class LoginModel

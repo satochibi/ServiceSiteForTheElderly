@@ -464,26 +464,105 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
 
         }
-        /*
-        public static ReturnOfBasicDatabase ResistDatabaseOrders(SessionModel CurrentSession)
-        {
-            DBAccess dba = new DBAccess();
 
-            string sql = $"insert into Orders (randomId, customerId, orderDate, shippingAddressesId, isCash) values(REPLACE(CAST(NEWID() AS NCHAR(36)), '-', ''), 1, GETDATE(), null, 'false');";
-            if (dba.Execute(sql) >= 0)
+        /// <summary>
+        /// ShippingAddressesに登録
+        /// </summary>
+        /// <param name="CurrentSession">現在のセッション情報</param>
+        /// <param name="shippingAddressesId">出力されるShippingAddressesId</param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase RegistDatabaseShippingAddresses(SessionModel CurrentSession, ref int? shippingAddressesId)
+        {
+            // 送り先情報がなければスキップ
+            if (CurrentSession.shippingAddressInfo == null)
             {
+                shippingAddressesId = null;
                 return ReturnOfBasicDatabase.Success;
             }
-            else
+
+
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+
+            string sql = $"insert into ShippingAddresses (name, furigana, tel, postcode, address) values('{CurrentSession.shippingAddressInfo.Name}', '{CurrentSession.shippingAddressInfo.Furigana}', '{CurrentSession.shippingAddressInfo.Tel}', '{CurrentSession.shippingAddressInfo.Postcode}', '{CurrentSession.shippingAddressInfo.Address}'); select @@IDENTITY;";
+            try
+            {
+                dba.Query(sql, ref dt);
+                int id = int.Parse(dt.Rows[0].ItemArray[0].ToString());
+                shippingAddressesId = id;
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+
+        }
+
+        /// <summary>
+        /// Orderテーブルに登録
+        /// </summary>
+        /// <param name="CurrentSession">現在のセッション情報</param>
+        /// <param name="ordersId">出力されるOrderId</param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase RegistDatabaseOrders(SessionModel CurrentSession, int? shippingAddressesId, ref int ordersId)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+
+            string shippingAddressesStr = (shippingAddressesId == null) ? " null" : $" '{shippingAddressesId}'";
+
+            string sql = $"insert into Orders (randomId, customerId, orderDate, shippingAddressesId, isCash) values(REPLACE(CAST(NEWID() AS NCHAR(36)), '-', ''), '{CurrentSession.customerUserInfo.Id}', GETDATE(), {shippingAddressesStr}, 'false'); select @@IDENTITY;";
+            try
+            {
+                dba.Query(sql, ref dt);
+                int id = int.Parse(dt.Rows[0].ItemArray[0].ToString());
+                ordersId = id;
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
             {
                 return ReturnOfBasicDatabase.Error;
             }
         }
-        
-        public static ReturnOfBasicDatabase ResistDatabaseOrderGoods()
+
+        /// <summary>
+        /// OrderGoodsテーブルに登録
+        /// </summary>
+        /// <param name="CurrentSession">現在のセッション情報</param>
+        /// <param name="ordersId">登録するordersId</param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase RegistDatabaseOrderGoods(SessionModel CurrentSession, int ordersId)
         {
             DBAccess dba = new DBAccess();
+
+            foreach (var item in CurrentSession.cartModelInfo)
+            {
+                var variety = string.IsNullOrEmpty(item.Variety) ? "null" : $"'{item.Variety}'";
+                string sql = $"insert into OrderGoods (goodsId, variety, quantity, startTimeOfDist, endTimeOfDist, orderId) values('{item.GoodsId}', {variety}, '{item.Quantity}', null, null, '{ordersId}');";
+                if (dba.Execute(sql) == -1)
+                {
+                    return ReturnOfBasicDatabase.Error;
+                }
+            }
+
+            return ReturnOfBasicDatabase.Success;
+
         }
-        */
+
+        /// <summary>
+        /// orderIdからrandomIdに変換
+        /// </summary>
+        /// <param name="ordersId">変換元のorderId</param>
+        /// <returns></returns>
+        public static string GetDatabaseOrdersIdToRandomId(int ordersId)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            string sql = $"select randomId from Orders where id = {ordersId};";
+            dba.Query(sql, ref dt);
+            return dt.Rows[0].Field<string>("randomId");
+        }
+
     }
 }
