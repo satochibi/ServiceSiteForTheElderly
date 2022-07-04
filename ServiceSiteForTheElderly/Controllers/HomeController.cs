@@ -327,8 +327,9 @@ namespace ServiceSiteForTheElderly.Controllers
 
                 // 顧客情報を作ってデータベースに登録
                 MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = postModel.Mail, Postcode = postModel.Postcode, Address = postModel.Address, Password = postModel.Password };
-
-                CommonModel.RegistDatabaseCustomer(cust);
+                int custId = 0;
+                CommonModel.RegistDatabaseCustomer(cust, ref custId);
+                cust.Id = custId;
 
                 // 未ログインならログインしておく(新規登録からの自動的なログイン)
                 if (CurrentSession.customerUserInfo == null)
@@ -849,9 +850,39 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
+        /// 注文確定時に、カートの中身をデータベースに入れるAPI
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult CartToDatabase()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            // もし、カートの中身がなかったらエラー
+            if (CurrentSession.cartModelInfo == null || CurrentSession.cartModelInfo.Count <= 0)
+            {
+                return Json(new MJsonWithStatus() { status = "error" });
+            }
+
+            // セッションのカートの情報・送り先情報をもとに、データベースに書き込み
+            // CommonModel.ResistDatabaseOrders(CurrentSession);
+
+            // カートの中身を空にする
+            ClearToCart();
+
+            // 送り先情報を捨てる
+            CurrentSession.shippingAddressInfo = null;
+
+            return Json(new MJsonWithStatus() { status = "success" });
+        }
+
+        /// <summary>
         /// 完了画面
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         public ActionResult ShoppingComplete()
         {
             string sid = null;

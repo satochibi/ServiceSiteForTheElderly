@@ -201,16 +201,21 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// 新規登録
         /// </summary>
         /// <param name="cust">登録する顧客情報</param>
+        /// <param name="custId">登録した顧客情報のid</param>
         /// <returns>結果のステータス</returns>
-        public static ReturnOfBasicDatabase RegistDatabaseCustomer(MCustomers cust)
+        public static ReturnOfBasicDatabase RegistDatabaseCustomer(MCustomers cust, ref int custId)
         {
             DBAccess dba = new DBAccess();
-            string sql = $"insert into Customers (name, furigana, tel, mail, postcode, address, password) values('{cust.Name}', '{cust.Furigana}', '{cust.Tel}', '{cust.Mail}', '{cust.Postcode}', '{cust.Address}', '{cust.Password}')";
-            if (dba.Execute(sql) >= 0)
+            DataTable dt = null;
+            string sql = $"insert into Customers (name, furigana, tel, mail, postcode, address, password) values('{cust.Name}', '{cust.Furigana}', '{cust.Tel}', '{cust.Mail}', '{cust.Postcode}', '{cust.Address}', '{cust.Password}'); select @@IDENTITY;";
+            try
             {
+                dba.Query(sql, ref dt);
+                int id = int.Parse(dt.Rows[0].ItemArray[0].ToString());
+                custId = id;
                 return ReturnOfBasicDatabase.Success;
             }
-            else
+            catch (Exception)
             {
                 return ReturnOfBasicDatabase.Error;
             }
@@ -459,8 +464,26 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
 
         }
+        /*
+        public static ReturnOfBasicDatabase ResistDatabaseOrders(SessionModel CurrentSession)
+        {
+            DBAccess dba = new DBAccess();
 
-
-
+            string sql = $"insert into Orders (randomId, customerId, orderDate, shippingAddressesId, isCash) values(REPLACE(CAST(NEWID() AS NCHAR(36)), '-', ''), 1, GETDATE(), null, 'false');";
+            if (dba.Execute(sql) >= 0)
+            {
+                return ReturnOfBasicDatabase.Success;
+            }
+            else
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+        }
+        
+        public static ReturnOfBasicDatabase ResistDatabaseOrderGoods()
+        {
+            DBAccess dba = new DBAccess();
+        }
+        */
     }
 }
