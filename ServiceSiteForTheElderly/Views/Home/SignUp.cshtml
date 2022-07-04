@@ -60,41 +60,41 @@
                     <div class="input-container">
                         <div class="input-field">
                             <label class="label" for="name">お名前<small>必須</small></label>
-                            <input id="name" type="text" name="name" placeholder="砥部 花子" required>
+                            <input id="name" type="text" name="name" placeholder="砥部 花子" maxlength="30" required>
                         </div>
                         <div class="input-field">
                             <label class="label" for="furigana">ふりがな<small>必須</small></label>
                             <input id="furigana" type="text" name="furigana" placeholder="とべ はなこ"
-                                   pattern="(?=.*?[\u3041-\u309F])[\u3041-\u309F\s]*" required>
+                                   pattern="(?=.*?[\u3041-\u309F])[\u3041-\u309F\s]*" maxlength="50" required>
                         </div>
                         <div class="input-field">
                             <label class="label" for="phone-number">電話番号<small>必須</small></label>
                             <input id="phone-number" type="text" name="phone-number" placeholder="089-982-0001"
-                                   pattern="\d{2,4}-?\d{2,4}-?\d{3,4}" required>
+                                   pattern="\d{2,4}-?\d{2,4}-?\d{3,4}" maxlength="15" required>
                         </div>
                         <div class="input-field">
                             <label class="label" for="e-mail">メールアドレス</label>
-                            <input id="e-mail" type="email" name="email" placeholder="hanako@tobecho.com" required>
+                            <input id="e-mail" type="email" name="email" placeholder="hanako@tobecho.com" maxlength="200" required>
                         </div>
 
                         <div class="input-field">
                             <label class="label" for="postal-code">郵便番号</label>
                             <input id="postal-code" type="text" name="postal-code"
                                    onKeyUp="AjaxZip3.zip2addr(this,'','address','address');" placeholder="791-2114"
-                                   pattern="\d{3}-?\d{4}" required>
+                                   pattern="\d{3}-?\d{4}" maxlength="8" required>
                         </div>
 
                         <div class="input-field grow-field">
                             <label class="label" for="address">住所</label>
-                            <input id="address" type="text" name="address" placeholder="砥部町麻生000-0">
+                            <input id="address" type="text" name="address" placeholder="砥部町麻生000-0" maxlength="255">
                         </div>
                         <div class="input-field">
                             <label class="label" for="name">パスワード<small>必須</small></label>
-                            <input id="password" type="text" name="password" placeholder="半角英数字8文字以上でご入力ください" required>
+                            <input id="password" type="password" name="password" placeholder="半角英数字8文字以上でご入力ください" maxlength="50" required>
                         </div>
                         <div class="input-field">
                             <label class="label" for="name">パスワード(確認用)<small>必須</small></label>
-                            <input id="confirm-password" type="text" name="password" placeholder="確認のため、もう一度ご入力ください" required>
+                            <input id="confirm-password" type="password" name="password" placeholder="確認のため、もう一度ご入力ください" maxlength="50" required>
                         </div>
                     </div>
                     <div class="button-field">

@@ -203,7 +203,7 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// <param name="cust">登録する顧客情報</param>
         /// <param name="custId">登録した顧客情報のid</param>
         /// <returns>結果のステータス</returns>
-        public static ReturnOfBasicDatabase RegistDatabaseCustomer(MCustomers cust, ref int custId)
+        public static ReturnOfBasicDatabase RegistDatabaseCustomer(MCustomers cust, ref int? custId)
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;

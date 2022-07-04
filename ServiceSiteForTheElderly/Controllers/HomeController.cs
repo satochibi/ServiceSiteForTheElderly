@@ -327,9 +327,16 @@ namespace ServiceSiteForTheElderly.Controllers
 
                 // 顧客情報を作ってデータベースに登録
                 MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = postModel.Mail, Postcode = postModel.Postcode, Address = postModel.Address, Password = postModel.Password };
-                int custId = 0;
+                int? custId = null;
                 CommonModel.RegistDatabaseCustomer(cust, ref custId);
-                cust.Id = custId;
+                if (custId == null)
+                {
+                    return Json(new MJsonWithStatus() { status = "error" });
+                }
+                else
+                {
+                    cust.Id = custId.Value;
+                }
 
                 // 未ログインならログインしておく(新規登録からの自動的なログイン)
                 if (CurrentSession.customerUserInfo == null)
