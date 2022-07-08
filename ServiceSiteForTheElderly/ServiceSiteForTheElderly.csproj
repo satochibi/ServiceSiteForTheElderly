@@ -199,6 +199,7 @@
     <Content Include="Views\Home\ShoppingConfirm.cshtml" />
     <Content Include="Views\Home\Complete.cshtml" />
     <Content Include="Views\Home\MyPage.cshtml" />
+    <Content Include="Views\Home\OrderDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

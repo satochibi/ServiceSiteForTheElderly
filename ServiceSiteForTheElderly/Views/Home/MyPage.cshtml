@@ -21,6 +21,7 @@
 
 
 <body>
+    <input type="hidden" id="UrlActionOrderDetail" value="@Url.Action("OrderDetail", "Home")" />
     <div class="container">
         <header>
             <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
@@ -36,9 +37,8 @@
 
         <div class="breadcrumb-list">
             <ul>
-                <li><a href="./index.html">HOME</a></li>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
                 <li><a href="#">マイページ</a></li>
-
             </ul>
         </div>
 
@@ -82,41 +82,42 @@
             </div>
         </div>
 
+    </div>
+    <script>
+        $(function () {
+            $('tr[data-href]').addClass('clickable')
 
-        <script>
-            $(function () {
-                $('tr[data-href]').addClass('clickable')
-
-                    //クリックイベント
-                    .click(function (e) {
-                        //e.targetはクリックした要素自体、それがa要素以外であれば
-                        if (!$(e.target).is('a')) {
-                            URLJump(e);
-                        }
-                    })
-                    // フォーカス時のイベント
-                    .keypress(function (e) {
-                        var code = (e.keyCode ? e.keyCode : e.which);
-                        if (e.keyCode == 13) {
-                            URLJump(e);
-                        }
-                    });
-
-
-                function URLJump(e) {
-                    //その要素の先祖要素で一番近いtrの
-                    //data-href属性の値に書かれているURLに遷移する
-                    const query = $(e.target).closest('tr').data('href');
-                    const url = "./my-page-order-detail.html?randomid=" + query;
-                    location.href = url;
-                };
+                //クリックイベント
+                .click(function (e) {
+                    //e.targetはクリックした要素自体、それがa要素以外であれば
+                    if (!$(e.target).is('a')) {
+                        URLJump(e);
+                    }
+                })
+                // フォーカス時のイベント
+                .keypress(function (e) {
+                    var code = (e.keyCode ? e.keyCode : e.which);
+                    if (e.keyCode == 13) {
+                        URLJump(e);
+                    }
+                });
 
 
-            });
+            function URLJump(e) {
+                //その要素の先祖要素で一番近いtrの
+                //data-href属性の値に書かれているURLに遷移する
+                const query = $(e.target).closest('tr').data('href');
+                const url = $("#UrlActionOrderDetail").val() + "?randomid=" + query;
+                location.href = url;
+            };
+
+
+        });
 
 
 
-        </script>
+    </script>
+
 </body>
 
 </html>

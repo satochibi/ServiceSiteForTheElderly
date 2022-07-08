@@ -658,7 +658,6 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             // ログインしていなければ、ログイン画面にリダイレクト
-            // 既にログイン済みならトップページにリダイレクト
             if (CurrentSession.customerUserInfo == null)
             {
                 return View("Login");
@@ -1150,9 +1149,15 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Error");
             }
 
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
             List<MOrders> mOrders = new List<MOrders>();
 
-            CommonModel.GetDatabaseOrders(CurrentSession, ref mOrders);
+            CommonModel.GetDatabaseOrders(CurrentSession.customerUserInfo.Id, ref mOrders);
 
             string html = "";
 
@@ -1170,6 +1175,47 @@ namespace ServiceSiteForTheElderly.Controllers
 
 
             return View("MyPage");
+        }
+
+        /// <summary>
+        /// マイページの注文履歴の詳細
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult OrderDetail()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            // クエリがなければトップページにリダイレクト
+            string paramArg1 = Request.Params["randomid"];
+            if (string.IsNullOrEmpty(paramArg1))
+            {
+                IndexMakeView();
+                return View("Index");
+            }
+
+
+            MOrders mOrder = null;
+            List<MOrderGoods> mOrderGoods = new List<MOrderGoods>();
+            CommonModel.GetDatabaseOrderGoods(paramArg1, ref mOrder, ref mOrderGoods);
+
+
+            ViewData["CurrentSession"] = CurrentSession;
+            return View();
         }
 
         public ActionResult Foodstuff()

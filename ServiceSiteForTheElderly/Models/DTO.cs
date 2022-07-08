@@ -106,6 +106,18 @@ public class MOrders
 
 }
 
+public class MOrderGoods
+{
+    public int GoodsId { get; set; }
+    public string Variety { get; set; }
+    public int Quantity { get; set; }
+    public DateTime? StartTimeOfDist { get; set; }
+    public DateTime? EndTimeOfDist { get; set; }
+    public int OrderId { get; set; }
+}
+
+
+
 public class MJsonWithStatus
 {
     public string status { get; set; }

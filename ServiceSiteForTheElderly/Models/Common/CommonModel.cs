@@ -566,15 +566,29 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
         /// <summary>
+        /// randomIdからorderIdに変換
+        /// </summary>
+        /// <param name="randomId">変換元のrandomId</param>
+        /// <returns></returns>
+        public static int GetDatabaseRandomIdToOrdersId(string randomId)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            string sql = $"select id from Orders where randomId = '{randomId}';";
+            dba.Query(sql, ref dt);
+            return dt.Rows[0].Field<int>("id");
+        }
+
+        /// <summary>
         /// Ordersテーブルを取得
         /// </summary>
         /// <returns></returns>
-        public static ReturnOfBasicDatabase GetDatabaseOrders(SessionModel CurrentSession, ref List<MOrders> mOrders)
+        public static ReturnOfBasicDatabase GetDatabaseOrders(int customerId, ref List<MOrders> mOrders)
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
 
-            string sql = $"select * from Orders where customerId={CurrentSession.customerUserInfo.Id} order by orderDate desc;";
+            string sql = $"select * from Orders where customerId={customerId} order by orderDate desc;";
             try
             {
                 dba.Query(sql, ref dt);
@@ -595,6 +609,56 @@ namespace ServiceSiteForTheElderly.Models.Common
             {
                 return ReturnOfBasicDatabase.Error;
             }
+        }
+
+
+
+        /// <summary>
+        /// 注文の詳細を取得
+        /// </summary>
+        /// <param name="randomId">変換元のrandomId</param>
+        /// <param name="mOrder">出力されるOrder情報</param>
+        /// <param name="mOrderGoods">出力されるOrderGoods情報</param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase GetDatabaseOrderGoods(string randomId, ref MOrders mOrder, ref List<MOrderGoods> mOrderGoods)
+        {
+            int orderId = CommonModel.GetDatabaseRandomIdToOrdersId(randomId);
+
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            string sql = $"select * from Orders where id = {orderId};";
+
+            dba.Query(sql, ref dt);
+
+            // Orderテーブルから取得
+            mOrder = new MOrders();
+            mOrder.Id = dt.Rows[0].Field<int>("id");
+            mOrder.RandomId = dt.Rows[0].Field<string>("randomId");
+            mOrder.CustomerId = dt.Rows[0].Field<int>("customerId");
+            mOrder.OrderDate = dt.Rows[0].Field<DateTime>("orderDate");
+            mOrder.ShippingAddressesId = dt.Rows[0].Field<int?>("shippingAddressesId");
+            mOrder.IsCash = dt.Rows[0].Field<bool>("isCash");
+
+
+            dt = null;
+            // OrderGoodsテーブルから取得
+            sql = $"select * from OrderGoods where orderId = {orderId};";
+            dba.Query(sql, ref dt);
+
+            for (int row = 0; row < dt.Rows.Count; row++)
+            {
+                MOrderGoods aOrderGoods = new MOrderGoods();
+                aOrderGoods.GoodsId = dt.Rows[row].Field<int>("goodsId");
+                aOrderGoods.Variety = dt.Rows[row].Field<string>("variety");
+                aOrderGoods.Quantity = dt.Rows[row].Field<int>("quantity");
+                aOrderGoods.StartTimeOfDist = dt.Rows[row].Field<DateTime?>("startTimeOfDist");
+                aOrderGoods.EndTimeOfDist = dt.Rows[row].Field<DateTime?>("endTimeOfDist");
+                aOrderGoods.OrderId = dt.Rows[row].Field<int>("orderId");
+                mOrderGoods.Add(aOrderGoods);
+            }
+
+            return ReturnOfBasicDatabase.Success;
+
         }
 
     }
