@@ -1133,7 +1133,44 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
 
-        
+        /// <summary>
+        /// マイページ(注文履歴)
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyPageOrder()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            List<MOrders> mOrders = new List<MOrders>();
+
+            CommonModel.GetDatabaseOrders(CurrentSession, ref mOrders);
+
+            string html = "";
+
+            foreach (var aOrder in mOrders)
+            {
+
+                html += string.Format(@"
+                        <tr data-href=""{0}"" tabindex=""0"">
+                            <td>{1}</td>
+                            <td>発送準備中&nbsp;<i class=""fa-solid fa-arrow-up-right-from-square""></i></td>
+                        </tr>", aOrder.RandomId, aOrder.OrderDate.ToString("yyyy/MM/dd HH:mm:ss"));
+            }
+
+            ViewData["orders"] = html;
+
+
+            return View("MyPage");
+        }
 
         public ActionResult Foodstuff()
         {

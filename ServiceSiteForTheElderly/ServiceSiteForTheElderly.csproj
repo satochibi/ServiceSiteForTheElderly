@@ -135,6 +135,7 @@
     <Content Include="css\common.css" />
     <Content Include="css\contact.css" />
     <Content Include="css\index.css" />
+    <Content Include="css\my-page-order-detail.css" />
     <Content Include="css\my-page.css" />
     <Content Include="css\normalize.css" />
     <Content Include="css\obento.css" />
@@ -197,6 +198,7 @@
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Home\ShoppingConfirm.cshtml" />
     <Content Include="Views\Home\Complete.cshtml" />
+    <Content Include="Views\Home\MyPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

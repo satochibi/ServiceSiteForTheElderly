@@ -346,6 +346,11 @@ li.cart-table-body-list-item:nth-child(4) {
   }
 }
 
+@media only screen and (max-width: 600px) {
+  div.container .main-contents div.contact-table form {
+    padding: 0;
+  }
+}
 div.container .main-contents div.cart-table form {
   margin-left: 30px;
   margin-right: 30px;
@@ -417,7 +422,8 @@ div.container .main-contents div.cart-table form .a-shop .cart-table-body ul .sh
 div.container .main-contents div.cart-table form .a-shop .cart-table-postage {
   border-top: 1px solid #a0a0a0;
 }
-div.container .main-contents div.cart-table form .a-shop .cart-table-postage, div.container .main-contents div.cart-table form .a-shop .cart-table-price {
+div.container .main-contents div.cart-table form .a-shop .cart-table-postage,
+div.container .main-contents div.cart-table form .a-shop .cart-table-price {
   font-weight: bold;
   text-align: center;
 }

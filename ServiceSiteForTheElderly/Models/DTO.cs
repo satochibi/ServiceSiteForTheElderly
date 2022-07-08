@@ -95,8 +95,19 @@ public class MShippingAddress
     public string Address { get; set; }
 }
 
+public class MOrders
+{
+    public int Id { get; set; }
+    public string RandomId { get; set; }
+    public int CustomerId { get; set; }
+    public DateTime OrderDate { get; set; }
+    public int? ShippingAddressesId { get; set; }
+    public bool IsCash { get; set; }
+
+}
 
 public class MJsonWithStatus
 {
     public string status { get; set; }
 }
+

@@ -39,8 +39,9 @@ namespace ServiceSiteForTheElderly.Models.Common
             DataTable dt = null;
             dba.Query("select status from Global;", ref dt);
 
-            switch (dt.Rows[0].Field<int>("status")){
-                
+            switch (dt.Rows[0].Field<int>("status"))
+            {
+
                 case 0:
                     return ReturnOfBasicDatabase.Success;
                 case -1:
@@ -562,6 +563,38 @@ namespace ServiceSiteForTheElderly.Models.Common
             string sql = $"select randomId from Orders where id = {ordersId};";
             dba.Query(sql, ref dt);
             return dt.Rows[0].Field<string>("randomId");
+        }
+
+        /// <summary>
+        /// Ordersテーブルを取得
+        /// </summary>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase GetDatabaseOrders(SessionModel CurrentSession, ref List<MOrders> mOrders)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+
+            string sql = $"select * from Orders where customerId={CurrentSession.customerUserInfo.Id} order by orderDate desc;";
+            try
+            {
+                dba.Query(sql, ref dt);
+                for (int row = 0; row < dt.Rows.Count; row++)
+                {
+                    MOrders aOrder = new MOrders();
+                    aOrder.Id = dt.Rows[row].Field<int>("id");
+                    aOrder.RandomId = dt.Rows[row].Field<string>("randomId");
+                    aOrder.CustomerId = dt.Rows[row].Field<int>("customerId");
+                    aOrder.OrderDate = dt.Rows[row].Field<DateTime>("orderDate");
+                    aOrder.ShippingAddressesId = dt.Rows[row].Field<int?>("shippingAddressesId");
+                    aOrder.IsCash = dt.Rows[row].Field<bool>("isCash");
+                    mOrders.Add(aOrder);
+                }
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
         }
 
     }
