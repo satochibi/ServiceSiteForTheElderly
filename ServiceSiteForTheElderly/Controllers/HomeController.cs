@@ -1131,7 +1131,6 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["goods"] = html;
         }
 
-
         /// <summary>
         /// マイページ(注文履歴)
         /// </summary>
@@ -1212,9 +1211,122 @@ namespace ServiceSiteForTheElderly.Controllers
             MOrders mOrder = null;
             List<MOrderGoods> mOrderGoods = new List<MOrderGoods>();
             CommonModel.GetDatabaseOrderGoods(paramArg1, ref mOrder, ref mOrderGoods);
+            List<MGoodsOfCart> mGoodsOfCartList = new List<MGoodsOfCart>();
+            CommonModel.GetDataBaseOrderGoodsInCart(mOrderGoods, ref mGoodsOfCartList);
+            MShippingAddress mShippingAddress = null;
+
+            if (mOrder.ShippingAddressesId != null)
+            {
+                CommonModel.GetDatabaseShippingAddress(mOrder.ShippingAddressesId.Value, ref mShippingAddress);
+            }
+            else
+            {
+                mShippingAddress = null;
+            }
+            int allTotalPrice = 0;
+            // 店ごとにグループ化
+            var query = mGoodsOfCartList.GroupBy(item => new { ShopName = item.ShopName, ShippingCost = item.ShippingCost });
+            string html = "";
+
+            foreach (var group in query)
+            {
+                // それぞれの店ごとにテーブルを作成
+
+                int shopTotalPrice = 0;
+
+                // テーブルヘッダー
+                html += string.Format(@"
+                        <div class=""a-shop"">
+                            <h3>{0}</h3>
+                            <div class=""cart-table-heading"">
+                                <ul>
+                                    <li class=""cart-table-body-list-item"">商品内容</li>
+                                    <li class=""cart-table-body-list-item"">数量</li>
+                                    <li class=""cart-table-body-list-item"">小計(税込)</li>
+                                    <li class=""cart-table-body-list-item"">配達状況</li>
+                                </ul>
+                            </div>
+                        <div class=""cart-table-body"">", group.Key.ShopName);
 
 
+
+                foreach (var item in group)
+                {
+                    int totalPrice = item.Price * item.Quantity;
+                    string varietyDisplay = string.IsNullOrEmpty(item.Variety) ? "" : $"({item.Variety})";
+                    string varietyId = string.IsNullOrEmpty(item.Variety) ? "" : $"-{item.Variety}";
+
+                    string aPicture = string.IsNullOrEmpty(item.Picture) ? Url.Content($"~/GoodsPictures/noimage.png") : Url.Content($"~/GoodsPictures/{item.Picture}");
+
+                    string delivery = "エラー";
+
+                    if (item.StartTimeOfDist != null)
+                    {
+                        if (item.EndTimeOfDist != null)
+                        {
+                            delivery = "配達済";
+                        }
+                        else
+                        {
+                            delivery = "配達中";
+                        }
+                    }
+                    else
+                    {
+                        delivery = "未発送";
+                    }
+                    
+
+
+                    // テーブルボディー
+                    html += string.Format(@"
+                            <ul class=""goods"" id=""goods-{6}{7}"">
+                                
+                                <li class=""cart-table-body-list-item shopping-item-column"">
+                                    <img src = ""{5}"" alt=""{0}{1}"">
+                                    <div>
+                                        <h4>{0}{1}</h4>
+                                        <p>{2}円</p>
+                                    </div>
+
+                                </li>
+                                <li class=""cart-table-body-list-item"">
+                                    {3}
+                                </li>
+                                <li class=""cart-table-body-list-item"">
+                                    {4}円
+                                </li>
+                                <li class=""cart-table-body-list-item"">
+                                    {8}
+                                </li>
+                             </ul>", item.Name, varietyDisplay, item.Price, item.Quantity, totalPrice, aPicture, item.GoodsId, varietyId, delivery);
+
+                    shopTotalPrice += totalPrice;
+                }
+
+                shopTotalPrice += group.Key.ShippingCost;
+
+                html += string.Format(@"
+                        </div>
+                        <div class=""cart-table-postage"">
+                            <span>送料 {0}円</span>
+                        </div>
+
+                        <div class=""cart-table-price"">
+                            <span>合計金額 {1}円</span>
+                        </div>", group.Key.ShippingCost, shopTotalPrice);
+
+                allTotalPrice += shopTotalPrice;
+                html += "</div>";
+
+            }
+
+
+            ViewData["goodsOfCart"] = html;
+            ViewData["mOrder"] = mOrder;
+            ViewData["totalPrice"] = allTotalPrice;
             ViewData["CurrentSession"] = CurrentSession;
+            ViewData["ShippingAddress"] = mShippingAddress;
             return View();
         }
 

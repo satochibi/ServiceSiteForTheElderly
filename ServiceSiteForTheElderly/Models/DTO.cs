@@ -83,6 +83,8 @@ public class MGoodsOfCart
     public string ShopName { get; set; }
     public string ShopGenre { get; set; }
     public int ShippingCost { get; set; }
+    public DateTime? StartTimeOfDist { get; set; } = null;
+    public DateTime? EndTimeOfDist { get; set; } = null;
 }
 
 

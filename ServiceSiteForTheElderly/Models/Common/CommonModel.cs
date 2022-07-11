@@ -612,6 +612,57 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
 
+        /// <summary>
+        /// OrderGoodsテーブルからMGoodsOfCartに変換(注文の詳細のカートの中身のため)
+        /// </summary>
+        /// <param name="mOrderGoods"></param>
+        /// <param name="mGoodsOfCart"></param>
+        public static void GetDataBaseOrderGoodsInCart(List<MOrderGoods> mOrderGoods, ref List<MGoodsOfCart> mGoodsOfCart)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+
+            if (mOrderGoods == null)
+            {
+                return;
+            }
+
+            MakeViewDataBaseLatestGoodsPriceTrends(dba);
+
+            foreach (var aItemInCart in mOrderGoods)
+            {
+                // 商品idから商品を検索
+                if (string.IsNullOrEmpty(aItemInCart.Variety))
+                {
+                    dba.Query($"select Top(1) * from Goods left join LatestGoodsPriceTrends on Goods.id = LatestGoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} order by priceChangeDate desc;", ref dt);
+                    aItemInCart.Variety = "";
+                }
+                else
+                {
+                    dba.Query($"select Top(1) * from Goods left join LatestGoodsPriceTrends on Goods.id = LatestGoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} and variety = '{aItemInCart.Variety}' order by priceChangeDate desc;", ref dt);
+                }
+
+                MGoodsOfCart aGoods = new MGoodsOfCart();
+                aGoods.GoodsId = aItemInCart.GoodsId;
+                aGoods.Quantity = aItemInCart.Quantity;
+                aGoods.Variety = string.IsNullOrEmpty(aItemInCart.Variety) ? "" : aItemInCart.Variety;
+                aGoods.Price = dt.Rows[0].Field<int>("price");
+                aGoods.Name = dt.Rows[0].Field<string>("name");
+                aGoods.Picture = dt.Rows[0].Field<string>("picture");
+                aGoods.ShopId = dt.Rows[0].Field<int>("shopId");
+                aGoods.PublicationStartDate = dt.Rows[0].Field<DateTime>("publicationStartDate");
+                aGoods.PublicationEndDate = dt.Rows[0].Field<DateTime>("publicationEndDate");
+                aGoods.ShopName = dt.Rows[0].Field<string>("displayName");
+                aGoods.ShopGenre = dt.Rows[0].Field<string>("genre");
+                aGoods.ShippingCost = dt.Rows[0].Field<int>("shippingCost");
+                aGoods.StartTimeOfDist = aItemInCart.StartTimeOfDist;
+                aGoods.EndTimeOfDist = aItemInCart.EndTimeOfDist;
+                mGoodsOfCart.Add(aGoods);
+            }
+
+        }
+
+
 
         /// <summary>
         /// 注文の詳細を取得
@@ -659,6 +710,37 @@ namespace ServiceSiteForTheElderly.Models.Common
 
             return ReturnOfBasicDatabase.Success;
 
+        }
+
+        /// <summary>
+        /// shippingAddressesIdからMShippingAddressを取得
+        /// </summary>
+        /// <param name="shippingAddressesId"></param>
+        /// <param name="mShippingAddress"></param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase GetDatabaseShippingAddress(int shippingAddressesId, ref MShippingAddress mShippingAddress)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            string sql = $"select * from ShippingAddresses where id = {shippingAddressesId};";
+
+            try
+            {
+                dba.Query(sql, ref dt);
+                mShippingAddress = new MShippingAddress()
+                {
+                    Name = dt.Rows[0].Field<string>("name"),
+                    Furigana = dt.Rows[0].Field<string>("furigana"),
+                    Tel = dt.Rows[0].Field<string>("tel"),
+                    Postcode = dt.Rows[0].Field<string>("postcode"),
+                    Address = dt.Rows[0].Field<string>("address")
+                };
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
         }
 
     }
