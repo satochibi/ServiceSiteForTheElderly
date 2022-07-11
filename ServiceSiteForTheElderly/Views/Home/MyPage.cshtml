@@ -76,7 +76,18 @@
                             <th>注文日</th>
                             <th>状況</th>
                         </tr>
-                        @Html.Raw(ViewData["orders"])
+
+                        @if (string.IsNullOrEmpty(ViewData["orders"].ToString()))
+                        {
+                            <tr>
+                                <td colspan="2">今まで注文したことがありません</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @Html.Raw(ViewData["orders"])
+
+                        }
                     </tbody>
                 </table>
             </div>
