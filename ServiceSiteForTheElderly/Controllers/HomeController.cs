@@ -1212,7 +1212,7 @@ namespace ServiceSiteForTheElderly.Controllers
             List<MOrderGoods> mOrderGoods = new List<MOrderGoods>();
             CommonModel.GetDatabaseOrderGoods(paramArg1, ref mOrder, ref mOrderGoods);
             List<MGoodsOfCart> mGoodsOfCartList = new List<MGoodsOfCart>();
-            CommonModel.GetDataBaseOrderGoodsInCart(mOrderGoods, ref mGoodsOfCartList);
+            CommonModel.GetDataBaseOrderGoodsInCart(mOrder.OrderDate, mOrderGoods, ref mGoodsOfCartList);
             MShippingAddress mShippingAddress = null;
 
             if (mOrder.ShippingAddressesId != null)

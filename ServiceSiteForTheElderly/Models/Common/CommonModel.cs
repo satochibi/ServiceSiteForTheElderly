@@ -414,7 +414,17 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// <param name="dba">データベースオブジェクト</param>
         private static void MakeViewDataBaseLatestGoodsPriceTrends(DBAccess dba)
         {
+            dba.Execute("drop view LatestGoodsPriceTrends;");
             dba.Execute($"create view LatestGoodsPriceTrends as (select Latest.goodsId, Latest.priceChangeDate, NULLIF(Latest.variety, '') as variety, price from(select goodsId, MAX(priceChangeDate) as priceChangeDate, isnull(variety, '') as variety from GoodsPriceTrends where priceChangeDate <= GETDATE() group by goodsId, variety) as Latest left join(select goodsId, priceChangeDate, isnull(variety, '') as variety, price from GoodsPriceTrends) as Trends on Latest.goodsId = Trends.goodsId and Latest.priceChangeDate = Trends.priceChangeDate and Latest.variety = Trends.variety);");
+            return;
+        }
+
+
+        private static void MakeViewDataBasePreviousGoodsPriceTrends(DBAccess dba, DateTime dateTime)
+        {
+            dba.Execute("drop view PreviousGoodsPriceTrends;");
+            string datetimeStr = dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            dba.Execute($"create view PreviousGoodsPriceTrends as (select Latest.goodsId, Latest.priceChangeDate, NULLIF(Latest.variety, '') as variety, price from(select goodsId, MAX(priceChangeDate) as priceChangeDate, isnull(variety, '') as variety from GoodsPriceTrends where priceChangeDate <= '{datetimeStr}' group by goodsId, variety) as Latest left join(select goodsId, priceChangeDate, isnull(variety, '') as variety, price from GoodsPriceTrends) as Trends on Latest.goodsId = Trends.goodsId and Latest.priceChangeDate = Trends.priceChangeDate and Latest.variety = Trends.variety);");
             return;
         }
 
@@ -617,7 +627,7 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// </summary>
         /// <param name="mOrderGoods"></param>
         /// <param name="mGoodsOfCart"></param>
-        public static void GetDataBaseOrderGoodsInCart(List<MOrderGoods> mOrderGoods, ref List<MGoodsOfCart> mGoodsOfCart)
+        public static void GetDataBaseOrderGoodsInCart(DateTime dateTime, List<MOrderGoods> mOrderGoods, ref List<MGoodsOfCart> mGoodsOfCart)
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
@@ -627,19 +637,19 @@ namespace ServiceSiteForTheElderly.Models.Common
                 return;
             }
 
-            MakeViewDataBaseLatestGoodsPriceTrends(dba);
+            MakeViewDataBasePreviousGoodsPriceTrends(dba, dateTime);
 
             foreach (var aItemInCart in mOrderGoods)
             {
                 // 商品idから商品を検索
                 if (string.IsNullOrEmpty(aItemInCart.Variety))
                 {
-                    dba.Query($"select Top(1) * from Goods left join LatestGoodsPriceTrends on Goods.id = LatestGoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} order by priceChangeDate desc;", ref dt);
+                    dba.Query($"select Top(1) * from Goods left join PreviousGoodsPriceTrends on Goods.id = PreviousGoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} order by priceChangeDate desc;", ref dt);
                     aItemInCart.Variety = "";
                 }
                 else
                 {
-                    dba.Query($"select Top(1) * from Goods left join LatestGoodsPriceTrends on Goods.id = LatestGoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} and variety = '{aItemInCart.Variety}' order by priceChangeDate desc;", ref dt);
+                    dba.Query($"select Top(1) * from Goods left join PreviousGoodsPriceTrends on Goods.id = PreviousGoodsPriceTrends.goodsId left join Shops on shopId = Shops.id where Goods.id = {aItemInCart.GoodsId} and variety = '{aItemInCart.Variety}' order by priceChangeDate desc;", ref dt);
                 }
 
                 MGoodsOfCart aGoods = new MGoodsOfCart();
