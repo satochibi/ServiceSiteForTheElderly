@@ -580,13 +580,21 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// </summary>
         /// <param name="randomId">変換元のrandomId</param>
         /// <returns></returns>
-        public static int GetDatabaseRandomIdToOrdersId(string randomId)
+        public static int? GetDatabaseRandomIdToOrdersId(string randomId)
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
             string sql = $"select id from Orders where randomId = '{randomId}';";
-            dba.Query(sql, ref dt);
-            return dt.Rows[0].Field<int>("id");
+            try
+            {
+                dba.Query(sql, ref dt);
+                return dt.Rows[0].Field<int>("id");
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            
         }
 
         /// <summary>
@@ -683,7 +691,12 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// <returns></returns>
         public static ReturnOfBasicDatabase GetDatabaseOrderGoods(string randomId, ref MOrders mOrder, ref List<MOrderGoods> mOrderGoods)
         {
-            int orderId = CommonModel.GetDatabaseRandomIdToOrdersId(randomId);
+            int? orderId = CommonModel.GetDatabaseRandomIdToOrdersId(randomId);
+
+            if (orderId == null)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
 
             DBAccess dba = new DBAccess();
             DataTable dt = null;

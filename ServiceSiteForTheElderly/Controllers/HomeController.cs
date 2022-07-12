@@ -1199,18 +1199,17 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Login");
             }
 
-            // クエリがなければトップページにリダイレクト
             string paramArg1 = Request.Params["randomid"];
-            if (string.IsNullOrEmpty(paramArg1))
+
+            MOrders mOrder = null;
+            List<MOrderGoods> mOrderGoods = new List<MOrderGoods>();
+            var isSuccess = CommonModel.GetDatabaseOrderGoods(paramArg1, ref mOrder, ref mOrderGoods);
+            // クエリがない、またはランダムidが不正なら、トップページにリダイレクト
+            if (isSuccess == ReturnOfBasicDatabase.Error || string.IsNullOrEmpty(paramArg1))
             {
                 IndexMakeView();
                 return View("Index");
             }
-
-
-            MOrders mOrder = null;
-            List<MOrderGoods> mOrderGoods = new List<MOrderGoods>();
-            CommonModel.GetDatabaseOrderGoods(paramArg1, ref mOrder, ref mOrderGoods);
             List<MGoodsOfCart> mGoodsOfCartList = new List<MGoodsOfCart>();
             CommonModel.GetDataBaseOrderGoodsInCart(mOrder.OrderDate, mOrderGoods, ref mGoodsOfCartList);
             MShippingAddress mShippingAddress = null;
