@@ -208,7 +208,10 @@ namespace ServiceSiteForTheElderly.Models.Common
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
-            string sql = $"insert into Customers (name, furigana, tel, mail, postcode, address, password) values('{cust.Name}', '{cust.Furigana}', '{cust.Tel}', '{cust.Mail}', '{cust.Postcode}', '{cust.Address}', '{cust.Password}'); select @@IDENTITY;";
+            string mail = string.IsNullOrEmpty(cust.Mail) ? "NULL" : $"'{cust.Mail}'";
+            string postcode = string.IsNullOrEmpty(cust.Postcode) ? "NULL" : $"'{cust.Postcode}'";
+            string address = string.IsNullOrEmpty(cust.Address) ? "NULL" : $"'{cust.Address}'";
+            string sql = $"insert into Customers (name, furigana, tel, mail, postcode, address, password) values('{cust.Name}', '{cust.Furigana}', '{cust.Tel}', {mail}, {postcode}, {address}, '{cust.Password}'); select @@IDENTITY;";
             try
             {
                 dba.Query(sql, ref dt);

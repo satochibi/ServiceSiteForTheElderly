@@ -31,7 +31,7 @@ namespace ServiceSiteForTheElderly.Controllers
         /// <param name="body">メール本文</param>
         public static void MailSend(string smtpServer, string senderMail, string recipientMail, string subject, string body)
         {
-            SmtpClient sc = new SmtpClient() { Host = smtpServer, Port=587, DeliveryMethod = SmtpDeliveryMethod.Network, Credentials = new System.Net.NetworkCredential(senderMail, "qhtdcoppzgkkigfv"), EnableSsl = true };
+            SmtpClient sc = new SmtpClient() { Host = smtpServer, Port = 587, DeliveryMethod = SmtpDeliveryMethod.Network, Credentials = new System.Net.NetworkCredential(senderMail, "qhtdcoppzgkkigfv"), EnableSsl = true };
             sc.Send(senderMail, recipientMail, subject, body);
             sc.Dispose();
         }
@@ -312,21 +312,24 @@ namespace ServiceSiteForTheElderly.Controllers
 
             // 事前に電話番号と郵便番号のハイフンを取り除いておく
             postModel.Tel = postModel.Tel.Replace("-", "");
-            postModel.Postcode = postModel.Postcode.Replace("-", "");
+            if (postModel.Postcode != null)
+            {
+                postModel.Postcode = postModel.Postcode.Replace("-", "");
+            }
 
             // ユーザが既に存在するかの判定
             if (CommonModel.CheckDatabaseIsUserIdExist(postModel.Tel) == ReturnOfCheckDatabaseIsUserIdExist.UserIdIsNotExist)
             {
                 // 存在しなかったら、登録処理
 
-                if (string.IsNullOrEmpty(postModel.Name) || string.IsNullOrEmpty(postModel.Furigana) || string.IsNullOrEmpty(postModel.Tel) || string.IsNullOrEmpty(postModel.Mail) || string.IsNullOrEmpty(postModel.Postcode) || string.IsNullOrEmpty(postModel.Address) || string.IsNullOrEmpty(postModel.Password))
+                if (string.IsNullOrEmpty(postModel.Name) || string.IsNullOrEmpty(postModel.Furigana) || string.IsNullOrEmpty(postModel.Tel) || string.IsNullOrEmpty(postModel.Password))
                 {
                     // 未入力があるかどうかチェック
                     return Json(new MJsonWithStatus() { status = "containEmptyChar" });
                 }
 
                 // 顧客情報を作ってデータベースに登録
-                MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = postModel.Mail, Postcode = postModel.Postcode, Address = postModel.Address, Password = postModel.Password };
+                MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = string.IsNullOrEmpty(postModel.Mail) ? null : postModel.Mail, Postcode = string.IsNullOrEmpty(postModel.Postcode) ? null : postModel.Postcode, Address = string.IsNullOrEmpty(postModel.Address) ? null : postModel.Address, Password = postModel.Password };
                 int? custId = null;
                 CommonModel.RegistDatabaseCustomer(cust, ref custId);
                 if (custId == null)
@@ -388,7 +391,7 @@ namespace ServiceSiteForTheElderly.Controllers
 
             postModelList = postModelList.Select(postModel => new CartModel() { GoodsId = postModel.GoodsId, Variety = string.IsNullOrEmpty(postModel.Variety) ? "" : postModel.Variety, Quantity = postModel.Quantity }).ToList();
 
-            
+
 
             // カートの状態のコピーをとっておく、そのコピーに対して商品を入れる
             var copyCurrentCart = new List<CartModel>(CurrentSession.cartModelInfo);
@@ -426,7 +429,7 @@ namespace ServiceSiteForTheElderly.Controllers
 
             // 商品をカートに入れる前に、カートに入れた時に、10個以上の商品が入っているかチェック
             bool checkQuantity = copyCurrentCart.All(cartModel => cartModel.Quantity < 10);
-            
+
             if (checkQuantity)
             {
                 CurrentSession.cartModelInfo = copyCurrentCart;
@@ -438,7 +441,7 @@ namespace ServiceSiteForTheElderly.Controllers
                 // 10個以上ならstatusをerrorにして終了
                 return Json(new MJsonWithStatus() { status = "maxQuantityError" });
             }
-            
+
         }
 
         /// <summary>
@@ -946,7 +949,7 @@ namespace ServiceSiteForTheElderly.Controllers
                 paramArg1 = Request.Params["id"];
                 q = Request.Params["q"];
             }
-            catch(Exception)
+            catch (Exception)
             {
                 ViewData["title"] = "入力エラー";
                 ViewData["message"] = "特殊記号を含む文字列で検索することはできません";
@@ -967,7 +970,7 @@ namespace ServiceSiteForTheElderly.Controllers
             {
                 // idがあれば、その店の商品画面へ
                 int shopId = int.Parse(paramArg1);
-                
+
                 List<MGoods> mGoods = new List<MGoods>();
                 CommonModel.GetDataBaseGoodsOfShop(shopId, ref mGoods, q);
 
@@ -1073,7 +1076,7 @@ namespace ServiceSiteForTheElderly.Controllers
 
             foreach (var aGoods in mGoods)
             {
-                
+
                 string aPicture = string.IsNullOrEmpty(aGoods.Picture) ? Url.Content($"~/GoodsPictures/noimage.png") : Url.Content($"~/GoodsPictures/{aGoods.Picture}");
 
                 string priceHtml = "";
@@ -1300,7 +1303,7 @@ namespace ServiceSiteForTheElderly.Controllers
                     {
                         delivery = "未発送";
                     }
-                    
+
 
 
                     // テーブルボディー
