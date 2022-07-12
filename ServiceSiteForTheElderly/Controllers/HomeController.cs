@@ -939,7 +939,19 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Error");
             }
 
-            string paramArg1 = Request.Params["id"];
+            string paramArg1;
+            try
+            {
+                paramArg1 = Request.Params["id"];
+            }
+            catch(Exception)
+            {
+                ViewData["title"] = "入力エラー";
+                ViewData["message"] = "特殊記号を含む文字列で検索することはできません";
+                return View("Error");
+            }
+
+
             string q = string.IsNullOrEmpty(Request.Params["q"]) ? "" : Request.Params["q"];
 
             if (string.IsNullOrEmpty(paramArg1))
