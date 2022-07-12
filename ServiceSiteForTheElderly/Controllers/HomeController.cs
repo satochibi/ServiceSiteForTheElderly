@@ -940,9 +940,11 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             string paramArg1;
+            string q;
             try
             {
                 paramArg1 = Request.Params["id"];
+                q = Request.Params["q"];
             }
             catch(Exception)
             {
@@ -952,7 +954,7 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
 
-            string q = string.IsNullOrEmpty(Request.Params["q"]) ? "" : Request.Params["q"];
+            q = string.IsNullOrEmpty(q) ? "" : q;
 
             if (string.IsNullOrEmpty(paramArg1))
             {
@@ -1031,7 +1033,19 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Error");
             }
 
-            string q = string.IsNullOrEmpty(Request.Params["q"]) ? "" : Request.Params["q"];
+            string q;
+            try
+            {
+                q = Request.Params["q"];
+            }
+            catch (Exception)
+            {
+                ViewData["title"] = "入力エラー";
+                ViewData["message"] = "特殊記号を含む文字列で検索することはできません";
+                return View("Error");
+            }
+
+            q = string.IsNullOrEmpty(q) ? "" : q;
 
             List<MGoods> mGoods = new List<MGoods>();
 
