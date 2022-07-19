@@ -1430,5 +1430,75 @@ namespace ServiceSiteForTheElderly.Controllers
             return View("Error");
         }
 
+        public ActionResult Contact()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            ViewData["CurrentSession"] = CurrentSession;
+
+
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// お問い合わせの本文を更新するAPI
+        /// </summary>
+        /// <param name="postModel">必要な項目から構成されるJsonから生成されたオブジェクト</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SetMessage(MessageModel postModel)
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            CurrentSession.message = (postModel.Message == null) ? "" : postModel.Message;
+
+            return Json(new MJsonWithStatus() { status = "success" });
+        }
+
+
+
+        public ActionResult Confirm()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            ViewData["CurrentSession"] = CurrentSession;
+            return View();
+        }
+
     }
 }

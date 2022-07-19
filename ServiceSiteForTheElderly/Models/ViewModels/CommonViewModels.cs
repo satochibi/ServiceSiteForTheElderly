@@ -11,10 +11,26 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
 
     public class SessionModel
     {
+        /// <summary>
+        /// 顧客情報
+        /// </summary>
         public MCustomers customerUserInfo { get; set; }
+        /// <summary>
+        /// カートの中身
+        /// </summary>
         public List<CartModel> cartModelInfo { get; set; }
+        /// <summary>
+        /// 送り先情報
+        /// </summary>
         public MShippingAddress shippingAddressInfo { get; set; }
+        /// <summary>
+        /// 注文時のランダムID
+        /// </summary>
         public string randomId { get; set; } = "";
+        /// <summary>
+        /// お問い合わせ時の本文
+        /// </summary>
+        public string message { get; set; } = "";
     }
 
     public class LoginModel
@@ -60,6 +76,11 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
         public string Tel { get; set; }
         public string Postcode { get; set; }
         public string Address { get; set; }
+    }
+
+    public class MessageModel
+    {
+        public string Message { get; set; }
     }
 
 }
