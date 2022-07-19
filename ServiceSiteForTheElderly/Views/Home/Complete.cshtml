@@ -51,7 +51,7 @@
                     <table>
                         <tbody>
                             <tr>
-                                <th>ご注文番号</th>
+                                <th>@ViewData["tableTitle"]</th>
                                 <td>@ViewData["randomId"]</td>
                             </tr>
                         </tbody>
@@ -59,7 +59,7 @@
                 </div>
 
                 <p>
-                    @ViewData["message"]<br>
+                    @Html.Raw(ViewData["message"])<br>
                     <br>
                     確認のため、自動返信メールをお送りしております。<br>
                     自動返信メールが届かない場合、送信エラーの可能性がございます。<br>

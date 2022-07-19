@@ -20,6 +20,8 @@
 
 
 <body>
+    <input type="hidden" id="UrlActionPostContact" value="@Url.Action("PostContact", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("ContactComplete", "Home")" />
     <input type="hidden" id="NavigatorPrev" value="@Url.Action("Contact", "Home")" />
 
     <div class="container">
@@ -50,7 +52,7 @@
             </div>
 
             <div class="contact-table">
-                <form>
+                <form id="form">
                     <table border="1">
                         <tbody>
                             <tr>
@@ -101,9 +103,50 @@
 
     <script>
         $(function () {
+
+            $("#form").on("submit", function (event) {
+                event.preventDefault();
+                const inputData = {};
+                const postUrl = $("#UrlActionPostContact").val();
+                const nextUrl = $("#NavigatorNext").val();
+                postfuncajax(postUrl, nextUrl, inputData);
+            });
+
+
             $("#back-button").click(function () {
                 location.href = $("#NavigatorPrev").val();
             });
+
+
+
+            function postfuncajax(postUrl, nextUrl, inputData) {
+                const jsonString = JSON.stringify(inputData);
+
+                $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    async: false,
+                    data: jsonString,
+                    dataType: "json",
+                    contentType: 'application/json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var message = XMLHttpRequest.status;
+                        alert(message);
+                    },
+                    success: function (data) {
+                        switch (data.status) {
+                            case "success":
+                                location.href = nextUrl;
+                                break;
+                            case "error":
+                            default:
+                                alert("エラーが起こりました");
+                                break;
+                        }
+
+                    }
+                });
+            }
 
         });
     </script>

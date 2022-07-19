@@ -921,6 +921,7 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["title"] = "ご注文手続きが完了いたしました";
             ViewData["message"] = "ご注文いただき、ありがとうございます。";
             ViewData["randomId"] = CurrentSession.randomId;
+            ViewData["tableTitle"] = "ご注文番号";
             CurrentSession.randomId = "";
             return View("Complete");
         }
@@ -1430,6 +1431,10 @@ namespace ServiceSiteForTheElderly.Controllers
             return View("Error");
         }
 
+        /// <summary>
+        /// お問い合わせ画面
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Contact()
         {
             string sid = null;
@@ -1451,12 +1456,10 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             ViewData["CurrentSession"] = CurrentSession;
-
-
+            ViewData["categoryId"] = 11;
 
             return View();
         }
-
 
         /// <summary>
         /// お問い合わせの本文を更新するAPI
@@ -1471,13 +1474,16 @@ namespace ServiceSiteForTheElderly.Controllers
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
             CurrentSession.message = (postModel.Message == null) ? "" : postModel.Message;
+            CurrentSession.categoryId = postModel.CategoryId;
 
             return Json(new MJsonWithStatus() { status = "success" });
         }
 
-
-
-        public ActionResult Confirm()
+        /// <summary>
+        /// お問い合わせ確認画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ContactConfirm()
         {
             string sid = null;
             SessionModel CurrentSession = null;
@@ -1496,8 +1502,74 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Login");
             }
 
+            if (CurrentSession.categoryId == null)
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "お問い合わせが複数起こりました";
+                return View("Error");
+            }
+
             ViewData["CurrentSession"] = CurrentSession;
-            return View();
+            return View("Confirm");
+        }
+        
+        /// <summary>
+        /// お問い合わせを送信するAPI
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult PostContact()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            // データベースに書き込み
+            string randomId = null;
+            if (CurrentSession.categoryId == null)
+            {
+                return Json(new MJsonWithStatus() { status = "error" });
+            }
+            CommonModel.RegistDatabaseContacts(CurrentSession, CurrentSession.categoryId.Value, ref randomId);
+            CurrentSession.randomId = randomId;
+            // クリア
+            CurrentSession.message = "";
+
+            return Json(new MJsonWithStatus() { status = "success" });
+        }
+
+        /// <summary>
+        /// お問い合わせ完了画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ContactComplete()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // 再アクセスの禁止
+            if (string.IsNullOrEmpty(CurrentSession.randomId))
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "お問い合わせが複数起こりました";
+                return View("Error");
+            }
+
+            ViewData["title"] = "お問い合わせを送信しました";
+            ViewData["message"] = "お問い合わせいただき、ありがとうございます。<br><br>お問い合わせいただいた内容については、ご確認の上、返信させていただきます。";
+            ViewData["randomId"] = CurrentSession.randomId;
+            ViewData["tableTitle"] = "お問い合わせ番号";
+            CurrentSession.randomId = "";
+            CurrentSession.categoryId = null;
+            return View("Complete");
         }
 
     }

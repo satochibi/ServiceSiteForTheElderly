@@ -31,6 +31,10 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
         /// お問い合わせ時の本文
         /// </summary>
         public string message { get; set; } = "";
+        /// <summary>
+        /// お問い合わせ時のカテゴリid
+        /// </summary>
+        public int? categoryId { get; set; } = null;
     }
 
     public class LoginModel
@@ -81,6 +85,7 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
     public class MessageModel
     {
         public string Message { get; set; }
+        public int CategoryId { get; set; }
     }
 
 }

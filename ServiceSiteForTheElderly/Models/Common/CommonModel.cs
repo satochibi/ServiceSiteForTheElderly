@@ -597,7 +597,7 @@ namespace ServiceSiteForTheElderly.Models.Common
             {
                 return null;
             }
-            
+
         }
 
         /// <summary>
@@ -761,6 +761,30 @@ namespace ServiceSiteForTheElderly.Models.Common
                     Postcode = dt.Rows[0].Field<string>("postcode"),
                     Address = dt.Rows[0].Field<string>("address")
                 };
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+        }
+
+
+        public static ReturnOfBasicDatabase RegistDatabaseContacts(SessionModel CurrentSession, int categoryId, ref string randomId)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            randomId = null;
+            string sql = $"insert into Contacts (randomId, customerId, createdAt, categoryId, message, replyMessage, replyDate) values(REPLACE(CAST(NEWID() AS NCHAR(36)), '-', ''), {CurrentSession.customerUserInfo.Id}, GETDATE(), {categoryId}, '{CurrentSession.message}', NULL, NULL);select @@IDENTITY;";
+            try
+            {
+
+                dba.Query(sql, ref dt);
+                int id = int.Parse(dt.Rows[0].ItemArray[0].ToString());
+                sql = $"select randomId from Contacts where id = {id}";
+                dba.Query(sql, ref dt);
+                randomId = dt.Rows[0].ItemArray[0].ToString();
+
                 return ReturnOfBasicDatabase.Success;
             }
             catch (Exception)

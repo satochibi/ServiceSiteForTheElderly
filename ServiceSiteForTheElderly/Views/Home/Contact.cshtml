@@ -19,8 +19,9 @@
 </head>
 
 <body>
+    <input type="hidden" id="categoryId" value="@ViewData["categoryId"]" />
     <input type="hidden" id="NavigatorTop" value="@Url.Action("Index", "Home")" />
-    <input type="hidden" id="NavigatorNext" value="@Url.Action("Confirm", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("ContactConfirm", "Home")" />
     <input type="hidden" id="UrlActionSetMessage" value="@Url.Action("SetMessage", "Home")" />
     <div class="container">
         <header>
@@ -81,7 +82,8 @@
             $("#form").on("submit", function (event) {
                 event.preventDefault();
                 const inputData = {
-                    message: $("#message").val()
+                    message: $("#message").val(),
+                    categoryId: Number($("#categoryId").val())
                 };
                 const postUrl = $("#UrlActionSetMessage").val();
                 const nextUrl = $("#NavigatorNext").val();
