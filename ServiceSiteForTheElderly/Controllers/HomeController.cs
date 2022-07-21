@@ -1794,7 +1794,7 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
-        /// 旅行計画サービス画面
+        /// 家庭内作業サービス画面
         /// </summary>
         /// <returns></returns>
         public ActionResult InHomeWork()
@@ -1827,7 +1827,7 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
-        /// 旅行計画サービス確認画面
+        /// 家庭内作業サービス確認画面
         /// </summary>
         /// <returns></returns>
         public ActionResult InHomeWorkConfirm()
@@ -1866,7 +1866,7 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
-        /// 旅行計画サービス完了画面
+        /// 家庭内作業サービス完了画面
         /// </summary>
         /// <returns></returns>
         public ActionResult InHomeWorkComplete()
