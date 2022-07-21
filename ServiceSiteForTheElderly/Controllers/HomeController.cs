@@ -1547,7 +1547,6 @@ namespace ServiceSiteForTheElderly.Controllers
             return View("Confirm");
         }
 
-
         /// <summary>
         /// お問い合わせ完了画面
         /// </summary>
@@ -1680,6 +1679,218 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             ViewData["title"] = "お家の修理サービス送信完了";
+            ViewData["message"] = "折り返し担当より連絡いたします。";
+            ViewData["randomId"] = CurrentSession.randomId;
+            ViewData["tableTitle"] = "お問い合わせ番号";
+            CurrentSession.randomId = "";
+            CurrentSession.categoryId = null;
+            return View("Complete");
+        }
+
+        /// <summary>
+        /// 旅行計画サービス画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TravelPlanning()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            ViewData["CurrentSession"] = CurrentSession;
+            string title = "旅行計画サービス";
+            var categoryId = CommonModel.GetDataBaseCategotyId(title);
+            ViewData["categoryId"] = categoryId;
+            ViewData["title"] = title;
+            ViewData["NavigatorNext"] = "TravelPlanningConfirm";
+            return View("Contact");
+        }
+
+        /// <summary>
+        /// 旅行計画サービス確認画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TravelPlanningConfirm()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            if (CurrentSession.categoryId == null)
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "お問い合わせが複数起こりました";
+                return View("Error");
+            }
+
+            string title = "旅行計画サービス";
+            ViewData["title"] = title;
+            ViewData["CurrentSession"] = CurrentSession;
+            ViewData["NavigatorPrev"] = "TravelPlanning";
+            ViewData["NavigatorNext"] = "TravelPlanningComplete";
+
+            return View("Confirm");
+        }
+
+        /// <summary>
+        /// 旅行計画サービス完了画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TravelPlanningComplete()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // 再アクセスの禁止
+            if (string.IsNullOrEmpty(CurrentSession.randomId))
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "お問い合わせが複数起こりました";
+                return View("Error");
+            }
+
+            ViewData["title"] = "旅行計画サービス送信完了";
+            ViewData["message"] = "折り返し担当より連絡いたします。";
+            ViewData["randomId"] = CurrentSession.randomId;
+            ViewData["tableTitle"] = "お問い合わせ番号";
+            CurrentSession.randomId = "";
+            CurrentSession.categoryId = null;
+            return View("Complete");
+        }
+
+        /// <summary>
+        /// 旅行計画サービス画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult InHomeWork()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            ViewData["CurrentSession"] = CurrentSession;
+            string title = "家庭内作業サービス";
+            var categoryId = CommonModel.GetDataBaseCategotyId(title);
+            ViewData["categoryId"] = categoryId;
+            ViewData["title"] = title;
+            ViewData["NavigatorNext"] = "InHomeWorkConfirm";
+            return View("Contact");
+        }
+
+        /// <summary>
+        /// 旅行計画サービス確認画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult InHomeWorkConfirm()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            if (CurrentSession.categoryId == null)
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "お問い合わせが複数起こりました";
+                return View("Error");
+            }
+
+            string title = "家庭内作業サービス";
+            ViewData["title"] = title;
+            ViewData["CurrentSession"] = CurrentSession;
+            ViewData["NavigatorPrev"] = "InHomeWork";
+            ViewData["NavigatorNext"] = "InHomeWorkComplete";
+
+            return View("Confirm");
+        }
+
+        /// <summary>
+        /// 旅行計画サービス完了画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult InHomeWorkComplete()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // 再アクセスの禁止
+            if (string.IsNullOrEmpty(CurrentSession.randomId))
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "お問い合わせが複数起こりました";
+                return View("Error");
+            }
+
+            ViewData["title"] = "家庭内作業サービス送信完了";
             ViewData["message"] = "折り返し担当より連絡いたします。";
             ViewData["randomId"] = CurrentSession.randomId;
             ViewData["tableTitle"] = "お問い合わせ番号";
