@@ -1201,7 +1201,51 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             ViewData["orders"] = html;
+            ViewData["index"] = 0;
+            ViewData["title"] = "注文履歴";
 
+
+            return View("MyPage");
+        }
+
+        public ActionResult MyPageContact()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            List<MContacts> mContacts = new List<MContacts>();
+
+            CommonModel.GetDatabaseContacts(CurrentSession.customerUserInfo.Id, ref mContacts);
+
+            string html = "";
+
+            foreach (var aContact in mContacts)
+            {
+
+                html += string.Format(@"
+                        <tr data-href=""{0}"" tabindex=""0"">
+                            <td>{1}</td>
+                            <td>回答待ち&nbsp;<i class=""fa-solid fa-arrow-up-right-from-square""></i></td>
+                        </tr>", aContact.RandomId, aContact.CreatedAt.ToString("yyyy/MM/dd HH:mm:ss"));
+            }
+
+            ViewData["orders"] = html;
+            ViewData["index"] = 2;
+            ViewData["title"] = "問い合わせ履歴";
 
             return View("MyPage");
         }

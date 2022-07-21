@@ -125,6 +125,7 @@
     <Compile Include="Models\DBAccess.cs" />
     <Compile Include="Models\DTO.cs" />
     <Compile Include="Models\ViewModels\CommonViewModels.cs" />
+    <Compile Include="Models\ViewModels\MyPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -119,6 +119,19 @@ public class MOrderGoods
 }
 
 
+public class MContacts
+{
+    public int Id { get; set; }
+    public string RandomId { get; set; }
+    public int CustomerId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public int CategoryId { get; set; }
+    public string Message { get; set; }
+    public string ReplyMessage { get; set; }
+    public DateTime? ReplyDate { get; set; }
+}
+
+
 
 public class MJsonWithStatus
 {

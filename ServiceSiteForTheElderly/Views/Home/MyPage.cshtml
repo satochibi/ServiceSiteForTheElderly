@@ -1,6 +1,7 @@
 ﻿
 @{
     Layout = null;
+    int? index = ViewData["index"] as int?;
 }
 
 <!DOCTYPE html>
@@ -46,22 +47,22 @@
             <h2>マイページ</h2>
 
             <div class="button-field button-list">
-                <a href="@Url.Action("MyPageOrder", "Home")" class="active-button">
+                <a href="@Url.Action("MyPageOrder", "Home")" class="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.AddClassActiveOrNormalButton(0, index)">
                     <i class="fa-solid fa-box"></i>
                     <span>注文履歴</span>
                 </a>
 
-                <a href="my-page-book.html" class="normal-button">
+                <a href="#" class="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.AddClassActiveOrNormalButton(1, index)">
                     <i class="fa-solid fa-book-open"></i>
                     <span>書籍取り寄せ履歴</span>
                 </a>
 
-                <a href="my-page-contact.html" class="normal-button">
+                <a href="@Url.Action("MyPageContact", "Home")" class="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.AddClassActiveOrNormalButton(2, index)">
                     <i class="fa-solid fa-comment-dots"></i>
                     <span>問い合わせ履歴</span>
                 </a>
 
-                <a href="my-page-setting.html" class="normal-button">
+                <a href="#" class="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.AddClassActiveOrNormalButton(3, index)">
                     <i class="fa-solid fa-user"></i>
                     <span>お客様情報変更</span>
                 </a>
@@ -69,7 +70,7 @@
             </div>
 
             <div class="log-table">
-                <h3>注文履歴</h3>
+                <h3>@ViewData["title"]</h3>
                 <table border="1">
                     <tbody>
                         <tr>
@@ -80,7 +81,7 @@
                         @if (string.IsNullOrEmpty(ViewData["orders"].ToString()))
                         {
                             <tr>
-                                <td colspan="2">今まで注文したことがありません</td>
+                                <td colspan="2">履歴なし</td>
                             </tr>
                         }
                         else

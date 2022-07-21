@@ -55,7 +55,6 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
         }
 
-
         /// <summary>
         /// Indexの宅配配送サービス
         /// </summary>
@@ -130,7 +129,6 @@ namespace ServiceSiteForTheElderly.Models.Common
                     return ReturnOfCheckDatabaseIsUserIdExist.RunException;
             }
         }
-
 
         /// <summary>
         /// ログインできるかどうかチェック
@@ -228,7 +226,6 @@ namespace ServiceSiteForTheElderly.Models.Common
                 return ReturnOfBasicDatabase.Error;
             }
         }
-
 
         /// <summary>
         /// カテゴリ名からカテゴリidを取得する
@@ -426,7 +423,11 @@ namespace ServiceSiteForTheElderly.Models.Common
             return;
         }
 
-
+        /// <summary>
+        /// 引数にセットした日付より過去のPreviousGoodsPriceTrendsのビューを作成する
+        /// </summary>
+        /// <param name="dba">データベースオブジェクト</param>
+        /// <param name="dateTime">過去の当時の日付</param>
         private static void MakeViewDataBasePreviousGoodsPriceTrends(DBAccess dba, DateTime dateTime)
         {
             dba.Execute("drop view PreviousGoodsPriceTrends;");
@@ -607,6 +608,8 @@ namespace ServiceSiteForTheElderly.Models.Common
         /// <summary>
         /// Ordersテーブルを取得
         /// </summary>
+        /// <param name="customerId">顧客id</param>
+        /// <param name="mOrders">出力されるOrderのリスト</param>
         /// <returns></returns>
         public static ReturnOfBasicDatabase GetDatabaseOrders(int customerId, ref List<MOrders> mOrders)
         {
@@ -635,7 +638,6 @@ namespace ServiceSiteForTheElderly.Models.Common
                 return ReturnOfBasicDatabase.Error;
             }
         }
-
 
         /// <summary>
         /// OrderGoodsテーブルからMGoodsOfCartに変換(注文の詳細のカートの中身のため)
@@ -686,8 +688,6 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
 
         }
-
-
 
         /// <summary>
         /// 注文の詳細を取得
@@ -773,7 +773,13 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
         }
 
-
+        /// <summary>
+        /// お問い合わせ情報をデータベースに登録
+        /// </summary>
+        /// <param name="CurrentSession">現在のセッション情報</param>
+        /// <param name="categoryId">登録するカテゴリid</param>
+        /// <param name="randomId">出力されるランダムid</param>
+        /// <returns></returns>
         public static ReturnOfBasicDatabase RegistDatabaseContacts(SessionModel CurrentSession, int categoryId, ref string randomId)
         {
             DBAccess dba = new DBAccess();
@@ -789,6 +795,43 @@ namespace ServiceSiteForTheElderly.Models.Common
                 dba.Query(sql, ref dt);
                 randomId = dt.Rows[0].ItemArray[0].ToString();
 
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+        }
+
+        /// <summary>
+        /// Contactsテーブルを取得
+        /// </summary>
+        /// <param name="customerId">顧客id</param>
+        /// <param name="mContacts">出力されるOrderのリスト</param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase GetDatabaseContacts(int customerId, ref List<MContacts> mContacts)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+
+            string sql = $"select * from Contacts where customerId={customerId} order by createdAt desc;";
+            try
+            {
+                dba.Query(sql, ref dt);
+                for (int row = 0; row < dt.Rows.Count; row++)
+                {
+                    MContacts aContact = new MContacts();
+                    aContact.Id = dt.Rows[row].Field<int>("id");
+                    aContact.RandomId = dt.Rows[row].Field<string>("randomId");
+                    aContact.CustomerId = dt.Rows[row].Field<int>("customerId");
+                    aContact.CreatedAt = dt.Rows[row].Field<DateTime>("createdAt");
+                    aContact.CategoryId = dt.Rows[row].Field<int>("categoryId");
+                    aContact.Message = dt.Rows[row].Field<string>("message");
+                    aContact.ReplyMessage = dt.Rows[row].Field<string>("replyMessage");
+                    aContact.ReplyDate = dt.Rows[row].Field<DateTime?>("replyDate");
+
+                    mContacts.Add(aContact);
+                }
                 return ReturnOfBasicDatabase.Success;
             }
             catch (Exception)
