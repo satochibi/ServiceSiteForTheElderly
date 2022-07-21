@@ -1432,6 +1432,49 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
+        /// お問い合わせの本文を更新するAPI
+        /// </summary>
+        /// <param name="postModel">必要な項目から構成されるJsonから生成されたオブジェクト</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SetMessage(MessageModel postModel)
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            CurrentSession.message = (postModel.Message == null) ? "" : postModel.Message;
+            CurrentSession.categoryId = postModel.CategoryId;
+
+            return Json(new MJsonWithStatus() { status = "success" });
+        }
+
+        /// <summary>
+        /// お問い合わせを送信するAPI
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult PostContact()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            // データベースに書き込み
+            string randomId = null;
+            if (CurrentSession.categoryId == null)
+            {
+                return Json(new MJsonWithStatus() { status = "error" });
+            }
+            CommonModel.RegistDatabaseContacts(CurrentSession, CurrentSession.categoryId.Value, ref randomId);
+            CurrentSession.randomId = randomId;
+            // クリア
+            CurrentSession.message = "";
+
+            return Json(new MJsonWithStatus() { status = "success" });
+        }
+
+        /// <summary>
         /// お問い合わせ画面
         /// </summary>
         /// <returns></returns>
@@ -1456,28 +1499,14 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             ViewData["CurrentSession"] = CurrentSession;
-            ViewData["categoryId"] = 11;
-
+            string title = "お問い合わせ";
+            var categoryId = CommonModel.GetDataBaseCategotyId(title);
+            ViewData["categoryId"] = categoryId;
+            ViewData["title"] = title;
+            ViewData["NavigatorNext"] = "ContactConfirm";
             return View();
         }
 
-        /// <summary>
-        /// お問い合わせの本文を更新するAPI
-        /// </summary>
-        /// <param name="postModel">必要な項目から構成されるJsonから生成されたオブジェクト</param>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult SetMessage(MessageModel postModel)
-        {
-            string sid = null;
-            SessionModel CurrentSession = null;
-            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
-
-            CurrentSession.message = (postModel.Message == null) ? "" : postModel.Message;
-            CurrentSession.categoryId = postModel.CategoryId;
-
-            return Json(new MJsonWithStatus() { status = "success" });
-        }
 
         /// <summary>
         /// お問い合わせ確認画面
@@ -1509,34 +1538,15 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Error");
             }
 
+            string title = "お問い合わせ";
+            ViewData["title"] = title;
+
             ViewData["CurrentSession"] = CurrentSession;
+            ViewData["NavigatorPrev"] = "Contact";
+            ViewData["NavigatorNext"] = "ContactComplete";
             return View("Confirm");
         }
-        
-        /// <summary>
-        /// お問い合わせを送信するAPI
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult PostContact()
-        {
-            string sid = null;
-            SessionModel CurrentSession = null;
-            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
-            // データベースに書き込み
-            string randomId = null;
-            if (CurrentSession.categoryId == null)
-            {
-                return Json(new MJsonWithStatus() { status = "error" });
-            }
-            CommonModel.RegistDatabaseContacts(CurrentSession, CurrentSession.categoryId.Value, ref randomId);
-            CurrentSession.randomId = randomId;
-            // クリア
-            CurrentSession.message = "";
-
-            return Json(new MJsonWithStatus() { status = "success" });
-        }
 
         /// <summary>
         /// お問い合わせ完了画面
@@ -1571,6 +1581,113 @@ namespace ServiceSiteForTheElderly.Controllers
             CurrentSession.categoryId = null;
             return View("Complete");
         }
+
+        /// <summary>
+        /// お家の修理サービス画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult HomeRepair()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            ViewData["CurrentSession"] = CurrentSession;
+            string title = "お家の修理サービス";
+            var categoryId = CommonModel.GetDataBaseCategotyId(title);
+            ViewData["categoryId"] = categoryId;
+            ViewData["title"] = title;
+            ViewData["NavigatorNext"] = "HomeRepairConfirm";
+            return View("Contact");
+        }
+
+        /// <summary>
+        /// お家の修理サービス確認画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult HomeRepairConfirm()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            if (CurrentSession.categoryId == null)
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "お問い合わせが複数起こりました";
+                return View("Error");
+            }
+
+            string title = "お家の修理サービス";
+            ViewData["title"] = title;
+            ViewData["CurrentSession"] = CurrentSession;
+            ViewData["NavigatorPrev"] = "HomeRepair";
+            ViewData["NavigatorNext"] = "HomeRepairComplete";
+
+            return View("Confirm");
+        }
+
+        /// <summary>
+        /// お家の修理サービス完了画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult HomeRepairComplete()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // 再アクセスの禁止
+            if (string.IsNullOrEmpty(CurrentSession.randomId))
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "お問い合わせが複数起こりました";
+                return View("Error");
+            }
+
+            ViewData["title"] = "お家の修理サービス送信完了";
+            ViewData["message"] = "折り返し担当より連絡いたします。";
+            ViewData["randomId"] = CurrentSession.randomId;
+            ViewData["tableTitle"] = "お問い合わせ番号";
+            CurrentSession.randomId = "";
+            CurrentSession.categoryId = null;
+            return View("Complete");
+        }
+
 
     }
 }

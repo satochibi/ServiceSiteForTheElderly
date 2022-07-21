@@ -21,8 +21,8 @@
 
 <body>
     <input type="hidden" id="UrlActionPostContact" value="@Url.Action("PostContact", "Home")" />
-    <input type="hidden" id="NavigatorNext" value="@Url.Action("ContactComplete", "Home")" />
-    <input type="hidden" id="NavigatorPrev" value="@Url.Action("Contact", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action(ViewData["NavigatorNext"] as string, "Home")" />
+    <input type="hidden" id="NavigatorPrev" value="@Url.Action(ViewData["NavigatorPrev"] as string, "Home")" />
 
     <div class="container">
         <header>
@@ -40,13 +40,13 @@
         <div class="breadcrumb-list">
             <ul>
                 <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
-                <li><a href="@Url.Action("Contact", "Home")">お問い合わせ入力</a></li>
-                <li><a href="#">お問い合わせ確認</a></li>
+                <li><a href="@Url.Action("Contact", "Home")">@ViewData["title"]入力</a></li>
+                <li><a href="#">@ViewData["title"]確認</a></li>
             </ul>
         </div>
 
         <div class="main-contents">
-            <h2>お問い合わせ送信確認</h2>
+            <h2>@ViewData["title"]送信確認</h2>
             <div class="no-item-message">
                 <p>以下の内容で送信しますか?</p>
             </div>

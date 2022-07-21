@@ -33,6 +33,10 @@ namespace ServiceSiteForTheElderly.Models.Common
     /// </summary>
     public static class CommonModel
     {
+        /// <summary>
+        /// グローバルステータス(メンテナンス中かどうか)を取得
+        /// </summary>
+        /// <returns></returns>
         public static ReturnOfBasicDatabase GetDatabaseGlobalStatus()
         {
             DBAccess dba = new DBAccess();
