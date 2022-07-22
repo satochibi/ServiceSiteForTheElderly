@@ -1,0 +1,159 @@
+﻿
+@{
+    Layout = null;
+    var CurrentSession = ViewData["CurrentSession"] as ServiceSiteForTheElderly.Models.ViewModels.SessionModel;
+    var mContact = ViewData["mContact"] as MContacts;
+}
+
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高齢者のお困り解決砥部町内サービスサイト</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/contact.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/my-page-order-detail.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+</head>
+
+
+<body>
+    <input type="hidden" id="NavigatorPrev" value="@Url.Action("MyPageContact", "Home")" />
+    <div class="container">
+        <header>
+            <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <div class="header-buttons">
+                <div class="shopping-cart">
+                    <span class="shopping-count-badge @ViewData["HeaderBadgeStatus"]">@ViewData["HeaderBadge"]</span>
+                    <a href="@Url.Action("ShoppingCart", "Home")" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
+                </div>
+                <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
+            </div>
+        </header>
+
+
+        <div class="breadcrumb-list">
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
+                <li><a href="@Url.Action("MyPageOrder", "Home")">マイページ</a></li>
+                <li><a href="#">注文情報詳細</a></li>
+            </ul>
+        </div>
+
+        <div class="main-contents">
+            <h2>お問い合わせ情報詳細</h2>
+
+            <div class="contact-table cart-table">
+                <form>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th colspan="2">お問い合わせ情報</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>お問い合わせ番号</th>
+                                <td>@mContact.RandomId</td>
+                            </tr>
+                            <tr>
+                                <th>お問い合わせ日時</th>
+                                <td>@mContact.CreatedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
+                            </tr>
+                            <tr>
+                                <th>お問い合わせ種別</th>
+                                <td>@ViewData["categoryName"]</td>
+                            </tr>
+                            <tr>
+                                <th>お問い合わせ本文</th>
+                                <td>@mContact.Message</td>
+                            </tr>
+                        </tbody>
+
+                        <thead>
+                            <tr>
+                                <th colspan="2">回答情報</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>回答本文</th>
+                                @if (mContact.ReplyMessage == null)
+                                {
+                                    <td>回答はまだありません</td>
+                                }
+                                else
+                                {
+                                    <td>@mContact.ReplyMessage</td>
+                                }
+                            </tr>
+                            <tr>
+                                <th>回答日時</th>
+                                @if (mContact.ReplyDate == null)
+                                {
+                                    <td>回答はまだありません</td>
+                                }
+                                else
+                                {
+                                    <td>@mContact.ReplyDate.Value.ToString("yyyy/MM/dd HH:mm:ss")</td>
+                                }
+                            </tr>
+                        </tbody>
+
+                        <thead>
+                            <tr>
+                                <th colspan="2">申し込み者</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>お名前</th>
+                                <td>@CurrentSession.customerUserInfo.Name</td>
+                            </tr>
+                            <tr>
+                                <th>ふりがな</th>
+                                <td>@CurrentSession.customerUserInfo.Furigana</td>
+                            </tr>
+                            <tr>
+                                <th>電話番号</th>
+                                <td>@CurrentSession.customerUserInfo.Tel</td>
+                            </tr>
+                            <tr>
+                                <th>メールアドレス</th>
+                                <td>@CurrentSession.customerUserInfo.Mail</td>
+                            </tr>
+                            <tr>
+                                <th>郵便番号</th>
+                                <td>@CurrentSession.customerUserInfo.Postcode</td>
+                            </tr>
+                            <tr>
+                                <th>住所</th>
+                                <td>@CurrentSession.customerUserInfo.Address</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                    <div class="button-field">
+                        <button class="form-normal-button prev-arrow-button" type="button" id="back-button">お問い合わせ履歴に戻る</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("#back-button").click(function () {
+            location.href = $("#NavigatorPrev").val();
+        });
+    </script>
+</body>
+
+</html>

@@ -23,6 +23,10 @@
 
 <body>
     <input type="hidden" id="UrlActionOrderDetail" value="@Url.Action("OrderDetail", "Home")" />
+    <input type="hidden" id="UrlActionContactDetail" value="@Url.Action("ContactDetail", "Home")" />
+
+    <input type="hidden" id="UrlActionId" value="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.UrlActionId(index)"/>
+
     <div class="container">
         <header>
             <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
@@ -119,7 +123,8 @@
                 //その要素の先祖要素で一番近いtrの
                 //data-href属性の値に書かれているURLに遷移する
                 const query = $(e.target).closest('tr').data('href');
-                const url = $("#UrlActionOrderDetail").val() + "?randomid=" + query;
+                const urlActionIdString = $("#UrlActionId").val();
+                const url = $("#" + urlActionIdString).val() + "?randomid=" + query;
                 location.href = url;
             };
 

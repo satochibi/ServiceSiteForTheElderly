@@ -108,6 +108,21 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
         /// <summary>
+        /// カテゴリidから、カテゴリ名を取得
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        public static string GetDatabaseCategoryName(int categoryId)
+        {
+
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            dba.Query($"select name from Categories where id = {categoryId};", ref dt);
+            string categoryName = dt.Rows[0].Field<string>("name");
+            return categoryName;
+        }
+
+        /// <summary>
         /// ユーザがいるかどうかチェック
         /// </summary>
         /// <param name="inputTel">電話番号</param>
@@ -606,6 +621,27 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
         /// <summary>
+        /// randomIdからcontactIdに変換
+        /// </summary>
+        /// <param name="randomId"></param>
+        /// <returns></returns>
+        public static int? GetDatabaseRandomIdToContactId(string randomId)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            string sql = $"select id from Contacts where randomId = '{randomId}';";
+            try
+            {
+                dba.Query(sql, ref dt);
+                return dt.Rows[0].Field<int>("id");
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Ordersテーブルを取得
         /// </summary>
         /// <param name="customerId">顧客id</param>
@@ -838,6 +874,46 @@ namespace ServiceSiteForTheElderly.Models.Common
             {
                 return ReturnOfBasicDatabase.Error;
             }
+        }
+
+        /// <summary>
+        /// randomIdからContactモデルを取得
+        /// </summary>
+        /// <param name="randomId">ランダムid</param>
+        /// <param name="mContact">出力されるContactモデルオブジェクト</param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase GetDatabaseContact(string randomId, ref MContacts mContact)
+        {
+            int? contactId = CommonModel.GetDatabaseRandomIdToContactId(randomId);
+            if (contactId == null)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            string sql = $"select * from Contacts where id = {contactId};";
+            try
+            {
+                dba.Query(sql, ref dt);
+                mContact = new MContacts()
+                {
+                    Id = dt.Rows[0].Field<int>("id"),
+                    RandomId = dt.Rows[0].Field<string>("randomId"),
+                    CustomerId = dt.Rows[0].Field<int>("customerId"),
+                    CreatedAt = dt.Rows[0].Field<DateTime>("createdAt"),
+                    CategoryId = dt.Rows[0].Field<int>("categoryId"),
+                    Message = dt.Rows[0].Field<string>("message"),
+                    ReplyMessage = dt.Rows[0].Field<string>("replyMessage"),
+                    ReplyDate = dt.Rows[0].Field<DateTime?>("replyDate")
+                };
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+
         }
 
     }

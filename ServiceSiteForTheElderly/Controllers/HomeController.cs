@@ -1208,6 +1208,10 @@ namespace ServiceSiteForTheElderly.Controllers
             return View("MyPage");
         }
 
+        /// <summary>
+        /// マイページ(お問い合わせ履歴)
+        /// </summary>
+        /// <returns></returns>
         public ActionResult MyPageContact()
         {
             string sid = null;
@@ -1400,6 +1404,46 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["totalPrice"] = allTotalPrice;
             ViewData["CurrentSession"] = CurrentSession;
             ViewData["ShippingAddress"] = mShippingAddress;
+            return View();
+        }
+
+        /// <summary>
+        /// マイページのお問い合わせ履歴の詳細
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ContactDetail()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            string paramArg1 = Request.Params["randomid"];
+            MContacts mContact = null;
+            var isSuccess = CommonModel.GetDatabaseContact(paramArg1, ref mContact);
+            // クエリがない、またはランダムidが不正なら、トップページにリダイレクト
+            if (isSuccess == ReturnOfBasicDatabase.Error || string.IsNullOrEmpty(paramArg1))
+            {
+                IndexMakeView();
+                return View("Index");
+            }
+
+            ViewData["categoryName"] = CommonModel.GetDatabaseCategoryName(mContact.CategoryId);
+
+            ViewData["mContact"] = mContact;
+            ViewData["CurrentSession"] = CurrentSession;
             return View();
         }
 
