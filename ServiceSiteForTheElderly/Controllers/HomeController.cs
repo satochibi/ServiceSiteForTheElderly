@@ -1483,6 +1483,24 @@ namespace ServiceSiteForTheElderly.Controllers
             return View("Error");
         }
 
+        public ActionResult LocalSpecialty()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            ViewData["title"] = "特産品";
+            ViewData["message"] = "現在商品がありません";
+            return View("Error");
+        }
+
         public ActionResult Medicine()
         {
             string sid = null;
