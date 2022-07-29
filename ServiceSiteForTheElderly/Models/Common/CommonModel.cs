@@ -217,7 +217,7 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
         /// <summary>
-        /// 新規登録及び更新
+        /// 新規登録
         /// </summary>
         /// <param name="cust">登録する顧客情報</param>
         /// <param name="custId">登録した顧客情報のid</param>
@@ -235,6 +235,31 @@ namespace ServiceSiteForTheElderly.Models.Common
                 dba.Query(sql, ref dt);
                 int id = int.Parse(dt.Rows[0].ItemArray[0].ToString());
                 custId = id;
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+        }
+
+        /// <summary>
+        /// 顧客情報の更新
+        /// </summary>
+        /// <param name="cust">登録する顧客情報</param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase UpdateDatabaseCustomer(MCustomers cust)
+        {
+            DBAccess dba = new DBAccess();
+            string mail = string.IsNullOrEmpty(cust.Mail) ? "NULL" : $"'{cust.Mail}'";
+            string postcode = string.IsNullOrEmpty(cust.Postcode) ? "NULL" : $"'{cust.Postcode}'";
+            string address = string.IsNullOrEmpty(cust.Address) ? "NULL" : $"'{cust.Address}'";
+
+            string sql = "SET IDENTITY_INSERT Customers ON;";
+            sql += $"insert into Customers (id, createdAt, name, furigana, tel, mail, postcode, address, password) values({cust.Id}, GETDATE(), '{cust.Name}', '{cust.Furigana}', '{cust.Tel}', {mail}, {postcode}, {address}, '{cust.Password}');";
+            try
+            {
+                dba.Execute(sql);
                 return ReturnOfBasicDatabase.Success;
             }
             catch (Exception)

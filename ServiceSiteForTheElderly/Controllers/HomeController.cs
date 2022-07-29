@@ -1525,20 +1525,18 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             // 顧客情報を作ってデータベースに登録
-            MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = string.IsNullOrEmpty(postModel.Mail) ? null : postModel.Mail, Postcode = string.IsNullOrEmpty(postModel.Postcode) ? null : postModel.Postcode, Address = string.IsNullOrEmpty(postModel.Address) ? null : postModel.Address, Password = postModel.Password };
-            int? custId = null;
-            CommonModel.RegistDatabaseCustomer(cust, ref custId);
-            if (custId == null)
+            MCustomers cust = new MCustomers() {Id = CurrentSession.customerUserInfo.Id, Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = string.IsNullOrEmpty(postModel.Mail) ? null : postModel.Mail, Postcode = string.IsNullOrEmpty(postModel.Postcode) ? null : postModel.Postcode, Address = string.IsNullOrEmpty(postModel.Address) ? null : postModel.Address, Password = postModel.Password };
+            
+            if (CommonModel.UpdateDatabaseCustomer(cust) == ReturnOfBasicDatabase.Error)
             {
                 return Json(new MJsonWithStatus() { status = "error" });
             }
             else
             {
-                cust.Id = custId.Value;
                 CurrentSession.customerUserInfo = cust;
+                return Json(new MJsonWithStatus() { status = "success" });
             }
 
-            return Json(new MJsonWithStatus() { status = "success" });
         }
 
         public ActionResult Foodstuff()
