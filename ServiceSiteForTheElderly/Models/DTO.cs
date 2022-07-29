@@ -16,17 +16,12 @@ public class MCategores
 public class MCustomers
 {
     public int Id { get; set; }
-
+    public DateTime CreatedAt { get; set; }
     public string Name { get; set; }
-
     public string Furigana { get; set; }
-
     public string Tel { get; set; }
-
     public string Mail { get; set; }
-
     public string Postcode { get; set; }
-
     public string Address { get; set; }
     public string Password { get; set; }
 

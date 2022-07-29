@@ -157,9 +157,9 @@ namespace ServiceSiteForTheElderly.Models.Common
         {
             DBAccess dba = new DBAccess();
             DataTable dt = null;
-            string sql = "select * from Customers";
+            string sql = "select top (1) * from Customers";
             sql += $" where tel = '{inputTel}'";
-
+            sql += " order by createdAt desc;";
             try
             {
                 dba.Query(sql, ref dt);
@@ -181,6 +181,7 @@ namespace ServiceSiteForTheElderly.Models.Common
                         MCustomers mCustomers = new MCustomers()
                         {
                             Id = dt.Rows[0].Field<int>("id"),
+                            CreatedAt = dt.Rows[0].Field<DateTime>("createdAt"),
                             Name = dt.Rows[0].Field<string>("name"),
                             Furigana = dt.Rows[0].Field<string>("furigana"),
                             Tel = dt.Rows[0].Field<string>("tel"),
@@ -228,7 +229,7 @@ namespace ServiceSiteForTheElderly.Models.Common
             string mail = string.IsNullOrEmpty(cust.Mail) ? "NULL" : $"'{cust.Mail}'";
             string postcode = string.IsNullOrEmpty(cust.Postcode) ? "NULL" : $"'{cust.Postcode}'";
             string address = string.IsNullOrEmpty(cust.Address) ? "NULL" : $"'{cust.Address}'";
-            string sql = $"insert into Customers (name, furigana, tel, mail, postcode, address, password) values('{cust.Name}', '{cust.Furigana}', '{cust.Tel}', {mail}, {postcode}, {address}, '{cust.Password}'); select @@IDENTITY;";
+            string sql = $"insert into Customers (createdAt, name, furigana, tel, mail, postcode, address, password) values(GETDATE(), '{cust.Name}', '{cust.Furigana}', '{cust.Tel}', {mail}, {postcode}, {address}, '{cust.Password}'); select @@IDENTITY;";
             try
             {
                 dba.Query(sql, ref dt);
