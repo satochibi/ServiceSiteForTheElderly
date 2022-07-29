@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = null;
-    var CurrentSession = ViewData["CurrentSession"] as ServiceSiteForTheElderly.Models.ViewModels.SessionModel;
+    var Customer = ViewData["Customer"] as MCustomers;
     var mContact = ViewData["mContact"] as MContacts;
 }
 
@@ -115,27 +115,27 @@
                         <tbody>
                             <tr>
                                 <th>お名前</th>
-                                <td>@CurrentSession.customerUserInfo.Name</td>
+                                <td>@Customer.Name</td>
                             </tr>
                             <tr>
                                 <th>ふりがな</th>
-                                <td>@CurrentSession.customerUserInfo.Furigana</td>
+                                <td>@Customer.Furigana</td>
                             </tr>
                             <tr>
                                 <th>電話番号</th>
-                                <td>@CurrentSession.customerUserInfo.Tel</td>
+                                <td>@Customer.Tel</td>
                             </tr>
                             <tr>
                                 <th>メールアドレス</th>
-                                <td>@CurrentSession.customerUserInfo.Mail</td>
+                                <td>@Customer.Mail</td>
                             </tr>
                             <tr>
                                 <th>郵便番号</th>
-                                <td>@CurrentSession.customerUserInfo.Postcode</td>
+                                <td>@Customer.Postcode</td>
                             </tr>
                             <tr>
                                 <th>住所</th>
-                                <td>@CurrentSession.customerUserInfo.Address</td>
+                                <td>@Customer.Address</td>
                             </tr>
                         </tbody>
 

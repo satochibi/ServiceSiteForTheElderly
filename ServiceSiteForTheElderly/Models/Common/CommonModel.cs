@@ -941,5 +941,40 @@ namespace ServiceSiteForTheElderly.Models.Common
 
         }
 
+        /// <summary>
+        /// 当時の顧客情報を取得
+        /// </summary>
+        /// <param name="custId">顧客id</param>
+        /// <param name="dateTime">時刻(指定した時間より前の最新のユーザ情報をとってくる)</param>
+        /// <param name="mCustomer">出力される顧客情報</param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase GetDatabaseCustomer(int custId, DateTime dateTime, ref MCustomers mCustomer)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            string sql = $"select Top(1) * from Customers where id = {custId} and createdAt <= '{dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}' order by createdAt desc;";
+            try
+            {
+                dba.Query(sql, ref dt);
+                mCustomer = new MCustomers()
+                {
+                    Id = dt.Rows[0].Field<int>("id"),
+                    CreatedAt = dt.Rows[0].Field<DateTime>("createdAt"),
+                    Name = dt.Rows[0].Field<string>("name"),
+                    Furigana = dt.Rows[0].Field<string>("furigana"),
+                    Tel = dt.Rows[0].Field<string>("tel"),
+                    Mail = dt.Rows[0].Field<string>("mail"),
+                    Postcode = dt.Rows[0].Field<string>("postcode"),
+                    Address = dt.Rows[0].Field<string>("address"),
+                    Password = dt.Rows[0].Field<string>("password"),
+                };
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+        }
+
     }
 }

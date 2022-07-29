@@ -1432,8 +1432,11 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["goodsOfCart"] = html;
             ViewData["mOrder"] = mOrder;
             ViewData["totalPrice"] = allTotalPrice;
-            ViewData["CurrentSession"] = CurrentSession;
             ViewData["ShippingAddress"] = mShippingAddress;
+
+            MCustomers mCustomer = null;
+            CommonModel.GetDatabaseCustomer(mOrder.CustomerId, mOrder.OrderDate, ref mCustomer);
+            ViewData["Customer"] = mCustomer;
             return View();
         }
 
@@ -1473,7 +1476,10 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["categoryName"] = CommonModel.GetDatabaseCategoryName(mContact.CategoryId);
 
             ViewData["mContact"] = mContact;
-            ViewData["CurrentSession"] = CurrentSession;
+
+            MCustomers mCustomer = null;
+            CommonModel.GetDatabaseCustomer(mContact.CustomerId, mContact.CreatedAt, ref mCustomer);
+            ViewData["Customer"] = mCustomer;
             return View();
         }
 
