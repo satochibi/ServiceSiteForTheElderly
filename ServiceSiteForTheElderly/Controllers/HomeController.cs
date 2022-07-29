@@ -1307,7 +1307,19 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Login");
             }
 
-            string paramArg1 = Request.Params["randomid"];
+            
+            string paramArg1;
+            try
+            {
+                paramArg1 = Request.Params["randomid"];
+            }
+            catch (Exception)
+            {
+                // URLが不正なら、トップページにリダイレクト
+                IndexMakeView();
+                return View("Index");
+            }
+
 
             MOrders mOrder = null;
             List<MOrderGoods> mOrderGoods = new List<MOrderGoods>();
@@ -1463,7 +1475,19 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Login");
             }
 
-            string paramArg1 = Request.Params["randomid"];
+            string paramArg1;
+            try
+            {
+                paramArg1 = Request.Params["randomid"];
+            }
+            catch (Exception)
+            {
+                // URLが不正なら、トップページにリダイレクト
+                IndexMakeView();
+                return View("Index");
+            }
+
+
             MContacts mContact = null;
             var isSuccess = CommonModel.GetDatabaseContact(paramArg1, ref mContact);
             // クエリがない、またはランダムidが不正なら、トップページにリダイレクト
