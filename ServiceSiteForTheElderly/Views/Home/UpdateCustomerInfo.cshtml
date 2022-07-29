@@ -37,11 +37,9 @@
             <div class="header-buttons">
                 <div class="shopping-cart">
                     <span class="shopping-count-badge @ViewData["HeaderBadgeStatus"]">@ViewData["HeaderBadge"]</span>
-                    <a href="@Url.Action("ShoppingCart", "Home")" class="shopping-cart-button">
-                        <i class="fas fa-shopping-cart"></i>買い物カゴを見る
-                    </a>
+                    <a href="@Url.Action("ShoppingCart", "Home")" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
                 </div>
-                <a href="@Url.Action("Login", "Home")" class="avatar-button"><i class="fa-solid fa-user"></i>会員の方はこちら</a>
+                <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
             </div>
         </header>
 
@@ -117,8 +115,8 @@
             </div>
 
             <!-- <div class="ads">
-                広告
-            </div> -->
+            広告
+        </div> -->
 
         </footer>
     </div>

@@ -1525,6 +1525,12 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Error");
             }
 
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
             ViewData["CurrentSession"] = CurrentSession;
             return View();
         }
@@ -1734,7 +1740,6 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["NavigatorNext"] = "ContactConfirm";
             return View();
         }
-
 
         /// <summary>
         /// お問い合わせ確認画面
