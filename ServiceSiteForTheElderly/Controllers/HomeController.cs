@@ -1254,6 +1254,10 @@ namespace ServiceSiteForTheElderly.Controllers
             return View("MyPage");
         }
 
+        /// <summary>
+        /// マイページ(お客様情報変更)
+        /// </summary>
+        /// <returns></returns>
         public ActionResult MyPageSettings()
         {
             string sid = null;

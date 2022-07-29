@@ -32,8 +32,10 @@
 <body>
     <input type="hidden" id="UrlActionOrderDetail" value="@Url.Action("OrderDetail", "Home")" />
     <input type="hidden" id="UrlActionContactDetail" value="@Url.Action("ContactDetail", "Home")" />
+    <input type="hidden" id="UrlActionId" value="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.UrlActionId(index)" />
 
-    <input type="hidden" id="UrlActionId" value="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.UrlActionId(index)"/>
+    <input type="hidden" id="UrlActionUpdateCustomerInfo" value="@Url.Action("UpdateCustomerInfo", "Home")" />
+    <input type="hidden" id="UrlActionResign" value="@Url.Action("Resign", "Home")" />
 
     <div class="container">
         <header>
@@ -146,7 +148,7 @@
                         </tbody>
                     </table>
                     <div class="button-field">
-                        <button class="form-normal-button next-arrow-yellow-button">情報の変更をする</button>
+                        <button class="form-normal-button next-arrow-yellow-button" id="UpdateUserInfoButton">情報の変更をする</button>
                     </div>
                 </div>
 
@@ -155,7 +157,7 @@
                     <p>退会される方は下記ボタンより退会手続きをお願い致します</p>
                     <p>退会される退会手続きをお読みになって退会ください。</p>
                     <div class="button-field">
-                        <button class="form-normal-button next-arrow-yellow-button">退会手続きをする</button>
+                        <button class="form-normal-button next-arrow-yellow-button" id="ResignButton">退会手続きをする</button>
                     </div>
                 </div>
             }
@@ -192,11 +194,15 @@
                 location.href = url;
             };
 
+            $("#UpdateUserInfoButton").click(function () {
+                location.href = $("#UrlActionUpdateCustomerInfo").val();
+            });
+
+            $("#ResignButton").click(function () {
+                location.href = $("#UrlActionResign").val();
+            });
 
         });
-
-
-
     </script>
 
 </body>
