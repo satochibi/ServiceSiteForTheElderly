@@ -1254,6 +1254,34 @@ namespace ServiceSiteForTheElderly.Controllers
             return View("MyPage");
         }
 
+        public ActionResult MyPageSettings()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            ViewData["orders"] = "";
+            ViewData["index"] = 3;
+            ViewData["title"] = "お客様情報変更";
+            ViewData["CurrentSession"] = CurrentSession;
+
+            return View("MyPage");
+
+        }
+
         /// <summary>
         /// マイページの注文履歴の詳細
         /// </summary>

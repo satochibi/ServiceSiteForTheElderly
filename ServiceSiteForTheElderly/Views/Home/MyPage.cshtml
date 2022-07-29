@@ -2,6 +2,14 @@
 @{
     Layout = null;
     int? index = ViewData["index"] as int?;
+    var CurrentSession = ViewData["CurrentSession"] as ServiceSiteForTheElderly.Models.ViewModels.SessionModel;
+
+    var password = "";
+    if (CurrentSession != null)
+    {
+        password = new string(Enumerable.Repeat('*', CurrentSession.customerUserInfo.Password.Length).ToArray());
+    }
+
 }
 
 <!DOCTYPE html>
@@ -66,36 +74,92 @@
                     <span>問い合わせ履歴</span>
                 </a>
 
-                <a href="#" class="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.AddClassActiveOrNormalButton(3, index)">
+                <a href="@Url.Action("MyPageSettings", "Home")" class="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.AddClassActiveOrNormalButton(3, index)">
                     <i class="fa-solid fa-user"></i>
                     <span>お客様情報変更</span>
                 </a>
 
             </div>
 
-            <div class="log-table">
-                <h3>@ViewData["title"]</h3>
-                <table border="1">
-                    <tbody>
-                        <tr>
-                            <th>日時</th>
-                            <th>状況</th>
-                        </tr>
 
-                        @if (string.IsNullOrEmpty(ViewData["orders"].ToString()))
-                        {
+            @if (index != 3)
+            {
+                <div class="log-table">
+                    <h3>@ViewData["title"]</h3>
+                    <table border="1">
+                        <tbody>
+
                             <tr>
-                                <td colspan="2">履歴なし</td>
+                                <th>日時</th>
+                                <th>状況</th>
                             </tr>
-                        }
-                        else
-                        {
-                            @Html.Raw(ViewData["orders"])
 
-                        }
-                    </tbody>
-                </table>
-            </div>
+                            @if (string.IsNullOrEmpty(ViewData["orders"].ToString()))
+                            {
+                                <tr>
+                                    <td colspan="2">履歴なし</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @Html.Raw(ViewData["orders"])
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="log-table">
+                    <h3>@ViewData["title"]</h3>
+                    <table border="1">
+                        <tbody>
+                            <tr>
+                                <th>氏名</th>
+                                <td>@CurrentSession.customerUserInfo.Name</td>
+                            </tr>
+                            <tr>
+                                <th>ふりがな</th>
+                                <td>@CurrentSession.customerUserInfo.Furigana</td>
+                            </tr>
+                            <tr>
+                                <th>電話番号</th>
+                                <td>@CurrentSession.customerUserInfo.Tel</td>
+                            </tr>
+                            <tr>
+                                <th>メールアドレス</th>
+                                <td>@CurrentSession.customerUserInfo.Mail</td>
+                            </tr>
+                            <tr>
+                                <th>郵便番号</th>
+                                <td>@CurrentSession.customerUserInfo.Postcode</td>
+                            </tr>
+                            <tr>
+                                <th>住所</th>
+                                <td>@CurrentSession.customerUserInfo.Address</td>
+                            </tr>
+                            <tr>
+                                <th>パスワード</th>
+                                <td>@password</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="button-field">
+                        <button class="form-normal-button next-arrow-yellow-button">情報の変更をする</button>
+                    </div>
+                </div>
+
+                <div class="log-table">
+                    <h3>退会について</h3>
+                    <p>退会される方は下記ボタンより退会手続きをお願い致します</p>
+                    <p>退会される退会手続きをお読みになって退会ください。</p>
+                    <div class="button-field">
+                        <button class="form-normal-button next-arrow-yellow-button">退会手続きをする</button>
+                    </div>
+                </div>
+            }
+
         </div>
 
     </div>
