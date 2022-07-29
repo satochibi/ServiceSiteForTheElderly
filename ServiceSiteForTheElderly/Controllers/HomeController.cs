@@ -321,7 +321,6 @@ namespace ServiceSiteForTheElderly.Controllers
             if (CommonModel.CheckDatabaseIsUserIdExist(postModel.Tel) == ReturnOfCheckDatabaseIsUserIdExist.UserIdIsNotExist)
             {
                 // 存在しなかったら、登録処理
-
                 if (string.IsNullOrEmpty(postModel.Name) || string.IsNullOrEmpty(postModel.Furigana) || string.IsNullOrEmpty(postModel.Tel) || string.IsNullOrEmpty(postModel.Password))
                 {
                     // 未入力があるかどうかチェック
@@ -731,7 +730,6 @@ namespace ServiceSiteForTheElderly.Controllers
             return Json(new MJsonWithStatus() { status = "success" });
 
         }
-
 
         /// <summary>
         /// 注文最終確認画面
@@ -1477,6 +1475,70 @@ namespace ServiceSiteForTheElderly.Controllers
             ViewData["mContact"] = mContact;
             ViewData["CurrentSession"] = CurrentSession;
             return View();
+        }
+
+        /// <summary>
+        /// マイページの顧客情報の修正
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult UpdateCustomerInfo()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            ViewData["CurrentSession"] = CurrentSession;
+            return View();
+        }
+
+        /// <summary>
+        /// 顧客情報の修正のAPI
+        /// </summary>
+        /// <param name="postModel">必要な項目から構成されるJsonから生成されたオブジェクト</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UpdateCustomerInfo(SignUpModel postModel)
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            // 事前に電話番号と郵便番号のハイフンを取り除いておく
+            postModel.Tel = postModel.Tel.Replace("-", "");
+            if (postModel.Postcode != null)
+            {
+                postModel.Postcode = postModel.Postcode.Replace("-", "");
+            }
+
+            if (string.IsNullOrEmpty(postModel.Name) || string.IsNullOrEmpty(postModel.Furigana) || string.IsNullOrEmpty(postModel.Tel) || string.IsNullOrEmpty(postModel.Password))
+            {
+                // 未入力があるかどうかチェック
+                return Json(new MJsonWithStatus() { status = "containEmptyChar" });
+            }
+
+            // 顧客情報を作ってデータベースに登録
+            MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = string.IsNullOrEmpty(postModel.Mail) ? null : postModel.Mail, Postcode = string.IsNullOrEmpty(postModel.Postcode) ? null : postModel.Postcode, Address = string.IsNullOrEmpty(postModel.Address) ? null : postModel.Address, Password = postModel.Password };
+            int? custId = null;
+            CommonModel.RegistDatabaseCustomer(cust, ref custId);
+            if (custId == null)
+            {
+                return Json(new MJsonWithStatus() { status = "error" });
+            }
+            else
+            {
+                cust.Id = custId.Value;
+                CurrentSession.customerUserInfo = cust;
+            }
+
+            return Json(new MJsonWithStatus() { status = "success" });
         }
 
         public ActionResult Foodstuff()

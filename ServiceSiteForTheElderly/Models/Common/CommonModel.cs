@@ -217,7 +217,7 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
         /// <summary>
-        /// 新規登録
+        /// 新規登録及び更新
         /// </summary>
         /// <param name="cust">登録する顧客情報</param>
         /// <param name="custId">登録した顧客情報のid</param>
@@ -365,7 +365,6 @@ namespace ServiceSiteForTheElderly.Models.Common
 
             return isSuccess ? ReturnOfBasicDatabase.Success : ReturnOfBasicDatabase.Error;
         }
-
 
         /// <summary>
         /// 商品の一覧を取得(店舗idからのバージョン)
