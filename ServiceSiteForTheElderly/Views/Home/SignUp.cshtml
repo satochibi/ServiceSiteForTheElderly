@@ -73,20 +73,20 @@
                                    pattern="\d{2,4}-?\d{2,4}-?\d{3,4}" maxlength="15" required>
                         </div>
                         <div class="input-field">
-                            <label class="label" for="e-mail">メールアドレス</label>
-                            <input id="e-mail" type="email" name="email" placeholder="hanako@tobecho.com" maxlength="200">
+                            <label class="label" for="e-mail">メールアドレス<small>必須</small></label>
+                            <input id="e-mail" type="email" name="email" placeholder="hanako@tobecho.com" maxlength="200" required>
                         </div>
 
                         <div class="input-field">
-                            <label class="label" for="postal-code">郵便番号</label>
+                            <label class="label" for="postal-code">郵便番号<small>必須</small></label>
                             <input id="postal-code" type="text" name="postal-code"
                                    onKeyUp="AjaxZip3.zip2addr(this,'','address','address');" placeholder="791-2114"
-                                   pattern="\d{3}-?\d{4}" maxlength="8">
+                                   pattern="\d{3}-?\d{4}" maxlength="8" required>
                         </div>
 
                         <div class="input-field grow-field">
-                            <label class="label" for="address">住所</label>
-                            <input id="address" type="text" name="address" placeholder="砥部町麻生000-0" maxlength="255">
+                            <label class="label" for="address">住所<small>必須</small></label>
+                            <input id="address" type="text" name="address" placeholder="砥部町麻生000-0" maxlength="255" required>
                         </div>
                         <div class="input-field">
                             <label class="label" for="name">パスワード<small>必須</small></label>

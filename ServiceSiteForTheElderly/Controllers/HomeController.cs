@@ -321,14 +321,24 @@ namespace ServiceSiteForTheElderly.Controllers
             if (CommonModel.CheckDatabaseIsUserIdExist(postModel.Tel) == ReturnOfCheckDatabaseIsUserIdExist.UserIdIsNotExist)
             {
                 // 存在しなかったら、登録処理
-                if (string.IsNullOrEmpty(postModel.Name) || string.IsNullOrEmpty(postModel.Furigana) || string.IsNullOrEmpty(postModel.Tel) || string.IsNullOrEmpty(postModel.Password))
+                if (!postModel.IsNotEmpty())
                 {
                     // 未入力があるかどうかチェック
                     return Json(new MJsonWithStatus() { status = "containEmptyChar" });
                 }
 
                 // 顧客情報を作ってデータベースに登録
-                MCustomers cust = new MCustomers() { Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = string.IsNullOrEmpty(postModel.Mail) ? null : postModel.Mail, Postcode = string.IsNullOrEmpty(postModel.Postcode) ? null : postModel.Postcode, Address = string.IsNullOrEmpty(postModel.Address) ? null : postModel.Address, Password = postModel.Password };
+                MCustomers cust = new MCustomers() {
+                    Name = postModel.Name,
+                    Furigana = postModel.Furigana,
+                    Tel = postModel.Tel,
+                    Mail =postModel.Mail,
+                    Postcode =postModel.Postcode,
+                    Address = postModel.Address,
+                    Password = postModel.Password
+                };
+
+
                 int? custId = null;
                 CommonModel.RegistDatabaseCustomer(cust, ref custId);
                 if (custId == null)

@@ -58,6 +58,11 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
         public string Address { get; set; }
 
         public string Password { get; set; }
+
+        public bool IsNotEmpty()
+        {
+            return this.GetType().GetProperties().Aggregate(true, (acc, x) => acc && !string.IsNullOrEmpty(x.GetValue(this).ToString()));
+        }
     }
 
 
