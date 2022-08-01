@@ -328,12 +328,13 @@ namespace ServiceSiteForTheElderly.Controllers
                 }
 
                 // 顧客情報を作ってデータベースに登録
-                MCustomers cust = new MCustomers() {
+                MCustomers cust = new MCustomers()
+                {
                     Name = postModel.Name,
                     Furigana = postModel.Furigana,
                     Tel = postModel.Tel,
-                    Mail =postModel.Mail,
-                    Postcode =postModel.Postcode,
+                    Mail = postModel.Mail,
+                    Postcode = postModel.Postcode,
                     Address = postModel.Address,
                     Password = postModel.Password
                 };
@@ -1317,7 +1318,7 @@ namespace ServiceSiteForTheElderly.Controllers
                 return View("Login");
             }
 
-            
+
             string paramArg1;
             try
             {
@@ -1564,15 +1565,25 @@ namespace ServiceSiteForTheElderly.Controllers
                 postModel.Postcode = postModel.Postcode.Replace("-", "");
             }
 
-            if (string.IsNullOrEmpty(postModel.Name) || string.IsNullOrEmpty(postModel.Furigana) || string.IsNullOrEmpty(postModel.Tel) || string.IsNullOrEmpty(postModel.Password))
+            if (!postModel.IsNotEmpty())
             {
                 // 未入力があるかどうかチェック
                 return Json(new MJsonWithStatus() { status = "containEmptyChar" });
             }
 
             // 顧客情報を作ってデータベースに登録
-            MCustomers cust = new MCustomers() {Id = CurrentSession.customerUserInfo.Id, Name = postModel.Name, Furigana = postModel.Furigana, Tel = postModel.Tel, Mail = string.IsNullOrEmpty(postModel.Mail) ? null : postModel.Mail, Postcode = string.IsNullOrEmpty(postModel.Postcode) ? null : postModel.Postcode, Address = string.IsNullOrEmpty(postModel.Address) ? null : postModel.Address, Password = postModel.Password };
-            
+            MCustomers cust = new MCustomers()
+            {
+                Id = CurrentSession.customerUserInfo.Id,
+                Name = postModel.Name,
+                Furigana = postModel.Furigana,
+                Tel = postModel.Tel,
+                Mail = postModel.Mail,
+                Postcode = postModel.Postcode,
+                Address = postModel.Address,
+                Password = postModel.Password
+            };
+
             if (CommonModel.UpdateDatabaseCustomer(cust) == ReturnOfBasicDatabase.Error)
             {
                 return Json(new MJsonWithStatus() { status = "error" });
