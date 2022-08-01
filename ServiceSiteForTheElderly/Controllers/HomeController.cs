@@ -992,6 +992,7 @@ namespace ServiceSiteForTheElderly.Controllers
 
                 ViewData["id"] = shopId;
                 ViewData["q"] = q;
+                ViewData["CurrentSession"] = CurrentSession;
                 return View("Goods");
             }
 
@@ -1072,6 +1073,7 @@ namespace ServiceSiteForTheElderly.Controllers
             GoodsMakeView(mGoods, unitName);
 
             ViewData["q"] = q;
+            ViewData["CurrentSession"] = CurrentSession;
             return View("Goods");
         }
 

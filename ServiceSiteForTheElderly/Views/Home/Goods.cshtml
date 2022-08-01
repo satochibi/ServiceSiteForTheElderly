@@ -1,6 +1,8 @@
 ﻿
 @{
     Layout = null;
+    var CurrentSession = ViewData["CurrentSession"] as ServiceSiteForTheElderly.Models.ViewModels.SessionModel;
+    string categoryName = ViewData["categoryName"] as string;
 }
 
 <!DOCTYPE html>
@@ -45,33 +47,28 @@
         <div class="main-contents">
             <h2>@ViewData["categoryName"]の宅配サービス</h2>
 
-            <div id="order">
-                <form action="">
-                    <h3>@ViewData["categoryName"]購入の申込</h3>
-                    <div class="input-container">
-                        <div class="input-field">
-                            <label for="name">お名前</label>
-                            <input type="text" name="name" placeholder="砥部 花子">
+            @if (CurrentSession.customerUserInfo != null && (categoryName == "本" || categoryName == "特産品"))
+            {
+                <div id="order">
+                    <form action="">
+                        <h3>@ViewData["categoryName"]購入の申込</h3>
+                        <div class="input-container">
+                            <div class="input-field grow-field">
+                                <label for="name">商品名</label>
+                                <input type="text" name="name" placeholder="取り寄せる商品名">
+                            </div>
+                            <div class="message grow-field">
+                                申込み後、担当者より連絡いたします
+                            </div>
+                            <div class="button-field grow-field" id="order-button">
+                                <button class="form-primary-button" type="submit">申込</button>
+                            </div>
                         </div>
-                        <div class="input-field">
-                            <label for="phone-number">電話番号</label>
-                            <input type="text" name="phone-number" placeholder="089-982-0001"
-                                   pattern="\d{2,4}-?\d{2,4}-?\d{3,4}">
-                        </div>
-                        <div class="input-field grow-field">
-                            <label for="name">商品名</label>
-                            <input type="text" name="name" placeholder="取り寄せる商品名">
-                        </div>
-                        <div class="message grow-field">
-                            申込み後、担当者より連絡いたします
-                        </div>
-                        <div class="button-field grow-field" id="order-button">
-                            <button class="form-primary-button" type="submit">申込</button>
-                        </div>
-                    </div>
 
-                </form>
-            </div>
+                    </form>
+                </div>
+            }
+
 
             <div id="search">
                 <form action="">
@@ -127,7 +124,7 @@
                     const inputData = data.map(item => ({ "GoodsId": goodsId, "Variety": (item.name == "variety") ? "" : item.name, "Quantity": parseInt(item.value) }));
 
                     const inputCheck = inputData.every(item => item.Quantity == 0);
-                    
+
                     if (inputCheck) {
                         alert("個数を入力してください");
                         return;
