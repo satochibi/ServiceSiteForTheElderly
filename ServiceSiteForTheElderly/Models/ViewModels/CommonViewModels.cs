@@ -93,4 +93,10 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
         public int CategoryId { get; set; }
     }
 
+    public class BackorderModel
+    {
+        public string GoodsName { get; set; }
+        public int CategoryId { get; set; }
+    }
+
 }

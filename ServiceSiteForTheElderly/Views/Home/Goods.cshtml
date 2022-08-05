@@ -3,6 +3,7 @@
     Layout = null;
     var CurrentSession = ViewData["CurrentSession"] as ServiceSiteForTheElderly.Models.ViewModels.SessionModel;
     string categoryName = ViewData["categoryName"] as string;
+    int? categoryId = ViewData["categoryId"] as int?;
 }
 
 <!DOCTYPE html>
@@ -22,8 +23,9 @@
 <body>
     <input type="hidden" id="UrlActionAddToCart" value="@Url.Action("AddToCart", "Home")" />
     <input type="hidden" id="NavigatorNext" value="@Url.Action("ShoppingCart", "Home")" />
-
-
+    <input type="hidden" id="categoryId" value="@categoryId" />
+    <input type="hidden" id="UrlActionBackorder" value="@Url.Action("Backorder", "Home")"/>
+    <input type="hidden" id="NavigatorComplete" value="@Url.Action("BackorderComplete", "Home")" />
     <div class="container">
         <header>
             <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
@@ -54,8 +56,8 @@
                         <h3>@ViewData["categoryName"]購入の申込</h3>
                         <div class="input-container">
                             <div class="input-field grow-field">
-                                <label for="name">商品名</label>
-                                <input type="text" name="name" placeholder="取り寄せる商品名">
+                                <label for="backorder-goodsname">商品名</label>
+                                <input type="text" id="backorder-goodsname" name="name" placeholder="取り寄せる商品名">
                             </div>
                             <div class="message grow-field">
                                 申込み後、担当者より連絡いたします
@@ -104,15 +106,6 @@
     </div>
 
     <script>
-        const orderButton = document.getElementById("order-button");
-        orderButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            const answer = confirm('この商品を取り寄せますか?');
-            if (answer) {
-                location.href = "./order-complete.html";
-            }
-        });
-
         $(function () {
             $(".goods").each(function (index, element) {
                 const goodsId = parseInt($(element).attr("id").replace("goods-", ""));
@@ -136,6 +129,26 @@
 
                 });
 
+            });
+
+
+
+            $("#order > form").on("submit", function (event) {
+                event.preventDefault();
+                const data = $(this).serializeArray();
+                const inputData = data.map(item => ({ "GoodsName": item.value, "CategoryId": $("#categoryId").val() }))[0];
+
+                if (!inputData.GoodsName) {
+                    alert("商品名を入力してください");
+                    return;
+                } else {
+                    const postUrl = $("#UrlActionBackorder").val();
+                    const nextUrl = $("#NavigatorComplete").val();
+                    const answer = confirm('商品を取り寄せますか?');
+                    if (answer) {
+                        postfuncajax(postUrl, nextUrl, inputData)
+                    }
+                }
             });
 
 

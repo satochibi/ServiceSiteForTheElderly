@@ -990,9 +990,13 @@ namespace ServiceSiteForTheElderly.Controllers
 
                 GoodsMakeView(mGoods, unitName);
 
+                int categoryId = CommonModel.GetDataBaseCategotyId("料理とお弁当");
+
                 ViewData["id"] = shopId;
                 ViewData["q"] = q;
                 ViewData["CurrentSession"] = CurrentSession;
+                ViewData["categoryId"] = categoryId;
+
                 return View("Goods");
             }
 
@@ -1074,6 +1078,7 @@ namespace ServiceSiteForTheElderly.Controllers
 
             ViewData["q"] = q;
             ViewData["CurrentSession"] = CurrentSession;
+            ViewData["categoryId"] = categoryId;
             return View("Goods");
         }
 
@@ -1170,6 +1175,64 @@ namespace ServiceSiteForTheElderly.Controllers
             }
 
             ViewData["goods"] = html;
+        }
+
+        /// <summary>
+        /// 取り寄せるREST API
+        /// </summary>
+        /// <param name="postModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Backorder(BackorderModel postModel)
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            string randomId = null;
+            if (CommonModel.RegistDatabaseBackorder(CurrentSession, postModel, ref randomId) == ReturnOfBasicDatabase.Error)
+            {
+                return Json(new MJsonWithStatus() { status = "error" });
+            }
+            else
+            {
+                CurrentSession.randomId = randomId;
+                return Json(new MJsonWithStatus() { status = "success" });
+            }
+        }
+
+        /// <summary>
+        /// 商品取り寄せ完了画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BackorderComplete()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // 再アクセスの禁止
+            if (string.IsNullOrEmpty(CurrentSession.randomId))
+            {
+                ViewData["title"] = "エラーが起こりました";
+                ViewData["message"] = "注文が複数起こりました";
+                return View("Error");
+            }
+
+
+            ViewData["title"] = "取り寄せ手続きが完了いたしました";
+            ViewData["message"] = "取り寄せいただき、ありがとうございます。";
+            ViewData["randomId"] = CurrentSession.randomId;
+            ViewData["tableTitle"] = "取り寄せ番号";
+            CurrentSession.randomId = "";
+            return View("Complete");
         }
 
         /// <summary>

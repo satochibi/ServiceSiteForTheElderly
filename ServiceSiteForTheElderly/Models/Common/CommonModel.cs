@@ -976,5 +976,27 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
         }
 
+        public static ReturnOfBasicDatabase RegistDatabaseBackorder(SessionModel CurrentSession, BackorderModel backorderModel, ref string randomId)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+
+            string sql = $"insert into Backorders(randomId, customerId, createdAt, categoryId, goodsName) values(REPLACE(CAST(NEWID() AS NCHAR(36)), '-', ''), {CurrentSession.customerUserInfo.Id}, GETDATE(), {backorderModel.CategoryId}, '{backorderModel.GoodsName}'); select @@IDENTITY;";
+
+            try
+            {
+                dba.Query(sql, ref dt);
+                int id = int.Parse(dt.Rows[0].ItemArray[0].ToString());
+                sql = $"select randomId from Backorders where id = {id}";
+                dba.Query(sql, ref dt);
+                randomId = dt.Rows[0].ItemArray[0].ToString();
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+        }
+
     }
 }
