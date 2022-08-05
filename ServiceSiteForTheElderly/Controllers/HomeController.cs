@@ -1283,6 +1283,53 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
+        /// マイページ(取り寄せ履歴)
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyPageBackorder()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            List<MBackOrders> mBackOrders = new List<MBackOrders>();
+
+            CommonModel.GetDatabaseBackorders(CurrentSession.customerUserInfo.Id, ref mBackOrders);
+
+            string html = "";
+
+            foreach (var aBackOrder in mBackOrders)
+            {
+
+                html += string.Format(@"
+                        <tr data-href=""{0}"" tabindex=""0"">
+                            <td>{1}</td>
+                            <td>発送準備中&nbsp;<i class=""fa-solid fa-arrow-up-right-from-square""></i></td>
+                        </tr>", aBackOrder.RandomId, aBackOrder.CreatedAt.ToString("yyyy/MM/dd HH:mm:ss"));
+            }
+
+            ViewData["orders"] = html;
+            ViewData["index"] = 1;
+            ViewData["title"] = "取り寄せ履歴";
+
+
+            return View("MyPage");
+        }
+
+        /// <summary>
         /// マイページ(お問い合わせ履歴)
         /// </summary>
         /// <returns></returns>
@@ -1524,6 +1571,61 @@ namespace ServiceSiteForTheElderly.Controllers
 
             MCustomers mCustomer = null;
             CommonModel.GetDatabaseCustomer(mOrder.CustomerId, mOrder.OrderDate, ref mCustomer);
+            ViewData["Customer"] = mCustomer;
+            return View();
+        }
+
+        /// <summary>
+        /// マイページの取り寄せ履歴の詳細
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BackOrderDetail()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // ログインしていなければ、ログイン画面にリダイレクト
+            if (CurrentSession.customerUserInfo == null)
+            {
+                return View("Login");
+            }
+
+            string paramArg1;
+            try
+            {
+                paramArg1 = Request.Params["randomid"];
+            }
+            catch (Exception)
+            {
+                // URLが不正なら、トップページにリダイレクト
+                IndexMakeView();
+                return View("Index");
+            }
+
+
+            MBackOrders mBackOrder = null;
+            var isSuccess = CommonModel.GetDatabaseBackorder(paramArg1, ref mBackOrder);
+            // クエリがない、またはランダムidが不正なら、トップページにリダイレクト
+            if (isSuccess == ReturnOfBasicDatabase.Error || string.IsNullOrEmpty(paramArg1))
+            {
+                IndexMakeView();
+                return View("Index");
+            }
+
+            ViewData["categoryName"] = CommonModel.GetDatabaseCategoryName(mBackOrder.CategoryId);
+
+            ViewData["mContact"] = mBackOrder;
+
+            MCustomers mCustomer = null;
+            CommonModel.GetDatabaseCustomer(mBackOrder.CustomerId, mBackOrder.CreatedAt, ref mCustomer);
             ViewData["Customer"] = mCustomer;
             return View();
         }

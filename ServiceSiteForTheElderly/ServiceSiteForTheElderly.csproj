@@ -205,6 +205,7 @@
     <Content Include="Views\Home\Confirm.cshtml" />
     <Content Include="Views\Home\ContactDetail.cshtml" />
     <Content Include="Views\Home\UpdateCustomerInfo.cshtml" />
+    <Content Include="Views\Home\BackOrderDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

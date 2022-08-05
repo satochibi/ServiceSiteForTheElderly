@@ -667,6 +667,27 @@ namespace ServiceSiteForTheElderly.Models.Common
         }
 
         /// <summary>
+        /// randomIdからbackOrderIdに変換
+        /// </summary>
+        /// <param name="randomId"></param>
+        /// <returns></returns>
+        public static int? GetDatabaseRandomIdToBackOrderId(string randomId)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            string sql = $"select id from Backorders where randomId = '{randomId}';";
+            try
+            {
+                dba.Query(sql, ref dt);
+                return dt.Rows[0].Field<int>("id");
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Ordersテーブルを取得
         /// </summary>
         /// <param name="customerId">顧客id</param>
@@ -976,6 +997,13 @@ namespace ServiceSiteForTheElderly.Models.Common
             }
         }
 
+        /// <summary>
+        /// 取り寄せ情報をデータベースに登録
+        /// </summary>
+        /// <param name="CurrentSession">現在のセッション情報</param>
+        /// <param name="backorderModel">登録する取り寄せ情報</param>
+        /// <param name="randomId">出力されるランダムid</param>
+        /// <returns></returns>
         public static ReturnOfBasicDatabase RegistDatabaseBackorder(SessionModel CurrentSession, BackorderModel backorderModel, ref string randomId)
         {
             DBAccess dba = new DBAccess();
@@ -997,6 +1025,82 @@ namespace ServiceSiteForTheElderly.Models.Common
                 return ReturnOfBasicDatabase.Error;
             }
         }
+
+        /// <summary>
+        /// BackOrdersテーブルを取得
+        /// </summary>
+        /// <param name="customerId">顧客id</param>
+        /// <param name="mBackOrders]">出力されるBackOrderのリスト</param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase GetDatabaseBackorders(int customerId, ref List<MBackOrders> mBackOrders)
+        {
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+
+            string sql = $"select * from Backorders where customerId={customerId} order by createdAt desc;";
+            try
+            {
+                dba.Query(sql, ref dt);
+                for (int row = 0; row < dt.Rows.Count; row++)
+                {
+                    MBackOrders aBackOrder = new MBackOrders()
+                    {
+                        Id = dt.Rows[row].Field<int>("id"),
+                        RandomId=dt.Rows[row].Field<string>("randomId"),
+                        CustomerId= dt.Rows[row].Field<int>("customerId"),
+                        CreatedAt = dt.Rows[row].Field<DateTime>("createdAt"),
+                        CategoryId = dt.Rows[row].Field<int>("categoryId"),
+                        GoodsName = dt.Rows[row].Field<string>("goodsName"),
+                    };
+                    mBackOrders.Add(aBackOrder);
+
+                }
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+        }
+
+        /// <summary>
+        /// randomIdからBackOrderモデルを取得
+        /// </summary>
+        /// <param name="randomId"></param>
+        /// <param name="mBackOrder"></param>
+        /// <returns></returns>
+        public static ReturnOfBasicDatabase GetDatabaseBackorder(string randomId, ref MBackOrders mBackOrder)
+        {
+            int? contactId = CommonModel.GetDatabaseRandomIdToBackOrderId(randomId);
+            if (contactId == null)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+
+            DBAccess dba = new DBAccess();
+            DataTable dt = null;
+            string sql = $"select * from Backorders where id = {contactId};";
+            try
+            {
+                dba.Query(sql, ref dt);
+                mBackOrder = new MBackOrders()
+                {
+                    Id = dt.Rows[0].Field<int>("id"),
+                    RandomId = dt.Rows[0].Field<string>("randomId"),
+                    CustomerId = dt.Rows[0].Field<int>("customerId"),
+                    CreatedAt = dt.Rows[0].Field<DateTime>("createdAt"),
+                    CategoryId = dt.Rows[0].Field<int>("categoryId"),
+                    GoodsName = dt.Rows[0].Field<string>("goodsName"),
+                };
+                return ReturnOfBasicDatabase.Success;
+            }
+            catch (Exception)
+            {
+                return ReturnOfBasicDatabase.Error;
+            }
+
+        }
+
 
     }
 }

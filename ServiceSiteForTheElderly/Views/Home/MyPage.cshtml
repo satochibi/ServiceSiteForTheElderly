@@ -31,6 +31,7 @@
 
 <body>
     <input type="hidden" id="UrlActionOrderDetail" value="@Url.Action("OrderDetail", "Home")" />
+    <input type="hidden" id="UrlActionBackOrderDetail" value="@Url.Action("BackOrderDetail", "Home")" />
     <input type="hidden" id="UrlActionContactDetail" value="@Url.Action("ContactDetail", "Home")" />
     <input type="hidden" id="UrlActionId" value="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.UrlActionId(index)" />
 
@@ -66,7 +67,7 @@
                     <span>注文履歴</span>
                 </a>
 
-                <a href="#" class="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.AddClassActiveOrNormalButton(1, index)">
+                <a href="@Url.Action("MyPageBackorder", "Home")" class="@ServiceSiteForTheElderly.Models.ViewModels.MyPage.AddClassActiveOrNormalButton(1, index)">
                     <i class="fa-solid fa-book-open"></i>
                     <span>書籍取り寄せ履歴</span>
                 </a>

@@ -103,6 +103,8 @@ public class MOrders
 
 }
 
+
+
 public class MOrderGoods
 {
     public int GoodsId { get; set; }
@@ -113,6 +115,16 @@ public class MOrderGoods
     public int OrderId { get; set; }
 }
 
+
+public class MBackOrders
+{
+    public int Id { get; set; }
+    public string RandomId { get; set; }
+    public int CustomerId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public int CategoryId { get; set; }
+    public string GoodsName { get; set; }
+}
 
 public class MContacts
 {

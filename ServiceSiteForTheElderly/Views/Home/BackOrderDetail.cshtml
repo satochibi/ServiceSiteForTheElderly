@@ -2,7 +2,7 @@
 @{
     Layout = null;
     var Customer = ViewData["Customer"] as MCustomers;
-    var mContact = ViewData["mContact"] as MContacts;
+    var mContact = ViewData["mContact"] as MBackOrders;
 }
 
 
@@ -25,7 +25,7 @@
 
 
 <body>
-    <input type="hidden" id="NavigatorPrev" value="@Url.Action("MyPageContact", "Home")" />
+    <input type="hidden" id="NavigatorPrev" value="@Url.Action("MyPageBackorder", "Home")" />
     <div class="container">
         <header>
             <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
@@ -42,68 +42,38 @@
         <div class="breadcrumb-list">
             <ul>
                 <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
-                <li><a href="@Url.Action("MyPageContact", "Home")">マイページ</a></li>
-                <li><a href="#">お問い合わせ情報詳細</a></li>
+                <li><a href="@Url.Action("MyPageBackorder", "Home")">マイページ</a></li>
+                <li><a href="#">取り寄せ情報詳細</a></li>
             </ul>
         </div>
 
         <div class="main-contents">
-            <h2>お問い合わせ情報詳細</h2>
+            <h2>取り寄せ情報詳細</h2>
 
             <div class="contact-table cart-table">
                 <form>
                     <table border="1">
                         <thead>
                             <tr>
-                                <th colspan="2">お問い合わせ情報</th>
+                                <th colspan="2">取り寄せ情報</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <th>お問い合わせ番号</th>
+                                <th>取り寄せ番号</th>
                                 <td>@mContact.RandomId</td>
                             </tr>
                             <tr>
-                                <th>お問い合わせ日時</th>
+                                <th>取り寄せ日時</th>
                                 <td>@mContact.CreatedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
                             </tr>
                             <tr>
-                                <th>お問い合わせ種別</th>
+                                <th>取り寄せ種別</th>
                                 <td>@ViewData["categoryName"]</td>
                             </tr>
                             <tr>
-                                <th>お問い合わせ本文</th>
-                                <td>@mContact.Message</td>
-                            </tr>
-                        </tbody>
-
-                        <thead>
-                            <tr>
-                                <th colspan="2">回答情報</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>回答本文</th>
-                                @if (mContact.ReplyMessage == null)
-                                {
-                                    <td>回答はまだありません</td>
-                                }
-                                else
-                                {
-                                    <td>@mContact.ReplyMessage</td>
-                                }
-                            </tr>
-                            <tr>
-                                <th>回答日時</th>
-                                @if (mContact.ReplyDate == null)
-                                {
-                                    <td>回答はまだありません</td>
-                                }
-                                else
-                                {
-                                    <td>@mContact.ReplyDate.Value.ToString("yyyy/MM/dd HH:mm:ss")</td>
-                                }
+                                <th>取り寄せた商品</th>
+                                <td>@mContact.GoodsName</td>
                             </tr>
                         </tbody>
 
