@@ -206,6 +206,8 @@
     <Content Include="Views\Home\ContactDetail.cshtml" />
     <Content Include="Views\Home\UpdateCustomerInfo.cshtml" />
     <Content Include="Views\Home\BackOrderDetail.cshtml" />
+    <Content Include="Views\Home\SignUpConfirm.cshtml" />
+    <Content Include="Views\Home\SignUpComplete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,186 @@
+﻿
+@{
+    Layout = null;
+    var postModel = ViewData["postModel"] as ServiceSiteForTheElderly.Models.ViewModels.SignUpModel;
+}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高齢者のお困り解決砥部町内サービスサイト</title>
+    <link rel="stylesheet" href="@Url.Content("~/css/normalize.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/contact.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+</head>
+
+
+<body>
+    <input type="hidden" id="UrlActionSignUp" value="@Url.Action("SignUp", "Home")" />
+    <input type="hidden" id="NavigatorPrev" value="@Url.Action("SignUp", "Home")" />
+    <input type="hidden" id="NavigatorNext" value="@Url.Action("SignUpComplete", "Home")" />
+
+    <input type="hidden" id="InputDataName" value="@postModel.Name" />
+    <input type="hidden" id="InputDataFurigana" value="@postModel.Furigana" />
+    <input type="hidden" id="InputDataTel" value="@postModel.Tel" />
+    <input type="hidden" id="InputDataMail" value="@postModel.Mail" />
+    <input type="hidden" id="InputDataPostcode" value="@postModel.Postcode" />
+    <input type="hidden" id="InputDataAddress" value="@postModel.Address" />
+    <input type="hidden" id="InputDataPassword" value="@postModel.Password" />
+
+
+    <div class="container">
+        <header>
+            <h1><a href="@Url.Action("Index", "Home")">高齢者の<span>お困り解決</span>サイト<br>(砥部町内サービス)</a></h1>
+            <div class="header-buttons">
+                <div class="shopping-cart">
+                    <span class="shopping-count-badge @ViewData["HeaderBadgeStatus"]">@ViewData["HeaderBadge"]</span>
+                    <a href="@Url.Action("ShoppingCart", "Home")" class="shopping-cart-button"><i class="fas fa-shopping-cart"></i>買い物カゴを見る</a>
+                </div>
+                <a href="@ViewData["HeaderButtonLink"]" class="avatar-button"><i class="fa-solid fa-user"></i>@ViewData["HeaderButtonText"]</a>
+            </div>
+        </header>
+
+
+        <div class="breadcrumb-list">
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
+                <li><a href="@Url.Action("SignUp", "Home")">会員登録</a></li>
+                <li><a href="#">会員登録確認</a></li>
+            </ul>
+        </div>
+
+        <div class="main-contents">
+            <h2>会員登録確認</h2>
+            <div class="no-item-message">
+                <p>以下の内容で会員登録しますか?</p>
+            </div>
+
+            <div class="contact-table">
+                <form id="form">
+                    <table border="1">
+                        <tbody>
+                            <tr>
+                                <th>お名前</th>
+                                <td>@postModel.Name</td>
+                            </tr>
+                            <tr>
+                                <th>ふりがな</th>
+                                <td>@postModel.Furigana</td>
+                            </tr>
+                            <tr>
+                                <th>電話番号</th>
+                                <td>@postModel.Tel</td>
+                            </tr>
+                            <tr>
+                                <th>メールアドレス</th>
+                                <td>@postModel.Mail</td>
+                            </tr>
+                            <tr>
+                                <th>郵便番号</th>
+                                <td>@postModel.Postcode</td>
+                            </tr>
+                            <tr>
+                                <th>住所</th>
+                                <td>@postModel.Address</td>
+                            </tr>
+                            <tr>
+                                <th>パスワード</th>
+                                <td>ご登録いただいたパスワード</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="button-field">
+                        <button class="form-normal-button prev-arrow-button" type="button" id="back-button">入力画面に戻る</button>
+                        <button class="form-secondary-button next-arrow-button" type="submit" id="submit">会員登録する</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+
+        <footer>
+
+            <div class="footer-logo">
+                HAISABU Platform
+            </div>
+
+            <!-- <div class="ads">
+                広告
+            </div> -->
+
+        </footer>
+    </div>
+
+    <script>
+        $(function () {
+            $("#form").on("submit", function (event) {
+                event.preventDefault();
+
+                var inputData = {
+                    Name: $("#InputDataName").val().trim() ?? "",
+                    Furigana: $("#InputDataFurigana").val().trim() ?? "",
+                    Tel: $("#InputDataTel").val().trim() ?? "",
+                    Mail: $("#InputDataMail").val().trim() ?? "",
+                    Postcode: $("#InputDataPostcode").val().trim() ?? "",
+                    Address: $("#InputDataAddress").val().trim() ?? "",
+                    Password: $("#InputDataPassword").val().trim() ?? ""
+                };
+
+                const postUrl = $("#UrlActionSignUp").val();
+                const nextUrl = $("#NavigatorNext").val();
+                postfuncajax(postUrl, nextUrl, inputData);
+            });
+
+            function postfuncajax(postUrl, nextUrl, inputData) {
+
+                const jsonString = JSON.stringify(inputData);
+
+                $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    async: false,
+                    data: jsonString,
+                    dataType: "json",
+                    contentType: 'application/json',
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var message = XMLHttpRequest.status;
+                        alert(message);
+                    },
+                    success: function (data) {
+                        switch (data.status) {
+                            case "success":
+                                // alert("ログイン成功");
+                                location.href = nextUrl;
+                                break;
+                            case "containEmptyChar":
+                                alert("空文字列が含まれているフィールドがあります");
+                                break;
+                            case "duplicateTelError":
+                                alert("この電話番号は既に使われています");
+                                break;
+                            case "error":
+                            default:
+                                alert("エラーが起こりました");
+                                break;
+                        }
+
+                    }
+                });
+
+            }
+
+            $("#back-button").click(function () {
+                location.href = $("#NavigatorPrev").val();
+            });
+        });
+    </script>
+</body>
+
+</html>

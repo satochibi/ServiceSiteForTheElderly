@@ -287,6 +287,138 @@ namespace ServiceSiteForTheElderly.Controllers
         }
 
         /// <summary>
+        /// 新規登録確認画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SignUpConfirm()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+            // 既にログイン済みならトップページにリダイレクト
+            if (CurrentSession.customerUserInfo != null)
+            {
+                IndexMakeView();
+                return View("Index");
+            }
+
+
+            SignUpModel postModel = null;
+            try
+            {
+                postModel = new SignUpModel()
+                {
+                    Name = Request.Params["Name"],
+                    Furigana = Request.Params["Furigana"],
+                    Tel = Request.Params["Tel"],
+                    Mail = Request.Params["Mail"],
+                    Postcode = Request.Params["Postcode"],
+                    Address = Request.Params["Address"],
+                    Password = Request.Params["Password"],
+                };
+            }
+            catch (Exception)
+            {
+                ViewData["title"] = "エラー";
+                ViewData["message"] = "不適切な文字列が含まれている";
+                return View("Error");
+            }
+
+            ViewData["postModel"] = postModel;
+
+            return View();
+        }
+
+        /// <summary>
+        /// 新規登録完了画面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SignUpComplete()
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            if (CommonModel.GetDatabaseGlobalStatus() == ReturnOfBasicDatabase.Error)
+            {
+                ViewData["title"] = mentainanceTitle;
+                ViewData["message"] = mentainanceMessage;
+                return View("Error");
+            }
+
+
+            return View();
+        }
+
+        /// <summary>
+        /// 新規登録できるかどうかチェックするREST API
+        /// </summary>
+        /// <param name="postModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SignUpCheck(SignUpModel postModel)
+        {
+            string sid = null;
+            SessionModel CurrentSession = null;
+            GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
+
+            // 存在しなかったら、登録処理
+            if (!postModel.IsNotEmpty())
+            {
+                // 未入力があるかどうかチェック
+                return Json(new MJsonWithStatus() { status = "containEmptyChar" });
+            }
+
+            // 事前に電話番号と郵便番号のハイフンを取り除いておく
+            if (postModel.Tel != null)
+            {
+                postModel.Tel = postModel.Tel.Replace("-", "");
+            }
+
+            if (postModel.Postcode != null)
+            {
+                postModel.Postcode = postModel.Postcode.Replace("-", "");
+            }
+
+            // ユーザが既に存在するかの判定
+            if (CommonModel.CheckDatabaseIsUserIdExist(postModel.Tel) == ReturnOfCheckDatabaseIsUserIdExist.UserIdIsNotExist)
+            {
+                // 存在しなかったら、登録処理
+                if (!postModel.IsNotEmpty())
+                {
+                    // 未入力があるかどうかチェック
+                    return Json(new MJsonWithStatus() { status = "containEmptyChar" });
+                }
+
+                // 顧客情報を作ってデータベースに登録
+                MCustomers cust = new MCustomers()
+                {
+                    Name = postModel.Name,
+                    Furigana = postModel.Furigana,
+                    Tel = postModel.Tel,
+                    Mail = postModel.Mail,
+                    Postcode = postModel.Postcode,
+                    Address = postModel.Address,
+                    Password = postModel.Password
+                };
+
+                return Json(new MJsonWithStatus() { status = "success" });
+            }
+            else
+            {
+                return Json(new MJsonWithStatus() { status = "duplicateTelError" });
+            }
+        }
+
+        /// <summary>
         /// 新規登録のREST API
         /// </summary>
         /// <param name="postModel">新規登録に必要な項目から構成されるJsonから生成されたオブジェクト
@@ -310,8 +442,20 @@ namespace ServiceSiteForTheElderly.Controllers
             SessionModel CurrentSession = null;
             GetAndSetSession(Session, ViewData, Url, ref sid, ref CurrentSession);
 
+            // 存在しなかったら、登録処理
+            if (!postModel.IsNotEmpty())
+            {
+                // 未入力があるかどうかチェック
+                return Json(new MJsonWithStatus() { status = "containEmptyChar" });
+            }
+
+
             // 事前に電話番号と郵便番号のハイフンを取り除いておく
-            postModel.Tel = postModel.Tel.Replace("-", "");
+            if (postModel.Tel != null)
+            {
+                postModel.Tel = postModel.Tel.Replace("-", "");
+            }
+
             if (postModel.Postcode != null)
             {
                 postModel.Postcode = postModel.Postcode.Replace("-", "");

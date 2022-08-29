@@ -24,7 +24,7 @@
 
 
 <body>
-    <input type="hidden" id="UrlActionSignUp" value="@Url.Action("SignUp", "Home")" />
+    <input type="hidden" id="UrlActionSignUpCheck" value="@Url.Action("SignUpCheck", "Home")" />
     <input type="hidden" id="NavigatorPrev" value="@Url.Action("Login", "Home")" />
     <input type="hidden" id="NavigatorNext" value="@Url.Action("SignUpConfirm", "Home")" />
 
@@ -157,7 +157,7 @@
                 };
 
 
-                const postUrl = $("#UrlActionSignUp").val();
+                const postUrl = $("#UrlActionSignUpCheck").val();
                 const nextUrl = $("#NavigatorNext").val();
                 postfuncajax(postUrl, nextUrl, inputData);
 
@@ -165,7 +165,7 @@
 
 
             function postfuncajax(postUrl, nextUrl, inputData) {
-                
+
                 const jsonString = JSON.stringify(inputData);
 
                 $.ajax({
@@ -183,7 +183,7 @@
                         switch (data.status) {
                             case "success":
                                 // alert("ログイン成功");
-                                location.href = nextUrl;
+                                location.href = nextUrl + "?" + new URLSearchParams(inputData).toString();
                                 break;
                             case "containEmptyChar":
                                 alert("空文字列が含まれているフィールドがあります");
@@ -191,6 +191,7 @@
                             case "duplicateTelError":
                                 alert("この電話番号は既に使われています");
                                 break;
+                            case "error":
                             default:
                                 alert("エラーが起こりました");
                                 break;
@@ -198,6 +199,7 @@
 
                     }
                 });
+
             }
 
         });

@@ -61,7 +61,7 @@ namespace ServiceSiteForTheElderly.Models.ViewModels
 
         public bool IsNotEmpty()
         {
-            return this.GetType().GetProperties().Aggregate(true, (acc, x) => acc && !string.IsNullOrEmpty(x.GetValue(this).ToString()));
+            return this.GetType().GetProperties().Aggregate(true, (acc, x) => acc && !string.IsNullOrEmpty(x.GetValue(this)?.ToString()));
         }
     }
 
